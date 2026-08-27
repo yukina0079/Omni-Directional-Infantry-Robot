@@ -1,0 +1,20 @@
+{
+  "measured_at": "2026-08-17",
+  "convention": "Get_Angel_Notrack() radians, AS5600 raw 0..4095",
+  "upper": {
+    "raw": 2643,
+    "abs_rad": 4.054311,
+    "abs_deg": 232.295,
+    "ctrl_rad": -4.054311
+  },
+  "lower": {
+    "raw": 2127,
+    "abs_rad": 3.262777,
+    "abs_deg": 186.943,
+    "ctrl_rad": -3.262777
+  },
+  "span_rad": 0.791534,
+  "span_deg": 45.352,
+  "horizon_rad": 3.6202,
+  "inset_rad": 0.035
+}
