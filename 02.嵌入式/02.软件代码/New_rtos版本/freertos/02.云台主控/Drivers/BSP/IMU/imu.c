@@ -75,7 +75,6 @@ static uint8_t imu_gyro_calibrate(void)
 
     printf("IMU gyro calib: keep still\r\n");
 
-    /* Gyro digital filter needs time after reset; first frames are not bias. */
     for (tries = 0; tries < GYRO_CALIB_DISCARD; tries++)
     {
         (void)BMI055_update(&accel[0], &accel[1], &accel[2],
@@ -134,7 +133,7 @@ static uint8_t imu_gyro_calibrate(void)
 static void imu_set_healthy(uint8_t healthy)
 {
     imu_healthy = healthy;
-    /* ALIENTEK-style LED is typically active-low: 0 = on */
+
     if (healthy)
     {
         LED0(1);

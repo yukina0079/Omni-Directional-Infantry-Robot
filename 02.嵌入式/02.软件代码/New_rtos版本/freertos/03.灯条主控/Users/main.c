@@ -23,20 +23,20 @@ static uint32_t s_flash_tick[ARMOR_COUNT];
 
 int main(void)
 {
-    HAL_Init();                    
+    HAL_Init();
     stm32_clock_init(RCC_PLL_MUL9);
-	
+
 	lde_init();
 	key_init();
 	dma_init();
-//	oled_init();
+
 	NRF24L01_Init();
 	pwm_init(90-1,0);
     uart1_init(115200);
 
 	printf("running...\r\n");
-	
-	nrf2401_chack();	
+
+	nrf2401_chack();
 	lde2_on();
 
 	WS2812_SetALL(255,0,0);
@@ -103,68 +103,3 @@ int main(void)
 		delay_ms(10);
 	}
 }
-/*		
-1.ws2812测试	
-	
-		WS2812_SetALL(255,0,0);
-		WS2812_Updata();
-		delay_ms(1000);
-		WS2812_SetALL(0,255,0);
-		WS2812_Updata();
-		delay_ms(1000);			
-		WS2812_SetALL(0,0,255);
-		WS2812_Updata();
-		delay_ms(1000);	
-2.掉血测试
-		
-		if(key_edge_detect() == true){
-
-		key_num++; // 每检测到一次下降沿，count加1
-		
-		if(key_num<10){
-			WS2812_SetALL(0,0,255);
-			WS2812_Updata();
-			delay_ms(10);
-			
-		}else{
-			WS2812_SetALL(0,0,0);
-			WS2812_Updata();
-			delay_ms(10);
-		}
-    }
-	if(HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_12) == GPIO_PIN_RESET){ 
-			key_num  = 0;
-			WS2812_SetALL(0,0,255);
-			WS2812_Updata();
-			delay_ms(10);
-	}
-3.NRF24L01无线通讯
-初始化
-	 while(NRF24L01_Check()){
-			printf("硬件查寻不到NRF24L01无线模块\n"); 
-			delay_ms(1000);
-		}
-			printf("NRF24L01无线模块硬件连接正常\r\n");
-
-	
-		NRF24L01_TX_Mode();//设置为发送模式
-		printf("进入数据发送模式，每1s发送一次数据\r\n");
-		
-		NRF24L01_RX_Mode();
-		printf("进入数据接收模式\n");	
-循环
-			//发送端   
-		 if(NRF24L01_TxPacket(Send_Out)==TX_OK){
-				printf("NRF24L01无线模块数据发送成功：%s\r\n",Send_Out);
-			}else{
-				printf("NRF24L01无线模块数据发送失败\r\n");
-			} 
-
-			//接收端
-      if(NRF24L01_RxPacket(Receive)==0){
-      Receive[32]=0;//加入字符串结束符      
-      printf("NRF24L01无线模块数据接收成功：%s\r\n",Receive);
-    }	
-	
-	*/
-

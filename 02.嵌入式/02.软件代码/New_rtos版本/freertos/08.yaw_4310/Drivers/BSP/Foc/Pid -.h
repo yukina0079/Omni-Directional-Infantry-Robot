@@ -11,13 +11,13 @@ typedef struct{
     float output;
     float limit;
     float output_ramp;
-    float error_prev;//最后跟踪的误差
-    float output_prev;//最后的pid输出值
-    float integral_prev;//最后的积分输出值
-    unsigned long timestamp_prev;//最后的时间戳
+    float error_prev;
+    float output_prev;
+    float integral_prev;
+    unsigned long timestamp_prev;
 }PID;
 
 float PID_velocity(float error);
 void PID_init(PID *pid);
 
-#endif 
+#endif

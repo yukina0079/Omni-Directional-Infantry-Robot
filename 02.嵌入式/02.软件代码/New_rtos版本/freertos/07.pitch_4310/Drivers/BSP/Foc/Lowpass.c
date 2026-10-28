@@ -16,11 +16,7 @@ void LOWPass_Init(void)
 
 float LowPassFilter_operator(LowPassFilter *Lfi, float x)
 {
-    /*
-     * Ts from the TIM2 microsecond base. The old version read SysTick->VAL and
-     * assumed a /8 prescaler and a 0xFFFFFF reload, neither of which matched
-     * how HAL configures SysTick, so alpha was effectively frozen.
-     */
+
     float Ts = systime_delta_s(&Lfi->timestamp_prev);
 
     float alpha = Lfi->Tf / (Lfi->Tf + Ts);

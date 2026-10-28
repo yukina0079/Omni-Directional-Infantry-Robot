@@ -3,7 +3,6 @@
 
 #include "sys.h"
 
-/* IMU660RA uses the Bosch BMI270-compatible register map. */
 #define IMU660RA_I2C_ADDR_LOW       0x68U
 #define IMU660RA_I2C_ADDR_HIGH      0x69U
 #define IMU660RA_CHIP_ID_REG        0x00U
@@ -17,7 +16,7 @@
 #define IMU660RA_INIT_ADDR_0_REG    0x5BU
 #define IMU660RA_INIT_ADDR_1_REG    0x5CU
 #define IMU660RA_INIT_DATA_REG      0x5EU
-#define IMU660RA_INTERNAL_STATUS_REG 0x21U  /* bits[3:0]==0x01 means config OK */
+#define IMU660RA_INTERNAL_STATUS_REG 0x21U
 #define IMU660RA_CMD_REG            0x7EU
 #define IMU660RA_SOFT_RESET_CMD     0xB6U
 #define IMU660RA_TEMP_DATA_REG      0x22U
@@ -26,9 +25,8 @@
 #define IMU660RA_GYR_CONF_REG       0x42U
 #define IMU660RA_GYR_RANGE_REG      0x43U
 
-/* Seekfree IMU660RA_ACC_SAMPLE / IMU660RA_GYR_SAMPLE. */
-#define IMU660RA_ACC_SAMPLE         0x01U   /* +/-4 g, raw / 8192 -> g */
-#define IMU660RA_GYR_SAMPLE         0x00U   /* +/-2000 dps, raw / 16.4 -> deg/s */
+#define IMU660RA_ACC_SAMPLE         0x01U
+#define IMU660RA_GYR_SAMPLE         0x00U
 
 #define IMU660RA_CONFIG_SIZE        8192U
 #define IMU660RA_CONFIG_CHUNK       32U

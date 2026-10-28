@@ -21,15 +21,7 @@ extern float yaw_output[2];
 #define ACCEL_STILL_MIN       0.85f
 #define ACCEL_STILL_MAX       1.15f
 #define GYRO_STILL_DPS        8.0f
-/*
- * Consecutive failed reads before the IMU is declared unhealthy.
- *
- * Each failure now costs IIC_HW_TIMEOUT_FAST (5 ms), so 20 retries would be
- * 100 ms of degraded scheduling -- exactly the yaw board's comms timeout, i.e.
- * long enough to drop the gimbal on the way to noticing the sensor is gone.
- * 5 retries is 25 ms, which leaves margin, and 5 ms without attitude is far
- * more tolerance than a working IMU ever needs.
- */
+
 #define IMU_FAIL_FREEZE_N     5u
 
 float imu_dt = IMU_DT_DEFAULT;
@@ -264,4 +256,3 @@ uint8_t imu_is_healthy(void)
 {
     return imu_healthy;
 }
-

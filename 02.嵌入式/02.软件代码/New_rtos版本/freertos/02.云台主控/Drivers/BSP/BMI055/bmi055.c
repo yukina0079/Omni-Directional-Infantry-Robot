@@ -5,7 +5,6 @@
 #include "math.h"
 #include <stdio.h>
 
-/* Official datasheet sensitivities */
 #define BMI055_ACCEL_4G_SEN  0.001953125f
 #define BMI055_GYRO_2000_SEN 0.06103515625f
 
@@ -19,7 +18,7 @@ static uint8_t bmi055_write_check(uint8_t addr, uint8_t reg, uint8_t val, uint8_
         iic_write_register(addr, reg, val);
         delay_ms(2);
         rd = iic_read_register(addr, reg);
-        /* Reserved bits (e.g. gyro 0x10 bit7) may read back as 1. */
+
         if ((rd & mask) == (val & mask))
         {
             return 0;
@@ -47,7 +46,7 @@ bmi055_status_t BMI055_update(float *AX, float *AY, float *AZ,
 
     if (flags & BMI055_FLAG_ACCEL)
     {
-        /* 12-bit left-aligned in 16-bit register: arithmetic shift keeps sign */
+
         last_a[0] = (float)(ax >> 4) * BMI055_ACCEL_4G_SEN;
         last_a[1] = (float)(ay >> 4) * BMI055_ACCEL_4G_SEN;
         last_a[2] = (float)(az >> 4) * BMI055_ACCEL_4G_SEN;
@@ -62,7 +61,7 @@ bmi055_status_t BMI055_update(float *AX, float *AY, float *AZ,
 
     if (flags & BMI055_FLAG_TEMP)
     {
-        /* 0.5 K/LSB, 0x00 = 23 C; cast to int8_t for two's complement */
+
         last_t = (float)((int8_t)temp_raw) * 0.5f + 23.0f;
     }
 
@@ -95,7 +94,6 @@ uint8_t BMI055_get_data(int16_t *AccX, int16_t *AccY, int16_t *AccZ,
     uint8_t buf[6] = {0};
     uint8_t flags = 0;
 
-    /* Accel data 0x02-0x07, LSB first */
     if (iic_read_len(BMI055_ACCEL_ADDRESS, 0x02, buf, 6) == 0)
     {
         *AccX = (int16_t)((buf[1] << 8) | buf[0]);
@@ -104,7 +102,6 @@ uint8_t BMI055_get_data(int16_t *AccX, int16_t *AccY, int16_t *AccZ,
         flags |= BMI055_FLAG_ACCEL;
     }
 
-    /* Gyro data 0x02-0x07 */
     if (iic_read_len(BMI055_GYRO_ADDRESS, 0x02, buf, 6) == 0)
     {
         *GyroX = (int16_t)((buf[1] << 8) | buf[0]);
@@ -113,7 +110,6 @@ uint8_t BMI055_get_data(int16_t *AccX, int16_t *AccY, int16_t *AccZ,
         flags |= BMI055_FLAG_GYRO;
     }
 
-    /* Temperature is a single byte at accel 0x08 */
     if (iic_read_len(BMI055_ACCEL_ADDRESS, 0x08, buf, 1) == 0)
     {
         *Tmp = (int16_t)buf[0];
@@ -129,7 +125,7 @@ void BMI055_init(void)
     uint8_t acc_id;
     uint8_t mismatch = 0;
 
-    iic_write_register(BMI055_ACCEL_ADDRESS, 0x14, 0xB6);  /* Accel soft reset */
+    iic_write_register(BMI055_ACCEL_ADDRESS, 0x14, 0xB6);
     delay_ms(10);
 
     mismatch |= bmi055_write_check(BMI055_ACCEL_ADDRESS, 0x0F, BMI055_ACCEL_RANGE_4G, 0x0F);
@@ -137,7 +133,7 @@ void BMI055_init(void)
     mismatch |= bmi055_write_check(BMI055_ACCEL_ADDRESS, 0x11, BMI055_ACCEL_NORMAL_MODE, 0xE0);
     delay_ms(1);
 
-    iic_write_register(BMI055_GYRO_ADDRESS, 0x14, 0xB6);  /* Gyro soft reset */
+    iic_write_register(BMI055_GYRO_ADDRESS, 0x14, 0xB6);
     delay_ms(50);
 
     mismatch |= bmi055_write_check(BMI055_GYRO_ADDRESS, 0x0F, BMI055_GYRO_RANGE_2000, 0x07);

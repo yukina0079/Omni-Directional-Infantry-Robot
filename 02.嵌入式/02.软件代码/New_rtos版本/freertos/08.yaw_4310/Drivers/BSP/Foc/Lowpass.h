@@ -5,16 +5,14 @@
 
 typedef struct
 {
-	float Tf;                      /* filter time constant, seconds */
-	float y_prev;                  /* previous output */
-	uint32_t timestamp_prev;       /* micros() stamp, see systime.h */
+	float Tf;
+	float y_prev;
+	uint32_t timestamp_prev;
 } LowPassFilter;
 
 extern LowPassFilter  LPF_current,LPF_velocity;
 
-
 void LOWPass_Init(void);
 float LowPassFilter_operator(LowPassFilter *Lfi,float x);
-
 
 #endif

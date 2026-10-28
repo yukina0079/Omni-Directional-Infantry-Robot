@@ -40,4 +40,3 @@ double normalizeAngleRad(double angle);
 void data_init(void);
 void uart_sand(void);
 #endif
-

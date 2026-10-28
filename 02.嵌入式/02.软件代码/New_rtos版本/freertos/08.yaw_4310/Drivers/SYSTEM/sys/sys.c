@@ -13,12 +13,12 @@ void stm32_clock_init(uint32_t plln)
     rcc_osc_init.PLL.PLLSource = RCC_PLLSOURCE_HSE;
     rcc_osc_init.PLL.PLLMUL = plln;
     ret = HAL_RCC_OscConfig(&rcc_osc_init);
-    
+
     if (ret != HAL_OK)
     {
         while(1);
     }
-    
+
     rcc_clk_init.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
     rcc_clk_init.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
     rcc_clk_init.AHBCLKDivider = RCC_SYSCLK_DIV1;
@@ -30,4 +30,3 @@ void stm32_clock_init(uint32_t plln)
         while(1);
     }
 }
-

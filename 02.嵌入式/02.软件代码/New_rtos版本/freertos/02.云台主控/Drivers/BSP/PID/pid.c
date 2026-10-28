@@ -1,26 +1,5 @@
 #include "pid.h"
 
-
-/**
-  * @brief          pid struct data init
-  * @param[out]     pid: PID struct data point
-  * @param[in]      mode: PID_POSITION: normal pid
-  *                 PID_DELTA: delta pid
-  * @param[in]      PID: 0: kp, 1: ki, 2:kd
-  * @param[in]      max_out: pid max out
-  * @param[in]      max_iout: pid max iout
-  * @retval         none
-  */
-/**
-  * @brief          pid struct data init
-  * @param[out]     pid: PID结构数据指针
-  * @param[in]      mode: PID_POSITION:普通PID
-  *                 PID_DELTA: 差分PID
-  * @param[in]      PID: 0: kp, 1: ki, 2:kd
-  * @param[in]      max_out: pid最大输出
-  * @param[in]      max_iout: pid最大积分输出
-  * @retval         none
-  */
 void PID_init(pid_type_def *pid, uint8_t mode, const float PID[3], float max_out, float max_iout)
 {
     if (pid == NULL || PID == NULL)
@@ -37,20 +16,6 @@ void PID_init(pid_type_def *pid, uint8_t mode, const float PID[3], float max_out
     pid->error[0] = pid->error[1] = pid->error[2] = pid->Pout = pid->Iout = pid->Dout = pid->out = 0.0f;
 }
 
-/**
-  * @brief          pid calculate 
-  * @param[out]     pid: PID struct data point
-  * @param[in]      ref: feedback data 
-  * @param[in]      set: set point
-  * @retval         pid out
-  */
-/**
-  * @brief          pid计算
-  * @param[out]     pid: PID结构数据指针
-  * @param[in]      ref: 反馈数据
-  * @param[in]      set: 设定值
-  * @retval         pid输出
-  */
 float PID_calc(pid_type_def *pid, float ref, float set)
 {
     if (pid == NULL)
@@ -89,16 +54,6 @@ float PID_calc(pid_type_def *pid, float ref, float set)
     return pid->out;
 }
 
-/**
-  * @brief          pid out clear
-  * @param[out]     pid: PID struct data point
-  * @retval         none
-  */
-/**
-  * @brief          pid 输出清除
-  * @param[out]     pid: PID结构数据指针
-  * @retval         none
-  */
 void PID_clear(pid_type_def *pid)
 {
     if (pid == NULL)
@@ -111,4 +66,3 @@ void PID_clear(pid_type_def *pid)
     pid->out = pid->Pout = pid->Iout = pid->Dout = 0.0f;
     pid->fdb = pid->set = 0.0f;
 }
-

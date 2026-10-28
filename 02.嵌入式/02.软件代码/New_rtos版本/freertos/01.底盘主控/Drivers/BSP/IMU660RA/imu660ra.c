@@ -68,8 +68,6 @@ static uint8_t imu660ra_load_config(void)
     uint16_t offset;
 #endif
 
-    /* Datasheet: APS is on after POR / soft reset. Disable it and wait >=450 us
-     * before any further write, or the next access hits a sleeping interface. */
     imu660ra_diag.stage = IMU660RA_DIAG_STAGE_PWR_CONF;
     if (imu660ra_write(IMU660RA_PWR_CONF_REG, 0x00U) != 0U)
     {
@@ -85,8 +83,6 @@ static uint8_t imu660ra_load_config(void)
         return 1U;
     }
 
-    /* The IMU660RA module's supplied I2C example streams all 8192 bytes in one
-     * transaction to INIT_DATA; it does not use BMI270 INIT_ADDR_0/1 paging. */
 #if IMU660RA_CONFIG_SINGLE_BURST
     imu660ra_diag.config_offset = 0U;
     imu660ra_diag.stage = IMU660RA_DIAG_STAGE_INIT_DATA;
@@ -127,8 +123,6 @@ static uint8_t imu660ra_load_config(void)
         return 1U;
     }
 
-    /* INTERNAL_STATUS[3:0] == 0x01 is "init OK". Bit0-only would also pass
-     * error codes 0x03/0x05. Poll up to ~150 ms as in the Bosch BMI2 API. */
     for (i = 0U; i < 30U; i++)
     {
         delay_ms(5U);
@@ -167,10 +161,6 @@ static uint8_t imu660ra_probe_addr(uint8_t addr)
 
     imu660ra_i2c_addr = addr;
 
-    /* BMI270 powers up with Advanced Power Save on. The first I2C access only
-     * wakes the interface and often returns 0x00 / NACK. Official Seekfree
-     * code retries CHIP_ID up to 32 times; one shot here is why a live module
-     * was reported as "not found". */
     (void)IMU660RA_get_chip_id();
     delay_ms(1U);
 
@@ -196,8 +186,8 @@ IMU660RA_Status IMU660RA_init(void)
 
     imu660ra_ready = 0U;
     imu660ra_diag_reset();
-    LED1(0); /* PD3: 0x68 probe result */
-    LED2(0); /* PD4: 0x69 probe result */
+    LED1(0);
+    LED2(0);
     delay_ms(20U);
 
     imu660ra_diag.stage = IMU660RA_DIAG_STAGE_PROBE_HIGH;
@@ -213,8 +203,6 @@ IMU660RA_Status IMU660RA_init(void)
     }
     LED2(chip_id_high == IMU660RA_CHIP_ID);
 
-    /* Always test both SA0 choices. A successful 0x69 probe must not skip
-     * the 0x68 self-check, because SA0 may be floating on the fitted module. */
     imu660ra_diag.stage = IMU660RA_DIAG_STAGE_PROBE_LOW;
     chip_id_low = imu660ra_probe_addr(IMU660RA_I2C_ADDR_LOW);
     imu660ra_diag.probe_low_chip_id = chip_id_low;
@@ -232,7 +220,6 @@ IMU660RA_Status IMU660RA_init(void)
            chip_id_low, (chip_id_low == IMU660RA_CHIP_ID) ? "OK" : "FAIL",
            chip_id_high, (chip_id_high == IMU660RA_CHIP_ID) ? "OK" : "FAIL");
 
-    /* Preserve the previous address priority when both addresses respond. */
     if (chip_id_high == IMU660RA_CHIP_ID)
     {
         imu660ra_i2c_addr = IMU660RA_I2C_ADDR_HIGH;
@@ -255,8 +242,6 @@ IMU660RA_Status IMU660RA_init(void)
     imu660ra_diag.i2c_addr = imu660ra_i2c_addr;
     imu660ra_diag_capture_i2c();
 
-    /* CMD=0xB6 soft-reset. Datasheet min wait 1 ms; Bosch API uses 2 ms.
-     * Soft reset does NOT re-sample CSB, so SPI/I2C stays as latched at POR. */
     imu660ra_diag.stage = IMU660RA_DIAG_STAGE_SOFT_RESET;
     if (imu660ra_write(IMU660RA_CMD_REG, IMU660RA_SOFT_RESET_CMD) != 0U)
     {
@@ -280,10 +265,6 @@ IMU660RA_Status IMU660RA_init(void)
         return IMU660RA_ERROR_CONFIG;
     }
 
-    /* Configure ODR/range first, then enable sensors (Bosch BMI2 order).
-     * Seekfree uses ACC_CONF=0xA7 (50 Hz) for a print loop. The chassis AHRS
-     * runs at 1 kHz, so keep 0xAB = perf + NORM + 800 Hz. Range macros match
-     * Seekfree IMU660RA_ACC_SAMPLE / IMU660RA_GYR_SAMPLE. */
     imu660ra_diag.stage = IMU660RA_DIAG_STAGE_SENSOR_CONFIG;
     if ((imu660ra_write(IMU660RA_ACC_CONF_REG, 0xABU) != 0U) ||
         (imu660ra_write(IMU660RA_ACC_RANGE_REG, IMU660RA_ACC_SAMPLE) != 0U) ||
@@ -297,7 +278,7 @@ IMU660RA_Status IMU660RA_init(void)
         imu660ra_diag.result = IMU660RA_ERROR_CONFIG;
         return IMU660RA_ERROR_CONFIG;
     }
-    /* Gyro typical startup is ~45 ms after gyr_en. */
+
     delay_ms(50U);
 
     imu660ra_ready = 1U;
@@ -390,7 +371,7 @@ IMU660RA_Status IMU660RA_update(float *AX, float *AY, float *AZ,
     *GX = IMU660RA_gyro_transition(gx);
     *GY = IMU660RA_gyro_transition(gy);
     *GZ = IMU660RA_gyro_transition(gz);
-    /* BMI270: temperature_C = raw / 512 + 23 */
+
     *Temperature = ((float)temp / 512.0f) + 23.0f;
     return IMU660RA_OK;
 }

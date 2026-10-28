@@ -1,5 +1,5 @@
 #include "Motor.h"
-#include <math.h>          /* fmodf, used by position_error_deg() */
+#include <math.h>
 #include "delay.h"
 #include "systime.h"
 #include "uart1.h"
@@ -10,18 +10,9 @@
 static float shaft_angle = 0.0f;
 static uint32_t open_loop_timestamp = 0;
 
-/*
- * Note on the removed E_EN and M_EN helpers:
- * they toggled PA6 and PB5, which are unconnected on this board (new_foc,
- * DRV8313). The DRV8313's EN1/EN2/EN3 pins are tied active in hardware, so
- * there is no software enable line -- Motor_stop() disabling the PWM outputs
- * is the only available way to de-energise the motor.
- */
-
 void Motor_init(void)
 {
-	/* A stationary field is enough to establish the electrical offset. Do not
-	 * sweep the assembled pitch axis or use its mechanical end stops at boot. */
+
 	motor1_pwm_start();
 	setPhaseVoltage(MOTOR_ALIGN_VOLTAGE, 0, _3PI_2);
 	delay_ms(400);
@@ -36,39 +27,10 @@ void Motor_init(void)
 	printf("zero_electric_angle = %f\r\n", zero_electric_angle);
 }
 
-/*
- * ---------------------------------------------------------------------------
- * Commissioning test: encoder direction AND pole pair count
- * ---------------------------------------------------------------------------
- *
- * Determines sensor_direction without any external instrument, and validates
- * pole_pairs as a free by-product.
- *
- * Method: drive the electrical angle open-loop through a known span and measure
- * how far the shaft actually moved. The rotor follows the commanded field, so
- *
- *     mechanical_delta = electrical_span / pole_pairs
- *
- * with the SIGN telling us how the encoder is oriented relative to the phase
- * order, and the MAGNITUDE telling us whether pole_pairs is right.
- *
- * Why this matters more than any other single check: sensor_direction enters
- * _electricalAngle(), so getting it wrong makes the commutation angle run
- * backwards. A position loop built on that is positive feedback -- the axis
- * accelerates away from the setpoint instead of toward it. That is the classic
- * gimbal runaway, and it cannot be diagnosed from a schematic.
- *
- * Separating the two failure modes is the point of checking magnitude as well
- * as sign: a wrong sign is a wiring/mounting convention, a wrong magnitude
- * means pole_pairs is misdeclared, and the two need completely different fixes.
- *
- * Safety: the rotor turns ~0.29 revolutions forward, slowly, at
- * MOTOR_ALIGN_VOLTAGE. Barrel off, supply current-limited.
- */
 void motor_direction_test(void)
 {
 	const int   steps    = 400;
-	const float el_span  = 4.0f * _2PI;    /* 4 electrical revolutions */
+	const float el_span  = 4.0f * _2PI;
 	float angle_start, angle_end, mech_delta, expected, implied_pp;
 	float el;
 	int   i;
@@ -77,19 +39,11 @@ void motor_direction_test(void)
 
 	motor1_pwm_start();
 
-	/* Park on a known electrical angle and let the rotor settle, so the start
-	 * sample is taken from a rotor that is actually at rest. */
 	setPhaseVoltage(MOTOR_ALIGN_VOLTAGE, 0, 0.0f);
 	delay_ms(500);
 	as5600_update();
 	angle_start = Get_Angel();
 
-	/*
-	 * Sweep forward. as5600_update() runs every step, not just at the ends:
-	 * Get_Angel() is a multi-turn value maintained by detecting wraps between
-	 * consecutive samples, so it stays valid only if we keep sampling. Reading
-	 * just the endpoints would risk missing a wrap entirely.
-	 */
 	for (i = 0; i <= steps; i++) {
 		el = el_span * (float)i / (float)steps;
 		setPhaseVoltage(MOTOR_ALIGN_VOLTAGE, 0, el);
@@ -119,12 +73,6 @@ void motor_direction_test(void)
 		printf("  -> sensor_direction = -1 (encoder INVERTED vs phase order)\r\n");
 	}
 
-	/*
-	 * Magnitude cross-check. A shaft that barely moved means the rotor did not
-	 * track the field at all (stalled against a stop, or the drive voltage is
-	 * too low), which would make the sign verdict above meaningless -- so say so
-	 * rather than reporting a confident direction.
-	 */
 	mech_delta = (mech_delta < 0.0f) ? -mech_delta : mech_delta;
 	if (mech_delta < 0.1f) {
 		printf("  -> WARNING shaft barely moved: rotor did not follow the field.\r\n");
@@ -155,17 +103,12 @@ void Motor_start(void)
 void Motor_stop(void)
 {
 	motor1_pwm_stop();
-	/*
-	 * Clear the loop state too. Without this, an integrator that wound up
-	 * before the stop would still be loaded when the loop is re-engaged, and
-	 * the motor would jump on the first cycle.
-	 */
+
 	PID_Reset(&PID_Pos);
 	PID_Reset(&PID_Vel);
 	PID_Reset(&PID_Cur);
 }
 
-//开环速度控制
 float velocityOpenloop(float target_velocity)
 {
 	float Ts, Uq;
@@ -179,32 +122,6 @@ float velocityOpenloop(float target_velocity)
 	return Uq;
 }
 
-/*
- * A note on units for all the closed loops below:
- * Get_Angel() and Get_Velocity() are in radians and rad/s, but the error fed
- * to the PID is converted to DEGREES (the *180/PI factor). So the P/I/D gains
- * are "volts per degree of error", and the limit is in volts.
- */
-
-/*
- * Position error, wrapped to the shortest path, in DEGREES.
- *
- * Both the command and Get_Angel() are continuous multi-turn angles, so their
- * raw difference grows without bound: after the axis has made three turns the
- * error can legitimately read 6*PI even though the shaft is pointing exactly
- * where it was asked to. Feeding that to the PID would drive a full-speed slew
- * to unwind turns that do not need unwinding.
- *
- * This matters most for the chassis-spin (小陀螺) case that is coming. There the
- * command is a world-frame heading, which is inherently a mod-2*PI quantity: as
- * the chassis spins past its own zero the command steps from +PI to -PI while
- * the shaft angle keeps accumulating. Without wrapping, that 2*PI step reads as
- * a huge error and the axis lunges a full turn backwards at exactly the moment
- * it should hold still.
- *
- * Wrapping to [-PI, PI] makes the loop always take the short way round, which
- * is both the correct behaviour and the only one the mechanics like.
- */
 float position_error_rad(float target)
 {
     float err = target - sensor_direction * Get_Angel();
@@ -219,13 +136,11 @@ float position_error_rad(float target)
     return err;
 }
 
-/* Same error in DEGREES, which is the unit the PID gains are expressed in. */
 static float position_error_deg(float target)
 {
     return position_error_rad(target) * 180.0f / PI;
 }
 
-//位置闭环
 void PID_Pos_Set(float P, float I, float D, float limit)
 {
     PID_Pos.P = P;
@@ -240,16 +155,6 @@ void PositionCloseloop(float position)
     float output = PID_operator(&PID_Pos, error_deg);
     float elev;
 
-    /*
-     * Gravity feedforward. The barrel COM sits in front of the pivot,
-     * so gravity always tries to lower elevation. That is the +Uq
-     * direction with sensor_direction = -1. Compensate with a
-     * negative bias that peaks at the horizon.
-     *
-     * Fade it when error_deg > 0 (commanding lower / +Uq). A constant
-     * -2 V hold plus a 4.6 deg lead left only P*4.6 ≈ 0.9 V to fight
-     * the bias, so a down-stick could not overpower the feedforward.
-     */
     elev = Get_Angel_Notrack() - PITCH_ZERO_RAD;
     while (elev > _PI)  elev -= _2PI;
     while (elev < -_PI) elev += _2PI;
@@ -261,11 +166,6 @@ void PositionCloseloop(float position)
         output += grav;
     }
 
-    /*
-     * Extra volts only when the following error is past one or two
-     * encoder LSBs. At hold the term is off (no buzz). On a climb
-     * it covers dry friction; gravity is already in the feedforward.
-     */
     {
         float cmd = PID_Pos.P * error_deg;
         float eabs = (error_deg < 0.0f) ? -error_deg : error_deg;
@@ -280,11 +180,6 @@ void PositionCloseloop(float position)
     setPhaseVoltage(output, 0, _electricalAngle());
 }
 
-/*
- * Stick-to-torque path. A 40 V/s slew stops a full-stick slam from
- * appearing as a step on the winding; the hard cap is still
- * PITCH_TORQUE_LIMIT_V. Encoder is only used for commutation.
- */
 #define PITCH_UQ_SLEW_V_S   25.0f
 
 void TorqueCommand(float uq_volts)
@@ -312,7 +207,6 @@ void TorqueCommand(float uq_volts)
     setPhaseVoltage(uq_volts, 0, _electricalAngle());
 }
 
-//速度闭环
 void PID_Vel_Set(float P, float I, float D, float limit)
 {
     PID_Vel.P = P;
@@ -328,7 +222,6 @@ void VelocityCloseloop(float Velocity)
     setPhaseVoltage(output, 0, _electricalAngle());
 }
 
-//电流环
 void PID_Cur_Set(float P, float I, float D, float limit)
 {
     PID_Cur.P = P;
@@ -344,7 +237,6 @@ void CurrentCloseloop(float current)
     setPhaseVoltage(output, 0, _electricalAngle());
 }
 
-//位置速度闭环
 void Position_VelocityCloseloop(float position)
 {
     float output;
@@ -352,7 +244,6 @@ void Position_VelocityCloseloop(float position)
     VelocityCloseloop(output);
 }
 
-//速度电流闭环
 void Velocity_CurrentCloseloop(float velocity)
 {
     float output;
@@ -360,7 +251,6 @@ void Velocity_CurrentCloseloop(float velocity)
     CurrentCloseloop(output);
 }
 
-//位置电流闭环
 void Position_CurrentCloseloop(float position)
 {
     float output;

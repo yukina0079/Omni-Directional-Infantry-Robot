@@ -20,62 +20,16 @@
 #include "data.h"
 #include "ws2812b.h"
 
-/* Set to 1 for the standalone PC attitude viewer; set to 0 for normal control. */
 #define IMU_GRAPH_TEST 0
 
-/*
- * Gimbal main control board -- STM32F407VET6.
- *
- * Receives the operator frame over nRF24L01 and relays a pitch command to the
- * PITCH 4310 FOC board over USART3. Drives no motor directly. Yaw belongs to the
- * chassis board; this one owns pitch, the laser and the WS2812 strip.
- *
- * BOOT ORDER:
- *
- *   sys_stm32_clock_init(336, 8, 2, 7)
- *       HSE 8 MHz / 8 = 1 MHz, x336 = 336 MHz, /2 = 168 MHz SYSCLK. PLLQ = 7
- *       gives the 48 MHz USB/SDIO clock, unused but required to be legal.
- *       Identical to the chassis, so the two boards share one baud divisor and
- *       one 1 ms SysTick.
- *
- *   usart_init(115200)
- *       Brings up BOTH ports: USART3 for the binary FOC frames, and USART2 as
- *       the printf console (usart.c calls usart2_log_init() first). Having two
- *       is what lets data_print() run permanently here -- the chassis, with only
- *       USART3, has to keep its debug output switched off.
- *
- *   spi2_init()  before  nrf24l01_init()   -- the radio is on SPI2.
- *   iic_init()   before  BMI055_init()     -- the IMU is on I2C.
- *   BMI055_init() before imu_init()        -- the AHRS seeds its quaternion from
- *                                             a first accelerometer reading, so
- *                                             the sensor must already answer.
- *   data_init()  before  create_task()     -- sets up pitch_pos_pid and stamps
- *                                             the frame header/tail. A task
- *                                             running first would call PID_calc()
- *                                             on a zeroed struct: Kp = 0, so it
- *                                             would quietly command nothing.
- *
- * IMU_GRAPH_TEST is a standalone bench mode: it never starts the scheduler and
- * never brings up the radio, just streams attitude to the PC at 50 Hz for
- * plotting. Useful for judging whether the AHRS is converging before any of the
- * control path is involved. Must be 0 for a normal build.
- *
- * Note IMU_HAS_MAGNETOMETER gates ist8310_init(). It defaults to 0 in imu.h, so
- * the AHRS runs six-axis and yaw is free to drift -- which does not matter on this
- * board, because only pitch is used and pitch is gravity-referenced by the
- * accelerometer.
- *
- * As on the chassis there is no while(1) after vTaskStartScheduler(); control
- * falls off the end of main() if the idle task cannot be allocated.
- */
 int main(void)
 {
-    HAL_Init();                         /* 初始化HAL库 */
-	sys_stm32_clock_init(336, 8, 2, 7); /* 设置时钟,168Mhz */
-    delay_init(168);                    /* 延时初始化 */
-    usart_init(115200);                 /* 串口初始化为115200 */
-    led_init();                         /* 初始化LED */
-    key_init();                         /* 初始化按键 */	
+    HAL_Init();
+	sys_stm32_clock_init(336, 8, 2, 7);
+    delay_init(168);
+    usart_init(115200);
+    led_init();
+    key_init();
 	spi2_init();
 	iic_init();
 	BMI055_init();
@@ -110,7 +64,7 @@ int main(void)
 	data_init();
 
 	printf("runing......\r\n");
-	
+
     create_task();
 	vTaskStartScheduler();
 #endif
