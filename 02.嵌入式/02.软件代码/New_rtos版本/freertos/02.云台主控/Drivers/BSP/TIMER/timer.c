@@ -7,9 +7,9 @@
 TIM_HandleTypeDef htim2;
 
 /**
- * @brief TIM2 ³õÊ¼»¯º¯Êı
- * @param arr ×Ô¶¯ÖØ×°ÔØÖµ
- * @param psc Ô¤·ÖÆµÏµÊı
+ * @brief TIM2 åˆå§‹åŒ–å‡½æ•°
+ * @param arr è‡ªåŠ¨é‡è£…è½½å€¼
+ * @param psc é¢„åˆ†é¢‘ç³»æ•°
  */
 void TIM2_Init(uint16_t arr, uint16_t psc)
 {
@@ -21,46 +21,46 @@ void TIM2_Init(uint16_t arr, uint16_t psc)
     
     if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
     {
-        // ´íÎó´¦Àí
+        // é”™è¯¯å¤„ç†
     }
 
-    // Æô¶¯¶¨Ê±Æ÷ÖĞ¶Ï
+    // å¯åŠ¨å®šæ—¶å™¨ä¸­æ–­
     HAL_TIM_Base_Start_IT(&htim2);
 }
 
 /**
- * @brief HAL¿âµ×²ãMSP»Øµ÷£¬¸ºÔğÊ±ÖÓÊ¹ÄÜºÍNVICÅäÖÃ
+ * @brief HALåº“åº•å±‚MSPå›è°ƒï¼Œè´Ÿè´£æ—¶é’Ÿä½¿èƒ½å’ŒNVICé…ç½®
  */
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 {
     if (htim->Instance == TIM2)
     {
-        // 1. Ê¹ÄÜÊ±ÖÓ
+        // 1. ä½¿èƒ½æ—¶é’Ÿ
         __HAL_RCC_TIM2_CLK_ENABLE();
 
-        // 2. ÅäÖÃNVICÓÅÏÈ¼¶
+        // 2. é…ç½®NVICä¼˜å…ˆçº§
         HAL_NVIC_SetPriority(TIM2_IRQn, 3, 0);
         HAL_NVIC_EnableIRQ(TIM2_IRQn);
     }
 }
 /**
-  * @brief ¶¨Ê±Æ÷2ÖĞ¶Ï·şÎñ³ÌĞò (ÓÉÆô¶¯ÎÄ¼şÏòÁ¿±íµ÷ÓÃ)
+  * @brief å®šæ—¶å™¨2ä¸­æ–­æœåŠ¡ç¨‹åº (ç”±å¯åŠ¨æ–‡ä»¶å‘é‡è¡¨è°ƒç”¨)
   */
 void TIM2_IRQHandler(void)
 {
-    // µ÷ÓÃHAL¿âÍ¨ÓÃ´¦Àíº¯Êı£¬ÄÚ²¿»á×Ô¶¯Çå³ı±êÖ¾Î»²¢µ÷ÓÃ»Øµ÷º¯Êı
+    // è°ƒç”¨HALåº“é€šç”¨å¤„ç†å‡½æ•°ï¼Œå†…éƒ¨ä¼šè‡ªåŠ¨æ¸…é™¤æ ‡å¿—ä½å¹¶è°ƒç”¨å›è°ƒå‡½æ•°
     HAL_TIM_IRQHandler(&htim2);
 }
 /**
- * @brief ¶¨Ê±Æ÷Òç³öÖĞ¶Ï»Øµ÷º¯Êı (ÒµÎñÂß¼­Ğ´ÔÚÕâÀï)
+ * @brief å®šæ—¶å™¨æº¢å‡ºä¸­æ–­å›è°ƒå‡½æ•° (ä¸šåŠ¡é€»è¾‘å†™åœ¨è¿™é‡Œ)
  */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     if (htim->Instance == TIM2)
     {
-		//imuÊı¾İ¸üĞÂ
+		//imuæ•°æ®æ›´æ–°
 		imu_updata();
-		//Ë«»·pid¼ÆËã
+		//åŒç¯pidè®¡ç®—
 		pid_calculate();
 
 //	usart3_dma_send(test_frame, sizeof(test_frame));

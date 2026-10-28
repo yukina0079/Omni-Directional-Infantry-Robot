@@ -13,13 +13,13 @@
 void key_init(void)
 {
 	
-		GPIO_InitTypeDef gpio_initstruct;//¶¨Òå½á¹¹Ìå²ÎÊı
+		GPIO_InitTypeDef gpio_initstruct;//å®šä¹‰ç»“æ„ä½“å‚æ•°
 		key2_rcc;
 	
-		gpio_initstruct.Pin = key1_pin|key2_pin;//ÅäÖÃÒı½ÅºÅ
-		gpio_initstruct.Mode = GPIO_MODE_INPUT;//ÅäÖÃ¹¤×÷Ä£Ê½ ÍÆÍìÊä³ö
-		gpio_initstruct.Pull = GPIO_PULLUP;//ÅäÖÃÉÏÀ­ÏÂÀ­
-		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//ÅäÖÃÊä³öËÙ¶È
+		gpio_initstruct.Pin = key1_pin|key2_pin;//é…ç½®å¼•è„šå·
+		gpio_initstruct.Mode = GPIO_MODE_INPUT;//é…ç½®å·¥ä½œæ¨¡å¼ æ¨æŒ½è¾“å‡º
+		gpio_initstruct.Pull = GPIO_PULLUP;//é…ç½®ä¸Šæ‹‰ä¸‹æ‹‰
+		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//é…ç½®è¾“å‡ºé€Ÿåº¦
 	
 		HAL_GPIO_Init(key1_port,&gpio_initstruct);
 }

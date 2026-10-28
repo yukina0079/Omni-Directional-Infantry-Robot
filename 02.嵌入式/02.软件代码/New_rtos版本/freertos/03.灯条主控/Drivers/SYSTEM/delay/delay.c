@@ -1,28 +1,28 @@
 #include "delay.h"
 
 /**
-  * @brief  Î¢Ãë¼¶ÑÓÊ±
-  * @param  nus ÑÓÊ±Ê±³¤£¬·¶Î§£º0~233015
-  * @retval ÎÞ
+  * @brief  å¾®ç§’çº§å»¶æ—¶
+  * @param  nus å»¶æ—¶æ—¶é•¿ï¼ŒèŒƒå›´ï¼š0~233015
+  * @retval æ— 
   */
 void delay_us(uint32_t nus)
 {
     uint32_t temp;
-    SysTick->LOAD = 72 * nus;                           /* ÉèÖÃ¶¨Ê±Æ÷ÖØ×°Öµ */
-    SysTick->VAL = 0x00;                                /* Çå¿Õµ±Ç°¼ÆÊýÖµ */
-    SysTick->CTRL |= 1 << 2;                            /* ÉèÖÃ·ÖÆµÏµÊýÎª1·ÖÆµ */
-    SysTick->CTRL |= 1 << 0;                            /* Æô¶¯¶¨Ê±Æ÷ */
+    SysTick->LOAD = 72 * nus;                           /* è®¾ç½®å®šæ—¶å™¨é‡è£…å€¼ */
+    SysTick->VAL = 0x00;                                /* æ¸…ç©ºå½“å‰è®¡æ•°å€¼ */
+    SysTick->CTRL |= 1 << 2;                            /* è®¾ç½®åˆ†é¢‘ç³»æ•°ä¸º1åˆ†é¢‘ */
+    SysTick->CTRL |= 1 << 0;                            /* å¯åŠ¨å®šæ—¶å™¨ */
     do
     {
         temp = SysTick->CTRL;
-    } while ((temp & 0x01) && !(temp & (1 << 16)));     /* µÈ´ý¼ÆÊýµ½0 */
-    SysTick->CTRL &= ~(1 << 0);                         /* ¹Ø±Õ¶¨Ê±Æ÷ */
+    } while ((temp & 0x01) && !(temp & (1 << 16)));     /* ç­‰å¾…è®¡æ•°åˆ°0 */
+    SysTick->CTRL &= ~(1 << 0);                         /* å…³é—­å®šæ—¶å™¨ */
 }
 
 /**
-  * @brief  ºÁÃë¼¶ÑÓÊ±
-  * @param  nms ÑÓÊ±Ê±³¤£¬·¶Î§£º0~4294967295
-  * @retval ÎÞ
+  * @brief  æ¯«ç§’çº§å»¶æ—¶
+  * @param  nms å»¶æ—¶æ—¶é•¿ï¼ŒèŒƒå›´ï¼š0~4294967295
+  * @retval æ— 
   */
 void delay_ms(uint32_t nms)
 {
@@ -31,9 +31,9 @@ void delay_ms(uint32_t nms)
 }
  
 /**
-  * @brief  Ãë¼¶ÑÓÊ±
-  * @param  ns ÑÓÊ±Ê±³¤£¬·¶Î§£º0~4294967295
-  * @retval ÎÞ
+  * @brief  ç§’çº§å»¶æ—¶
+  * @param  ns å»¶æ—¶æ—¶é•¿ï¼ŒèŒƒå›´ï¼š0~4294967295
+  * @retval æ— 
   */
 void delay_s(uint32_t ns)
 {
@@ -42,9 +42,9 @@ void delay_s(uint32_t ns)
 }
 
 /**
-  * @brief  ÖØÐ´HAL_Delayº¯Êý
-  * @param  nms ÑÓÊ±Ê±³¤£¬·¶Î§£º0~4294967295
-  * @retval ÎÞ
+  * @brief  é‡å†™HAL_Delayå‡½æ•°
+  * @param  nms å»¶æ—¶æ—¶é•¿ï¼ŒèŒƒå›´ï¼š0~4294967295
+  * @retval æ— 
   */
 void HAL_Delay(uint32_t nms)
 {

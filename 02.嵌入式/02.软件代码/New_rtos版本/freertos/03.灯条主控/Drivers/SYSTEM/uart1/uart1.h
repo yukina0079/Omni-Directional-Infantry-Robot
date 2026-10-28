@@ -4,18 +4,18 @@
 #include "stdio.h"
 #include "sys.h"
 
-/* ´íÎó´úÂë */
-#define UART_EOK                     0      /* Ã»ÓĞ´íÎó */
-#define UART_ERROR                   1      /* Í¨ÓÃ´íÎó */
-#define UART_ETIMEOUT                2      /* ³¬Ê±´íÎó */
-#define UART_EINVAL                  3      /* ²ÎÊı´íÎó */
+/* é”™è¯¯ä»£ç  */
+#define UART_EOK                     0      /* æ²¡æœ‰é”™è¯¯ */
+#define UART_ERROR                   1      /* é€šç”¨é”™è¯¯ */
+#define UART_ETIMEOUT                2      /* è¶…æ—¶é”™è¯¯ */
+#define UART_EINVAL                  3      /* å‚æ•°é”™è¯¯ */
 
-/* UARTÊÕ·¢»º³å´óĞ¡ */
+/* UARTæ”¶å‘ç¼“å†²å¤§å° */
 #define UART1_RX_BUF_SIZE            128
 #define UART1_TX_BUF_SIZE            64
 
 
-void uart1_init(uint32_t bound);            /* ´®¿Ú³õÊ¼»¯º¯Êı */
+void uart1_init(uint32_t bound);            /* ä¸²å£åˆå§‹åŒ–å‡½æ•° */
 
 #endif
 

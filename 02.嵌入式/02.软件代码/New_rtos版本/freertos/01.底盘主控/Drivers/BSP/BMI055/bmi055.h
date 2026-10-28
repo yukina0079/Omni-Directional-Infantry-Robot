@@ -3,8 +3,8 @@
 
 #include "sys.h"
 
-#define BMI055_ACCEL_ADDRESS 0x18	//¼ÓËÙ¶È¼Æ
-#define BMI055_GYRO_ADDRESS  0x68	//ÍÓÂÝÒÇ
+#define BMI055_ACCEL_ADDRESS 0x18	//åŠ é€Ÿåº¦è®¡
+#define BMI055_GYRO_ADDRESS  0x68	//é™€èžºä»ª
 
 #define BMI055_WHO_AM_I      0x00
 

@@ -1,7 +1,7 @@
 #include "ws2812b.h"
 #include "stdint.h"
 
-/* ¾ä±ú¶¨ÒåĞŞ¸ÄÎªTIM4 */
+/* å¥æŸ„å®šä¹‰ä¿®æ”¹ä¸ºTIM4 */
 DMA_HandleTypeDef tim4_ch2 = {0};
 TIM_HandleTypeDef htim4 = {0};	
 
@@ -43,13 +43,13 @@ void WS2812_Updata(void)
 	}
 	data[LED_COUNT * 24] = codeReset;
 	
-	/* ¸ÄÎªTIM4_CH2 */
+	/* æ”¹ä¸ºTIM4_CH2 */
 	HAL_TIM_PWM_Stop_DMA(&htim4, TIM_CHANNEL_2);  
 	__HAL_TIM_SetCounter(&htim4, 0);
 	HAL_TIM_PWM_Start_DMA(&htim4, TIM_CHANNEL_2, (uint32_t*)data, sizeof(data)/sizeof(uint16_t));
 }
 
-/* »ù´¡Á÷Ë®µÆĞ§¹û£¨±£³Ö²»±ä£© */
+/* åŸºç¡€æµæ°´ç¯æ•ˆæœï¼ˆä¿æŒä¸å˜ï¼‰ */
 void WS2812_FlowLight(uint8_t r, uint8_t g, uint8_t b, uint16_t delay_ms, uint8_t direction)
 {
     if(direction == 0) {
@@ -81,7 +81,7 @@ void WS2812_FlowLight(uint8_t r, uint8_t g, uint8_t b, uint16_t delay_ms, uint8_
     }
 }
 
-/* TIM4³õÊ¼»¯º¯Êı */
+/* TIM4åˆå§‹åŒ–å‡½æ•° */
 void ws2812_init(uint16_t arr, uint16_t psc)
 {
 	TIM_OC_InitTypeDef htim4_config = {0};
@@ -98,15 +98,15 @@ void ws2812_init(uint16_t arr, uint16_t psc)
 	htim4_config.Pulse = 0;
 	htim4_config.OCPolarity = TIM_OCPOLARITY_HIGH;
 	htim4_config.OCFastMode = TIM_OCFAST_DISABLE;
-	HAL_TIM_PWM_ConfigChannel(&htim4, &htim4_config, TIM_CHANNEL_2);  // ¸ÄÎªCH2
+	HAL_TIM_PWM_ConfigChannel(&htim4, &htim4_config, TIM_CHANNEL_2);  // æ”¹ä¸ºCH2
 }
 
-/* DMA1_Channel3³õÊ¼»¯£¨¶ÔÓ¦TIM4_CH2£© */
+/* DMA1_Channel3åˆå§‹åŒ–ï¼ˆå¯¹åº”TIM4_CH2ï¼‰ */
 void dma_init(void)
 {
 	__HAL_RCC_DMA1_CLK_ENABLE();
 	
-	tim4_ch2.Instance = DMA1_Channel4;  // TIM4_CH2¶ÔÓ¦DMA1_Channel3
+	tim4_ch2.Instance = DMA1_Channel4;  // TIM4_CH2å¯¹åº”DMA1_Channel3
 	tim4_ch2.Init.Direction = DMA_MEMORY_TO_PERIPH;
 	tim4_ch2.Init.PeriphInc = DMA_PINC_DISABLE;
 	tim4_ch2.Init.MemInc = DMA_MINC_ENABLE;
@@ -117,6 +117,6 @@ void dma_init(void)
 											
 	HAL_DMA_Init(&tim4_ch2);
 
-	__HAL_LINKDMA(&htim4, hdma[TIM_DMA_ID_CC2], tim4_ch2);  // Á´½ÓTIM4_CH2
+	__HAL_LINKDMA(&htim4, hdma[TIM_DMA_ID_CC2], tim4_ch2);  // é“¾æ¥TIM4_CH2
 }
 

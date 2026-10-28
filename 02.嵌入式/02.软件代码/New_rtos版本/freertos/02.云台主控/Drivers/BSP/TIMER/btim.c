@@ -3,66 +3,66 @@
 #include "./BSP/TIMER/btim.h"
 
 
-TIM_HandleTypeDef timx_handler;         /* ��ʱ��������� */
+TIM_HandleTypeDef timx_handler;         /* 定时器参数句柄 */
 
 /**
- * @brief       ������ʱ��TIMX�жϷ�����
- * @param       ��
- * @retval      ��
+ * @brief       基本定时器TIMX中断服务函数
+ * @param       无
+ * @retval      无
  */
 void BTIM_TIMX_INT_IRQHandler(void)
 {
-    HAL_TIM_IRQHandler(&timx_handler);  /*��ʱ���ص�����*/
+    HAL_TIM_IRQHandler(&timx_handler);  /*定时器回调函数*/
 }
 /**
- * @brief       �ص���������ʱ���жϷ���������
- * @param       ��
- * @retval      ��
+ * @brief       回调函数，定时器中断服务函数调用
+ * @param       无
+ * @retval      无
  */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     if (htim == (&timx_handler))
     {
-        LED1_TOGGLE(); /*LED1��ת*/
+        LED1_TOGGLE(); /*LED1反转*/
     }
 }
 
 /**
- * @brief       ������ʱ��TIMX��ʱ�жϳ�ʼ������
+ * @brief       基本定时器TIMX定时中断初始化函数
  * @note
- *              ������ʱ����ʱ������APB1,��PPRE1 �� 2��Ƶ��ʱ��
- *              ������ʱ����ʱ��ΪAPB1ʱ�ӵ�2��, ��APB1Ϊ36M, ���Զ�ʱ��ʱ�� = 72Mhz
- *              ��ʱ�����ʱ����㷽��: Tout = ((arr + 1) * (psc + 1)) / Ft us.
- *              Ft=��ʱ������Ƶ��,��λ:Mhz
+ *              基本定时器的时钟来自APB1,当PPRE1 ≥ 2分频的时候
+ *              基本定时器的时钟为APB1时钟的2倍, 而APB1为36M, 所以定时器时钟 = 72Mhz
+ *              定时器溢出时间计算方法: Tout = ((arr + 1) * (psc + 1)) / Ft us.
+ *              Ft=定时器工作频率,单位:Mhz
  *
- * @param       arr: �Զ���װֵ��
- * @param       psc: ʱ��Ԥ��Ƶ��
- * @retval      ��
+ * @param       arr: 自动重装值。
+ * @param       psc: 时钟预分频数
+ * @retval      无
  */
 void btim_timx_int_init(uint16_t arr, uint16_t psc)
 {
-    timx_handler.Instance = BTIM_TIMX_INT;                      /*ͨ�ö�ʱ��X*/
-    timx_handler.Init.Prescaler = psc;                          /* ����Ԥ��Ƶ��  */
-    timx_handler.Init.CounterMode = TIM_COUNTERMODE_UP;         /* ���ϼ����� */
-    timx_handler.Init.Period = arr;                             /*�Զ�װ��ֵ*/
-    timx_handler.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;   /*ʱ�ӷ�Ƶ����*/
+    timx_handler.Instance = BTIM_TIMX_INT;                      /*通用定时器X*/
+    timx_handler.Init.Prescaler = psc;                          /* 设置预分频器  */
+    timx_handler.Init.CounterMode = TIM_COUNTERMODE_UP;         /* 向上计数器 */
+    timx_handler.Init.Period = arr;                             /*自动装载值*/
+    timx_handler.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;   /*时钟分频因子*/
     HAL_TIM_Base_Init(&timx_handler);
 
-    HAL_TIM_Base_Start_IT(&timx_handler);                       /*ʹ��ͨ�ö�ʱ��x�ͼ�������жϣ�TIM_IT_UPDATE*/
+    HAL_TIM_Base_Start_IT(&timx_handler);                       /*使能通用定时器x和及其更新中断：TIM_IT_UPDATE*/
 }
 
 /**
- * @brief       ��ʱ���ײ�����������ʱ�ӣ������ж����ȼ�
-                �˺����ᱻHAL_TIM_Base_Init()��������
- * @param       ��
- * @retval      ��
+ * @brief       定时器底册驱动，开启时钟，设置中断优先级
+                此函数会被HAL_TIM_Base_Init()函数调用
+ * @param       无
+ * @retval      无
  */
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 {
     if (htim->Instance == BTIM_TIMX_INT)
     {
-        BTIM_TIMX_INT_CLK_ENABLE();                     /*ʹ��TIMʱ��*/
-        HAL_NVIC_SetPriority(BTIM_TIMX_INT_IRQn, 5, 0); /* ��ռ1�������ȼ�3����2 */
-        HAL_NVIC_EnableIRQ(BTIM_TIMX_INT_IRQn);         /*����ITM3�ж�*/
+        BTIM_TIMX_INT_CLK_ENABLE();                     /*使能TIM时钟*/
+        HAL_NVIC_SetPriority(BTIM_TIMX_INT_IRQn, 5, 0); /* 抢占1，子优先级3，组2 */
+        HAL_NVIC_EnableIRQ(BTIM_TIMX_INT_IRQn);         /*开启ITM3中断*/
     }
 }

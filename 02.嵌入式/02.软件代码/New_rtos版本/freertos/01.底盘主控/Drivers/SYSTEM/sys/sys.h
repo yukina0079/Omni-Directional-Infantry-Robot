@@ -8,26 +8,26 @@
 
 
 /**
- * SYS_SUPPORT_OSÓÃÓÚ¶¨ÒåÏµÍ³ÎÄ¼ş¼ĞÊÇ·ñÖ§³ÖOS
- * 0,²»Ö§³ÖOS
- * 1,Ö§³ÖOS
+ * SYS_SUPPORT_OSç”¨äºå®šä¹‰ç³»ç»Ÿæ–‡ä»¶å¤¹æ˜¯å¦æ”¯æŒOS
+ * 0,ä¸æ”¯æŒOS
+ * 1,æ”¯æŒOS
  */
 #define SYS_SUPPORT_OS         1
 
 
-/*º¯ÊıÉùÃ÷*******************************************************************************************/
+/*å‡½æ•°å£°æ˜*******************************************************************************************/
 
-void sys_nvic_set_vector_table(uint32_t baseaddr, uint32_t offset);                         /* ÉèÖÃÖĞ¶ÏÆ«ÒÆÁ¿ */
-void sys_standby(void);                                                                     /* ½øÈë´ı»úÄ£Ê½ */
-void sys_soft_reset(void);                                                                  /* ÏµÍ³Èí¸´Î» */
-uint8_t sys_stm32_clock_init(uint32_t plln, uint32_t pllm, uint32_t pllp, uint32_t pllq);   /* ÅäÖÃÏµÍ³Ê±ÖÓ */
+void sys_nvic_set_vector_table(uint32_t baseaddr, uint32_t offset);                         /* è®¾ç½®ä¸­æ–­åç§»é‡ */
+void sys_standby(void);                                                                     /* è¿›å…¥å¾…æœºæ¨¡å¼ */
+void sys_soft_reset(void);                                                                  /* ç³»ç»Ÿè½¯å¤ä½ */
+uint8_t sys_stm32_clock_init(uint32_t plln, uint32_t pllm, uint32_t pllp, uint32_t pllq);   /* é…ç½®ç³»ç»Ÿæ—¶é’Ÿ */
 
 
-/* ÒÔÏÂÎª»ã±àº¯Êı */
-void sys_wfi_set(void);             /* Ö´ĞĞWFIÖ¸Áî */
-void sys_intx_disable(void);        /* ¹Ø±ÕËùÓĞÖĞ¶Ï */
-void sys_intx_enable(void);         /* ¿ªÆôËùÓĞÖĞ¶Ï */
-void sys_msr_msp(uint32_t addr);    /* ÉèÖÃÕ»¶¥µØÖ· */
+/* ä»¥ä¸‹ä¸ºæ±‡ç¼–å‡½æ•° */
+void sys_wfi_set(void);             /* æ‰§è¡ŒWFIæŒ‡ä»¤ */
+void sys_intx_disable(void);        /* å…³é—­æ‰€æœ‰ä¸­æ–­ */
+void sys_intx_enable(void);         /* å¼€å¯æ‰€æœ‰ä¸­æ–­ */
+void sys_msr_msp(uint32_t addr);    /* è®¾ç½®æ ˆé¡¶åœ°å€ */
 
 #endif
 

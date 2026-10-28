@@ -6,14 +6,14 @@
 #define IST8310_ADDRESS 0x0E
 #define IST8310_WHO_AM_I 0x00       //ist8310 "who am I " 
 #define IST8310_WHO_AM_I_VALUE 0x10 //device ID
-//the first column:the registers of IST8310. µÚÒ»ÁĞ:IST8310µÄ¼Ä´æÆ÷
-//the second column: the value to be writed to the registers.µÚ¶şÁĞ:ĞèÒªĞ´ÈëµÄ¼Ä´æÆ÷Öµ
-//the third column: return error value.µÚÈıÁĞ:·µ»ØµÄ´íÎóÂë
+//the first column:the registers of IST8310. ç¬¬ä¸€åˆ—:IST8310çš„å¯„å­˜å™¨
+//the second column: the value to be writed to the registers.ç¬¬äºŒåˆ—:éœ€è¦å†™å…¥çš„å¯„å­˜å™¨å€¼
+//the third column: return error value.ç¬¬ä¸‰åˆ—:è¿”å›çš„é”™è¯¯ç 
 static const uint8_t ist8310_write_reg_data_error[][3] ={
-        {0x0B, 0x08, 0x01},     //enalbe interrupt  and low pin polarity.¿ªÆôÖĞ¶Ï£¬²¢ÇÒÉèÖÃµÍµçÆ½
-        {0x41, 0x09, 0x02},     //average 2 times.Æ½¾ù²ÉÑùÁ½´Î
-        {0x42, 0xC0, 0x03},     //must be 0xC0. ±ØĞëÊÇ0xC0
-        {0x0A, 0x0B, 0x04}};    //200Hz output rate.200HzÊä³öÆµÂÊ
+        {0x0B, 0x08, 0x01},     //enalbe interrupt  and low pin polarity.å¼€å¯ä¸­æ–­ï¼Œå¹¶ä¸”è®¾ç½®ä½ç”µå¹³
+        {0x41, 0x09, 0x02},     //average 2 times.å¹³å‡é‡‡æ ·ä¸¤æ¬¡
+        {0x42, 0xC0, 0x03},     //must be 0xC0. å¿…é¡»æ˜¯0xC0
+        {0x0A, 0x0B, 0x04}};    //200Hz output rate.200Hzè¾“å‡ºé¢‘ç‡
 
 void ist8310_init(void);
 void ist8310_updata(float *ax,float *ay,float *az,float *tmp);

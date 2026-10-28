@@ -198,7 +198,7 @@ int main(void)
     /*
      * Telemetry stays off in a self-test build. send_angal is a binary frame
      * pushed by a circular DMA with no gap between repetitions, so leaving it
-     * running would bury the self-test's text output in 20-byte binary frames
+     * running would bury the self-test's text output in 13-byte binary frames
      * on the same wire.
      */
     printf("telemetry DMA disabled (self-test build)\r\n");

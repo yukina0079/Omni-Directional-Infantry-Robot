@@ -2,7 +2,7 @@
 #include "usart.h"
 
 /**
- * @file ±àÂëÆ÷Òý½Å
+ * @file ç¼–ç å™¨å¼•è„š
  * encoder:PB6 TIM4_CH1
  * encoder:PB7 TIM4_CH2
  * encoder:PA6 TIM3_CH1
@@ -16,21 +16,21 @@ void encoder_init(void)
 {
     TIM_Encoder_InitTypeDef config = {0};
     
-    // µç»ú1±àÂëÆ÷£¨TIM4£©ÅäÖÃ£º·¶Î§0-127
+    // ç”µæœº1ç¼–ç å™¨ï¼ˆTIM4ï¼‰é…ç½®ï¼šèŒƒå›´0-127
     motor1_encoder.Instance = TIM4;
     motor1_encoder.Init.Period = 127;
     motor1_encoder.Init.Prescaler = 0;
     motor1_encoder.Init.CounterMode = TIM_COUNTERMODE_UP;
     motor1_encoder.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     
-    // µç»ú2±àÂëÆ÷£¨TIM3£©ÅäÖÃ£º·¶Î§0-127
+    // ç”µæœº2ç¼–ç å™¨ï¼ˆTIM3ï¼‰é…ç½®ï¼šèŒƒå›´0-127
     motor2_encoder.Instance = TIM3;
     motor2_encoder.Init.Period = 127;
     motor2_encoder.Init.Prescaler = 0;
     motor2_encoder.Init.CounterMode = TIM_COUNTERMODE_UP;
     motor2_encoder.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     
-    // ±àÂëÆ÷Ä£Ê½ÅäÖÃ£¨TI1+TI2Ë«ÑØ¼ÆÊý£©
+    // ç¼–ç å™¨æ¨¡å¼é…ç½®ï¼ˆTI1+TI2åŒæ²¿è®¡æ•°ï¼‰
     config.EncoderMode = TIM_ENCODERMODE_TI12;
     config.IC1Polarity = TIM_ICPOLARITY_RISING;
     config.IC1Selection = TIM_ICSELECTION_DIRECTTI;
@@ -42,7 +42,7 @@ void encoder_init(void)
     config.IC2Prescaler = TIM_ICPSC_DIV1;
     config.IC2Filter = 0xF;
     
-    // ³õÊ¼»¯²¢Æô¶¯±àÂëÆ÷
+    // åˆå§‹åŒ–å¹¶å¯åŠ¨ç¼–ç å™¨
     HAL_TIM_Encoder_Init(&motor1_encoder, &config);
     HAL_TIM_Encoder_Init(&motor2_encoder, &config);
     HAL_TIM_Encoder_Start(&motor1_encoder, TIM_CHANNEL_ALL);
@@ -78,7 +78,7 @@ void HAL_TIM_Encoder_MspInit(TIM_HandleTypeDef *htim)
 }
 
 /**
- * @brief  ¶ÁÈ¡µç»ú1±àÂëÆ÷Öµ£¨·´Ïò£ºÔ­ÕýÏò¡úÊýÖµ¼õÉÙ£¬Ô­·´Ïò¡úÊýÖµÔö¼Ó£©
+ * @brief  è¯»å–ç”µæœº1ç¼–ç å™¨å€¼ï¼ˆåå‘ï¼šåŽŸæ­£å‘â†’æ•°å€¼å‡å°‘ï¼ŒåŽŸåå‘â†’æ•°å€¼å¢žåŠ ï¼‰
  */
 uint8_t encoder_r(void)
 {
@@ -87,11 +87,11 @@ uint8_t encoder_r(void)
     uint8_t curr_cnt = __HAL_TIM_GET_COUNTER(&motor1_encoder);
     int16_t diff = (int16_t)curr_cnt - prev_cnt;
     
-    // ÐÞÕý¼ÆÊýÆ÷Òç³ö/ÏÂÒçµ¼ÖÂµÄ²îÖµ´íÎó
+    // ä¿®æ­£è®¡æ•°å™¨æº¢å‡º/ä¸‹æº¢å¯¼è‡´çš„å·®å€¼é”™è¯¯
     if (diff > 64) diff -= 128;
     else if (diff < -64) diff += 128;
     
-    // ¡¾ºËÐÄÐÞ¸Ä¡¿Ìí¼ÓÈ¡·´ ¡ú ±àÂëÆ÷1·´Ïò
+    // ã€æ ¸å¿ƒä¿®æ”¹ã€‘æ·»åŠ å–å â†’ ç¼–ç å™¨1åå‘
     diff = -diff;
     
     if (diff > 0) output_val = (output_val + diff > 127) ? 127 : (output_val + diff);
@@ -102,7 +102,7 @@ uint8_t encoder_r(void)
 }
 
 /**
- * @brief  ¶ÁÈ¡µç»ú2±àÂëÆ÷Öµ£¨ÕýÏò£º0¡ú127£¬·´Ïò£º127¡ú0£©
+ * @brief  è¯»å–ç”µæœº2ç¼–ç å™¨å€¼ï¼ˆæ­£å‘ï¼š0â†’127ï¼Œåå‘ï¼š127â†’0ï¼‰
  */
 uint8_t encoder_l(void)
 {
@@ -111,12 +111,12 @@ uint8_t encoder_l(void)
     uint8_t curr_cnt = __HAL_TIM_GET_COUNTER(&motor2_encoder);
     int16_t diff = (int16_t)curr_cnt - prev_cnt;
     
-    // ÐÞÕý¼ÆÊýÆ÷Òç³ö/ÏÂÒçµ¼ÖÂµÄ²îÖµ´íÎó
+    // ä¿®æ­£è®¡æ•°å™¨æº¢å‡º/ä¸‹æº¢å¯¼è‡´çš„å·®å€¼é”™è¯¯
     if (diff > 64) diff -= 128;
     else if (diff < -64) diff += 128;
     
-    // ¡¾ºËÐÄÐÞ¸Ä¡¿ÒÆ³ýÈ¡·´ ¡ú ±àÂëÆ÷2»Ö¸´ÕýÏò
-    // diff = -diff;  // ×¢ÊÍ/É¾³ý¸ÃÐÐ
+    // ã€æ ¸å¿ƒä¿®æ”¹ã€‘ç§»é™¤å–å â†’ ç¼–ç å™¨2æ¢å¤æ­£å‘
+    // diff = -diff;  // æ³¨é‡Š/åˆ é™¤è¯¥è¡Œ
     
     if (diff > 0) output_val = (output_val + diff > 127) ? 127 : (output_val + diff);
     else if (diff < 0) output_val = (output_val + diff < 0) ? 0 : (output_val + diff);

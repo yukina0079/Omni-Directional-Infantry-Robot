@@ -3,49 +3,49 @@
 #include "uart1.h"
 #include "delay.h"
 //#include "spi.h"
-#define ADDR_AB_LEN    5   // ��⺯��TX_ADR_WIDTH=5һ��
-#define ADDR_BC_LEN    5   // ��⺯��TX_ADR_WIDTH=5һ��
-#define DATA_WIDTH     13  // ��⺯��TX_PLOAD_WIDTH=32һ��
+#define ADDR_AB_LEN    5   // 锟斤拷夂拷锟絋X_ADR_WIDTH=5一锟斤拷
+#define ADDR_BC_LEN    5   // 锟斤拷夂拷锟絋X_ADR_WIDTH=5一锟斤拷
+#define DATA_WIDTH     13  // 锟斤拷夂拷锟絋X_PLOAD_WIDTH=32一锟斤拷
 
-// A��B ͨ�Ų�����A��Bģ�鹲�ã�
+// A锟斤拷B 通锟脚诧拷锟斤拷锟斤拷A锟斤拷B模锟介共锟矫ｏ拷
 uint8_t ADDR_AB[ADDR_AB_LEN] = {0x11, 0x22, 0x33, 0x44, 0x55};
-#define CH_AB          30  // A-Bͨ��Ƶ��
+#define CH_AB          30  // A-B通锟斤拷频锟斤拷
 
-// B��C ͨ�Ų�����B��Cģ�鹲�ã�
+// B锟斤拷C 通锟脚诧拷锟斤拷锟斤拷B锟斤拷C模锟介共锟矫ｏ拷
 uint8_t ADDR_BC[ADDR_BC_LEN] = {0xAA, 0xBB, 0xCC, 0xDD, 0xEE};
-#define CH_BC          40  // B-Cͨ��Ƶ��
+#define CH_BC          40  // B-C通锟斤拷频锟斤拷
 
-const uint8_t TX_ADDRESS[TX_ADR_WIDTH]={0x34,0x43,0x10,0x10,0x01}; //���͵�ַ
-const uint8_t RX_ADDRESS[RX_ADR_WIDTH]={0x34,0x43,0x10,0x10,0x01}; //���յ�ַ
+const uint8_t TX_ADDRESS[TX_ADR_WIDTH]={0x34,0x43,0x10,0x10,0x01}; //锟斤拷锟酵碉拷址
+const uint8_t RX_ADDRESS[RX_ADR_WIDTH]={0x34,0x43,0x10,0x10,0x01}; //锟斤拷锟秸碉拷址
 
 SPI_HandleTypeDef SPI1_handle = {0};
 /**
-  * ��������: ��ʼ��SPI1
-  * �������: ��
-  * �� �� ֵ: ��
-  * ˵    ������
+  * 锟斤拷锟斤拷锟斤拷锟斤拷: 锟斤拷始锟斤拷SPI1
+  * 锟斤拷锟斤拷锟斤拷锟: 锟斤拷
+  * 锟斤拷 锟斤拷 值: 锟斤拷
+  * 说    锟斤拷锟斤拷锟斤拷
   */
 void NRF24L01_Init(void)
 {
 		SPI1_handle.Instance = SPI1;
-		SPI1_handle.Init.Mode = SPI_MODE_MASTER;//ָ��SPI����ģʽ��
-		SPI1_handle.Init.Direction = SPI_DIRECTION_2LINES;//ָ��SPI˫��ģʽ״̬��
-		SPI1_handle.Init.DataSize = SPI_DATASIZE_8BIT;//ָ��SPI���ݴ�С��
-		SPI1_handle.Init.CLKPolarity = SPI_POLARITY_LOW;//ָ������ʱ���ȶ�״̬��
-		SPI1_handle.Init.CLKPhase = SPI_PHASE_1EDGE;//ָ��λ�����ʱ�ӻ�ء�
-		SPI1_handle.Init.NSS = SPI_NSS_SOFT;//ָ��NSS�ź��Ƿ��ɹ���Ӳ����NSS���ţ���ʹ��SSIλ��������	//�Զ�������
-		SPI1_handle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;//ָ��������Ԥ��Ƶ��ֵ����ֵ��Ϊ�������÷��ͺͽ���SCKʱ�ӡ�
-		SPI1_handle.Init.FirstBit = SPI_FIRSTBIT_MSB;//ָ�����ݴ����Ǵ�MSB����LSBλ��ʼ
-		SPI1_handle.Init.TIMode = SPI_TIMODE_DISABLE;//ָ���Ƿ�����TIģʽ��
-		SPI1_handle.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;//ָ���Ƿ�����CRC���㡣
-		SPI1_handle.Init.CRCPolynomial = 7;//ָ������CRC����Ķ���ʽ��
+		SPI1_handle.Init.Mode = SPI_MODE_MASTER;//指锟斤拷SPI锟斤拷锟斤拷模式锟斤拷
+		SPI1_handle.Init.Direction = SPI_DIRECTION_2LINES;//指锟斤拷SPI双锟斤拷模式状态锟斤拷
+		SPI1_handle.Init.DataSize = SPI_DATASIZE_8BIT;//指锟斤拷SPI锟斤拷锟捷达拷小锟斤拷
+		SPI1_handle.Init.CLKPolarity = SPI_POLARITY_LOW;//指锟斤拷锟斤拷锟斤拷时锟斤拷锟饺讹拷状态锟斤拷
+		SPI1_handle.Init.CLKPhase = SPI_PHASE_1EDGE;//指锟斤拷位锟斤拷锟斤拷锟绞憋拷踊疃拷亍锟
+		SPI1_handle.Init.NSS = SPI_NSS_SOFT;//指锟斤拷NSS锟脚猴拷锟角凤拷锟缴癸拷锟斤拷硬锟斤拷锟斤拷NSS锟斤拷锟脚ｏ拷锟斤拷使锟斤拷SSI位锟斤拷锟斤拷锟斤拷锟斤拷	//锟皆讹拷锟斤拷锟斤拷锟斤拷
+		SPI1_handle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;//指锟斤拷锟斤拷锟斤拷锟斤拷预锟斤拷频锟斤拷值锟斤拷锟斤拷值锟斤拷为锟斤拷锟斤拷锟斤拷锟矫凤拷锟酵和斤拷锟斤拷SCK时锟接★拷
+		SPI1_handle.Init.FirstBit = SPI_FIRSTBIT_MSB;//指锟斤拷锟斤拷锟捷达拷锟斤拷锟角达拷MSB锟斤拷锟斤拷LSB位锟斤拷始
+		SPI1_handle.Init.TIMode = SPI_TIMODE_DISABLE;//指锟斤拷锟角凤拷锟斤拷锟斤拷TI模式锟斤拷
+		SPI1_handle.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;//指锟斤拷锟角凤拷锟斤拷锟斤拷CRC锟斤拷锟姐。
+		SPI1_handle.Init.CRCPolynomial = 7;//指锟斤拷锟斤拷锟斤拷CRC锟斤拷锟斤拷亩锟斤拷锟绞斤拷锟
 		HAL_SPI_Init(&SPI1_handle);
 }
 /**
-  * ��������: ��ʼ��SPI1Ӳ��
-  * �������: ��
-  * �� �� ֵ: ��
-  * ˵    ������
+  * 锟斤拷锟斤拷锟斤拷锟斤拷: 锟斤拷始锟斤拷SPI1硬锟斤拷
+  * 锟斤拷锟斤拷锟斤拷锟: 锟斤拷
+  * 锟斤拷 锟斤拷 值: 锟斤拷
+  * 说    锟斤拷锟斤拷锟斤拷
   */
 void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 {
@@ -56,37 +56,37 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 				__HAL_RCC_SPI1_CLK_ENABLE();
 			
 				gpio_initstruct.Pin = GPIO_PIN_4;//NSS
-				gpio_initstruct.Mode = GPIO_MODE_OUTPUT_PP;//�������
-				gpio_initstruct.Pull = GPIO_PULLUP;//������������
-				gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//��������ٶ�	
+				gpio_initstruct.Mode = GPIO_MODE_OUTPUT_PP;//锟斤拷锟斤拷锟斤拷锟
+				gpio_initstruct.Pull = GPIO_PULLUP;//锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
+				gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//锟斤拷锟斤拷锟斤拷锟斤拷俣锟	
 				HAL_GPIO_Init(GPIOA,&gpio_initstruct);
 
 				gpio_initstruct.Pin = GPIO_PIN_5|GPIO_PIN_7;//SLK,DI
-				gpio_initstruct.Mode = GPIO_MODE_AF_PP;//�����������
+				gpio_initstruct.Mode = GPIO_MODE_AF_PP;//锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟
 				HAL_GPIO_Init(GPIOA,&gpio_initstruct);		
 			
 				gpio_initstruct.Pin = GPIO_PIN_6;//DO
-				gpio_initstruct.Mode = GPIO_MODE_INPUT;//����
+				gpio_initstruct.Mode = GPIO_MODE_INPUT;//锟斤拷锟斤拷
 				HAL_GPIO_Init(GPIOA,&gpio_initstruct);
 						
 				__HAL_RCC_GPIOA_CLK_ENABLE();
-				gpio_initstruct.Pin = GPIO_PIN_1;//ʹ��
-				gpio_initstruct.Mode = GPIO_MODE_OUTPUT_PP;//�������
-				gpio_initstruct.Pull = GPIO_PULLUP;//������������
-				gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//��������ٶ�	
+				gpio_initstruct.Pin = GPIO_PIN_1;//使锟斤拷
+				gpio_initstruct.Mode = GPIO_MODE_OUTPUT_PP;//锟斤拷锟斤拷锟斤拷锟
+				gpio_initstruct.Pull = GPIO_PULLUP;//锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
+				gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//锟斤拷锟斤拷锟斤拷锟斤拷俣锟	
 				HAL_GPIO_Init(GPIOA,&gpio_initstruct);
 				
-				gpio_initstruct.Pin = GPIO_PIN_0;//�ж�
-				gpio_initstruct.Mode = GPIO_MODE_INPUT;//����
+				gpio_initstruct.Pin = GPIO_PIN_0;//锟叫讹拷
+				gpio_initstruct.Mode = GPIO_MODE_INPUT;//锟斤拷锟斤拷
 				HAL_GPIO_Init(GPIOA,&gpio_initstruct);
 		}
 
 }
 /**
-  * ��������: ������Flash��ȡд��һ���ֽ����ݲ�����һ���ֽ�����
-  * �������: data������������
-  * �� �� ֵ: uint8_t�����յ�������
-  * ˵    ������
+  * 锟斤拷锟斤拷锟斤拷锟斤拷: 锟斤拷锟斤拷锟斤拷Flash锟斤拷取写锟斤拷一锟斤拷锟街斤拷锟斤拷锟捷诧拷锟斤拷锟斤拷一锟斤拷锟街斤拷锟斤拷锟斤拷
+  * 锟斤拷锟斤拷锟斤拷锟: data锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
+  * 锟斤拷 锟斤拷 值: uint8_t锟斤拷锟斤拷锟秸碉拷锟斤拷锟斤拷锟斤拷
+  * 说    锟斤拷锟斤拷锟斤拷
   */
 uint8_t SPI_RT_byte(uint8_t data)
 {
@@ -96,273 +96,273 @@ uint8_t SPI_RT_byte(uint8_t data)
 }
 
 /**
-  * ��������: ���24L01�Ƿ����
-  * �������: ��
-  * �� �� ֵ: 0���ɹ�;1��ʧ��
-  * ˵    ������          
+  * 锟斤拷锟斤拷锟斤拷锟斤拷: 锟斤拷锟24L01锟角凤拷锟斤拷锟
+  * 锟斤拷锟斤拷锟斤拷锟: 锟斤拷
+  * 锟斤拷 锟斤拷 值: 0锟斤拷锟缴癸拷;1锟斤拷失锟斤拷
+  * 说    锟斤拷锟斤拷锟斤拷          
   */ 
 uint8_t NRF24L01_Check(void)
 {
 	uint8_t buf[5]={0XA5,0XA5,0XA5,0XA5,0XA5};
 	uint8_t i;
    
-	NRF24L01_Write_Buf(NRF_WRITE_REG+TX_ADDR,buf,5);//д��5���ֽڵĵ�ַ.	
-	NRF24L01_Read_Buf(TX_ADDR,buf,5); //����д��ĵ��  
+	NRF24L01_Write_Buf(NRF_WRITE_REG+TX_ADDR,buf,5);//写锟斤拷5锟斤拷锟街节的碉拷址.	
+	NRF24L01_Read_Buf(TX_ADDR,buf,5); //锟斤拷锟斤拷写锟斤拷牡锟街  
 	for(i=0;i<5;i++)if(buf[i]!=0XA5)break;	 							   
-	if(i!=5)return 1;   //���24L01����	
-	return 0;		 	//���24L01
+	if(i!=5)return 1;   //锟斤拷锟24L01锟斤拷锟斤拷	
+	return 0;		 	//锟斤拷獾24L01
 }	
  
 /**
-  * ��������: SPIд�Ĵ���
-  * �������: ��
-  * �� �� ֵ: ��
-  * ˵    ����reg:ָ���Ĵ�����ַ
+  * 锟斤拷锟斤拷锟斤拷锟斤拷: SPI写锟侥达拷锟斤拷
+  * 锟斤拷锟斤拷锟斤拷锟: 锟斤拷
+  * 锟斤拷 锟斤拷 值: 锟斤拷
+  * 说    锟斤拷锟斤拷reg:指锟斤拷锟侥达拷锟斤拷锟斤拷址
   *           
   */ 
 uint8_t NRF24L01_Write_Reg(uint8_t reg,uint8_t value)
 {
     uint8_t status;	
-  NRF24L01_SPI_CS_ENABLE();                 //ʹ��SPI����
-  status =SPI_RT_byte(reg);   //���ͼĴ����� 
-  SPI_RT_byte(value);         //д��Ĵ������
-  NRF24L01_SPI_CS_DISABLE();                //��ֹSPI����	   
-  return(status);       			//����״ֵ̬
+  NRF24L01_SPI_CS_ENABLE();                 //使锟斤拷SPI锟斤拷锟斤拷
+  status =SPI_RT_byte(reg);   //锟斤拷锟酵寄达拷锟斤拷锟斤拷 
+  SPI_RT_byte(value);         //写锟斤拷拇锟斤拷锟斤拷锟街
+  NRF24L01_SPI_CS_DISABLE();                //锟斤拷止SPI锟斤拷锟斤拷	   
+  return(status);       			//锟斤拷锟斤拷状态值
 }
  
 /**
-  * ��������: ��ȡSPI�Ĵ���ֵ
-  * �������: ��
-  * �� �� ֵ: ��
-  * ˵    ����reg:Ҫ���ļĴ���
+  * 锟斤拷锟斤拷锟斤拷锟斤拷: 锟斤拷取SPI锟侥达拷锟斤拷值
+  * 锟斤拷锟斤拷锟斤拷锟: 锟斤拷
+  * 锟斤拷 锟斤拷 值: 锟斤拷
+  * 说    锟斤拷锟斤拷reg:要锟斤拷锟侥寄达拷锟斤拷
   *           
   */ 
 uint8_t NRF24L01_Read_Reg(uint8_t reg)
 {
 	uint8_t reg_val;	    
- 	NRF24L01_SPI_CS_ENABLE();          //ʹ��SPI����		
-  SPI_RT_byte(reg);   //���ͼĴ�����
-  reg_val=SPI_RT_byte(0XFF);//��ȡ�Ĵ�������
-  NRF24L01_SPI_CS_DISABLE();          //��ֹSPI����		    
-  return(reg_val);           //����״ֵ̬
+ 	NRF24L01_SPI_CS_ENABLE();          //使锟斤拷SPI锟斤拷锟斤拷		
+  SPI_RT_byte(reg);   //锟斤拷锟酵寄达拷锟斤拷锟斤拷
+  reg_val=SPI_RT_byte(0XFF);//锟斤拷取锟侥达拷锟斤拷锟斤拷锟斤拷
+  NRF24L01_SPI_CS_DISABLE();          //锟斤拷止SPI锟斤拷锟斤拷		    
+  return(reg_val);           //锟斤拷锟斤拷状态值
 }		
  
 /**
-  * ��������: ��ָ��λ�ö���ָ�����ȵ�����
-  * �������: ��
-  * �� �� ֵ: �˴ζ�����״̬�Ĵ���ֵ 
-  * ˵    ������
+  * 锟斤拷锟斤拷锟斤拷锟斤拷: 锟斤拷指锟斤拷位锟矫讹拷锟斤拷指锟斤拷锟斤拷锟饺碉拷锟斤拷锟斤拷
+  * 锟斤拷锟斤拷锟斤拷锟: 锟斤拷
+  * 锟斤拷 锟斤拷 值: 锟剿次讹拷锟斤拷锟斤拷状态锟侥达拷锟斤拷值 
+  * 说    锟斤拷锟斤拷锟斤拷
   *           
   */ 
 uint8_t NRF24L01_Read_Buf(uint8_t reg,uint8_t *pBuf,uint8_t len)
 {
 	uint8_t status,uint8_t_ctr;	   
   
-  NRF24L01_SPI_CS_ENABLE();           //ʹ��SPI����
-  status=SPI_RT_byte(reg);//���ͼĴ���ֵ(λ��),����ȡ״ֵ̬   	   
+  NRF24L01_SPI_CS_ENABLE();           //使锟斤拷SPI锟斤拷锟斤拷
+  status=SPI_RT_byte(reg);//锟斤拷锟酵寄达拷锟斤拷值(位锟斤拷),锟斤拷锟斤拷取状态值   	   
  	for(uint8_t_ctr=0;uint8_t_ctr<len;uint8_t_ctr++)
   {
-    pBuf[uint8_t_ctr]=SPI_RT_byte(0XFF);//��������
+    pBuf[uint8_t_ctr]=SPI_RT_byte(0XFF);//锟斤拷锟斤拷锟斤拷锟斤拷
   }
-  NRF24L01_SPI_CS_DISABLE();       //�ر�SPI����
-  return status;        //���ض�����״ֵ̬
+  NRF24L01_SPI_CS_DISABLE();       //锟截憋拷SPI锟斤拷锟斤拷
+  return status;        //锟斤拷锟截讹拷锟斤拷锟斤拷状态值
 }
  
 /**
-  * ��������: ��ָ��λ��дָ�����ȵ�����
-  * �������: ��
-  * �� �� ֵ: ��
-  * ˵    ����reg:�Ĵ���(λ��)  *pBuf:����ָ��  len:���ݳ���
+  * 锟斤拷锟斤拷锟斤拷锟斤拷: 锟斤拷指锟斤拷位锟斤拷写指锟斤拷锟斤拷锟饺碉拷锟斤拷锟斤拷
+  * 锟斤拷锟斤拷锟斤拷锟: 锟斤拷
+  * 锟斤拷 锟斤拷 值: 锟斤拷
+  * 说    锟斤拷锟斤拷reg:锟侥达拷锟斤拷(位锟斤拷)  *pBuf:锟斤拷锟斤拷指锟斤拷  len:锟斤拷锟捷筹拷锟斤拷
   *           
   */ 
 uint8_t NRF24L01_Write_Buf(uint8_t reg, uint8_t *pBuf, uint8_t len)
 {
 	uint8_t status,uint8_t_ctr;	    
- 	NRF24L01_SPI_CS_ENABLE();          //ʹ��SPI����
-  status = SPI_RT_byte(reg);//���ͼĴ���ֵ(λ��),����ȡ״ֵ̬
+ 	NRF24L01_SPI_CS_ENABLE();          //使锟斤拷SPI锟斤拷锟斤拷
+  status = SPI_RT_byte(reg);//锟斤拷锟酵寄达拷锟斤拷值(位锟斤拷),锟斤拷锟斤拷取状态值
   for(uint8_t_ctr=0; uint8_t_ctr<len; uint8_t_ctr++)
   {
-    SPI_RT_byte(*pBuf++); //д������	 
+    SPI_RT_byte(*pBuf++); //写锟斤拷锟斤拷锟斤拷	 
   }
-  NRF24L01_SPI_CS_DISABLE();       //�ر�SPI����
-  return status;          //���ض�����״ֵ̬
+  NRF24L01_SPI_CS_DISABLE();       //锟截憋拷SPI锟斤拷锟斤拷
+  return status;          //锟斤拷锟截讹拷锟斤拷锟斤拷状态值
 }		
  
 /**
-  * ��������: ����NRF24L01����һ������
-  * �������: ��
-  * �� �� ֵ: �������״��
-  * ˵    ����txbuf:�����������׵�ַ
+  * 锟斤拷锟斤拷锟斤拷锟斤拷: 锟斤拷锟斤拷NRF24L01锟斤拷锟斤拷一锟斤拷锟斤拷锟斤拷
+  * 锟斤拷锟斤拷锟斤拷锟: 锟斤拷
+  * 锟斤拷 锟斤拷 值: 锟斤拷锟斤拷锟斤拷锟阶达拷锟
+  * 说    锟斤拷锟斤拷txbuf:锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟阶碉拷址
   *           
   */ 
 uint8_t NRF24L01_TxPacket(uint8_t *txbuf)
 {
 	uint8_t sta; 
 	NRF24L01_CE_LOW();
-    NRF24L01_Write_Buf(WR_TX_PLOAD,txbuf,TX_PLOAD_WIDTH);//д���ݵ�TX BUF  32���ֽ�
- 	NRF24L01_CE_HIGH();//��������	 
+    NRF24L01_Write_Buf(WR_TX_PLOAD,txbuf,TX_PLOAD_WIDTH);//写锟斤拷锟捷碉拷TX BUF  32锟斤拷锟街斤拷
+ 	NRF24L01_CE_HIGH();//锟斤拷锟斤拷锟斤拷锟斤拷	 
   
-	while(NRF24L01_IRQ_PIN_READ()!=0);//�ȴ��������
+	while(NRF24L01_IRQ_PIN_READ()!=0);//锟饺达拷锟斤拷锟斤拷锟斤拷锟
   
-	sta=NRF24L01_Read_Reg(STATUS);  //��ȡ״̬�Ĵ�����ֵ	   
-	NRF24L01_Write_Reg(NRF_WRITE_REG+STATUS,sta); //���TX_DS��MAX_RT�жϱ�־
-	if(sta&MAX_TX)//�ﵽ����ط�����
+	sta=NRF24L01_Read_Reg(STATUS);  //锟斤拷取状态锟侥达拷锟斤拷锟斤拷值	   
+	NRF24L01_Write_Reg(NRF_WRITE_REG+STATUS,sta); //锟斤拷锟絋X_DS锟斤拷MAX_RT锟叫断憋拷志
+	if(sta&MAX_TX)//锟斤到锟斤拷锟斤拷胤锟斤拷锟斤拷锟
 	{
-		NRF24L01_Write_Reg(FLUSH_TX,0xff);//���TX FIFO�Ĵ��� 
+		NRF24L01_Write_Reg(FLUSH_TX,0xff);//锟斤拷锟絋X FIFO锟侥达拷锟斤拷 
 		return MAX_TX; 
 	}
-	if(sta&TX_OK)//�������
+	if(sta&TX_OK)//锟斤拷锟斤拷锟斤拷锟
 	{
 		return TX_OK;
 	}
-	return 0xff;//����ԭ����ʧ��
+	return 0xff;//锟斤拷锟斤拷原锟斤拷锟斤拷失锟斤拷
 }
  
 /**
-  * ��������:����NRF24L01����һ������
-  * �������: ��
-  * �� �� ֵ: ��
-  * ˵    ������
+  * 锟斤拷锟斤拷锟斤拷锟斤拷:锟斤拷锟斤拷NRF24L01锟斤拷锟斤拷一锟斤拷锟斤拷锟斤拷
+  * 锟斤拷锟斤拷锟斤拷锟: 锟斤拷
+  * 锟斤拷 锟斤拷 值: 锟斤拷
+  * 说    锟斤拷锟斤拷锟斤拷
   *           
   */ 
 uint8_t NRF24L01_RxPacket(uint8_t *rxbuf)
 {
 	uint8_t sta;		 
-	sta=NRF24L01_Read_Reg(STATUS);  //��ȡ״̬�Ĵ�����ֵ    	 
-	NRF24L01_Write_Reg(NRF_WRITE_REG+STATUS,sta); //���TX_DS��MAX_RT�жϱ�־
-	if(sta&RX_OK)//���յ�����
+	sta=NRF24L01_Read_Reg(STATUS);  //锟斤拷取状态锟侥达拷锟斤拷锟斤拷值    	 
+	NRF24L01_Write_Reg(NRF_WRITE_REG+STATUS,sta); //锟斤拷锟絋X_DS锟斤拷MAX_RT锟叫断憋拷志
+	if(sta&RX_OK)//锟斤拷锟秸碉拷锟斤拷锟斤拷
 	{
-		NRF24L01_Read_Buf(RD_RX_PLOAD,rxbuf,RX_PLOAD_WIDTH);//��ȡ����
-		NRF24L01_Write_Reg(FLUSH_RX,0xff);//���RX FIFO�Ĵ��� 
+		NRF24L01_Read_Buf(RD_RX_PLOAD,rxbuf,RX_PLOAD_WIDTH);//锟斤拷取锟斤拷锟斤拷
+		NRF24L01_Write_Reg(FLUSH_RX,0xff);//锟斤拷锟絉X FIFO锟侥达拷锟斤拷 
 		return 0; 
 	}	   
-	return 1;//û�յ��κ�����
+	return 1;//没锟秸碉拷锟轿猴拷锟斤拷锟斤拷
 }			
  
 /**
-  * ��������: �ú�����ʼ��NRF24L01��RXģʽ
-  * �������: ��
-  * �� �� ֵ: ��
-  * ˵    ������
+  * 锟斤拷锟斤拷锟斤拷锟斤拷: 锟矫猴拷锟斤拷锟斤拷始锟斤拷NRF24L01锟斤拷RX模式
+  * 锟斤拷锟斤拷锟斤拷锟: 锟斤拷
+  * 锟斤拷 锟斤拷 值: 锟斤拷
+  * 说    锟斤拷锟斤拷锟斤拷
   *           
   */ 
 void NRF24L01_RX_Mode(void)
 {
   NRF24L01_CE_LOW();	  
-  NRF24L01_Write_Reg(NRF_WRITE_REG+CONFIG, 0x0F);//���û�������ģʽ�Ĳ���;PWR_UP,EN_CRC,16BIT_CRC 
-  NRF24L01_Write_Reg(NRF_WRITE_REG+EN_AA,0x01);    //ʹ��ͨ��0���Զ�Ӧ��    
-  NRF24L01_Write_Reg(NRF_WRITE_REG+EN_RXADDR,0x01);//ʹ��ͨ��0�Ľ��յ�ַ  	 
-  NRF24L01_Write_Reg(NRF_WRITE_REG+RF_CH,40);	     //����RFͨ��Ƶ��		  
-  NRF24L01_Write_Reg(NRF_WRITE_REG+RF_SETUP,0x0f);//����TX�������,0db����,2Mbps,���������濪��   
-  NRF24L01_Write_Reg(NRF_WRITE_REG+RX_PW_P0,RX_PLOAD_WIDTH);//ѡ��ͨ��0����Ч���ݿ��� 	       
-  NRF24L01_Write_Buf(NRF_WRITE_REG+RX_ADDR_P0,(uint8_t*)RX_ADDRESS,RX_ADR_WIDTH);//дRX�ڵ���
-  NRF24L01_CE_HIGH(); //CEΪ��,�������ģ� 
+  NRF24L01_Write_Reg(NRF_WRITE_REG+CONFIG, 0x0F);//锟斤拷锟矫伙拷锟斤拷锟斤拷锟斤拷模式锟侥诧拷锟斤拷;PWR_UP,EN_CRC,16BIT_CRC 
+  NRF24L01_Write_Reg(NRF_WRITE_REG+EN_AA,0x01);    //使锟斤拷通锟斤拷0锟斤拷锟皆讹拷应锟斤拷    
+  NRF24L01_Write_Reg(NRF_WRITE_REG+EN_RXADDR,0x01);//使锟斤拷通锟斤拷0锟侥斤拷锟秸碉拷址  	 
+  NRF24L01_Write_Reg(NRF_WRITE_REG+RF_CH,40);	     //锟斤拷锟斤拷RF通锟斤拷频锟斤拷		  
+  NRF24L01_Write_Reg(NRF_WRITE_REG+RF_SETUP,0x0f);//锟斤拷锟斤拷TX锟斤拷锟斤拷锟斤拷锟,0db锟斤拷锟斤拷,2Mbps,锟斤拷锟斤拷锟斤拷锟斤拷锟芥开锟斤拷   
+  NRF24L01_Write_Reg(NRF_WRITE_REG+RX_PW_P0,RX_PLOAD_WIDTH);//选锟斤拷通锟斤拷0锟斤拷锟斤拷效锟斤拷锟捷匡拷锟斤拷 	       
+  NRF24L01_Write_Buf(NRF_WRITE_REG+RX_ADDR_P0,(uint8_t*)RX_ADDRESS,RX_ADR_WIDTH);//写RX锟节碉拷锟街
+  NRF24L01_CE_HIGH(); //CE为锟斤拷,锟斤拷锟斤拷锟斤拷锟侥Ｊ 
   HAL_Delay(1);
 }	
  
 /**
-  * ��������: �ú�����ʼ��NRF24L01��TXģʽ
-  * �������: ��
-  * �� �� ֵ: ��
-  * ˵    ������
+  * 锟斤拷锟斤拷锟斤拷锟斤拷: 锟矫猴拷锟斤拷锟斤拷始锟斤拷NRF24L01锟斤拷TX模式
+  * 锟斤拷锟斤拷锟斤拷锟: 锟斤拷
+  * 锟斤拷 锟斤拷 值: 锟斤拷
+  * 说    锟斤拷锟斤拷锟斤拷
   *           
   */ 
 void NRF24L01_TX_Mode(void)
 {														 
   NRF24L01_CE_LOW();	    
-  NRF24L01_Write_Buf(NRF_WRITE_REG+TX_ADDR,(uint8_t*)TX_ADDRESS,TX_ADR_WIDTH);//дTX�ڵ��� 
-  NRF24L01_Write_Buf(NRF_WRITE_REG+RX_ADDR_P0,(uint8_t*)RX_ADDRESS,RX_ADR_WIDTH); //����TX�ڵ���,��ҪΪ��ʹ��ACK	  
-  NRF24L01_Write_Reg(NRF_WRITE_REG+EN_AA,0x01);     //ʹ��ͨ��0���Զ�Ӧ��    
-  NRF24L01_Write_Reg(NRF_WRITE_REG+EN_RXADDR,0x01); //ʹ��ͨ��0�Ľ��յ�ַ  
-  NRF24L01_Write_Reg(NRF_WRITE_REG+SETUP_RETR,0xff);//�����Զ��ط����ʱ��:4000us + 86us;����Զ��ط�����:15��
-  NRF24L01_Write_Reg(NRF_WRITE_REG+RF_CH,40);       //����RFͨ��Ϊ40
-  NRF24L01_Write_Reg(NRF_WRITE_REG+RF_SETUP,0x0f);  //����TX�������,0db����,2Mbps,���������濪��   
-  NRF24L01_Write_Reg(NRF_WRITE_REG+CONFIG,0x0e);    //���û�������ģʽ�Ĳ���;PWR_UP,EN_CRC,16BIT_CRC,����ģʽ,���������ж�
-  NRF24L01_CE_HIGH();//CEΪ��,10us����������
+  NRF24L01_Write_Buf(NRF_WRITE_REG+TX_ADDR,(uint8_t*)TX_ADDRESS,TX_ADR_WIDTH);//写TX锟节碉拷锟街 
+  NRF24L01_Write_Buf(NRF_WRITE_REG+RX_ADDR_P0,(uint8_t*)RX_ADDRESS,RX_ADR_WIDTH); //锟斤拷锟斤拷TX锟节碉拷锟街,锟斤拷要为锟斤拷使锟斤拷ACK	  
+  NRF24L01_Write_Reg(NRF_WRITE_REG+EN_AA,0x01);     //使锟斤拷通锟斤拷0锟斤拷锟皆讹拷应锟斤拷    
+  NRF24L01_Write_Reg(NRF_WRITE_REG+EN_RXADDR,0x01); //使锟斤拷通锟斤拷0锟侥斤拷锟秸碉拷址  
+  NRF24L01_Write_Reg(NRF_WRITE_REG+SETUP_RETR,0xff);//锟斤拷锟斤拷锟皆讹拷锟截凤拷锟斤拷锟绞憋拷锟:4000us + 86us;锟斤拷锟斤拷远锟斤拷胤锟斤拷锟斤拷锟:15锟斤拷
+  NRF24L01_Write_Reg(NRF_WRITE_REG+RF_CH,40);       //锟斤拷锟斤拷RF通锟斤拷为40
+  NRF24L01_Write_Reg(NRF_WRITE_REG+RF_SETUP,0x0f);  //锟斤拷锟斤拷TX锟斤拷锟斤拷锟斤拷锟,0db锟斤拷锟斤拷,2Mbps,锟斤拷锟斤拷锟斤拷锟斤拷锟芥开锟斤拷   
+  NRF24L01_Write_Reg(NRF_WRITE_REG+CONFIG,0x0e);    //锟斤拷锟矫伙拷锟斤拷锟斤拷锟斤拷模式锟侥诧拷锟斤拷;PWR_UP,EN_CRC,16BIT_CRC,锟斤拷锟斤拷模式,锟斤拷锟斤拷锟斤拷锟斤拷锟叫讹拷
+  NRF24L01_CE_HIGH();//CE为锟斤拷,10us锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
   HAL_Delay(1);
 }
  
 /**
-  * ��������: �ú���NRF24L01����͹���ģ�
-  * �������: ��
-  * �� �� ֵ: ��
-  * ˵    ������
+  * 锟斤拷锟斤拷锟斤拷锟斤拷: 锟矫猴拷锟斤拷NRF24L01锟斤拷锟斤拷凸锟斤拷锟侥Ｊ
+  * 锟斤拷锟斤拷锟斤拷锟: 锟斤拷
+  * 锟斤拷 锟斤拷 值: 锟斤拷
+  * 说    锟斤拷锟斤拷锟斤拷
   *           
   */
 void NRF_LowPower_Mode(void)
 {
 	NRF24L01_CE_LOW();	 
-	NRF24L01_Write_Reg(NRF_WRITE_REG+CONFIG, 0x00);		//���ù���ģʽ:����ģʽ
+	NRF24L01_Write_Reg(NRF_WRITE_REG+CONFIG, 0x00);		//锟斤拷锟矫癸拷锟斤拷模式:锟斤拷锟斤拷模式
 	
 }
 /**
- * @brief  Bģ������1���л�Ϊ������A���ݡ���ģʽ��A-B������
- * @note   ���ڿ⺯��nrf24l01_rx_mode()�޸ģ�����ADDR_AB��CH_AB
+ * @brief  B模锟斤拷锟斤拷锟斤拷1锟斤拷锟叫伙拷为锟斤拷锟斤拷锟斤拷A锟斤拷锟捷★拷锟斤拷模式锟斤拷A-B锟斤拷锟斤拷锟斤拷
+ * @note   锟斤拷锟节库函锟斤拷nrf24l01_rx_mode()锟睫改ｏ拷锟斤拷锟斤拷ADDR_AB锟斤拷CH_AB
  */
 void B_nrf24l01_switch_rx_from_A(void)
 {
-    NRF24L01_CE_LOW();  // ����CE����������ģʽ��ֹͣ��ǰģʽ��
+    NRF24L01_CE_LOW();  // 锟斤拷锟斤拷CE锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷模式锟斤拷停止锟斤拷前模式锟斤拷
     
-    // 1. дRX_ADDR_P0��A��B�ĵ�ַ ADDR_AB��
+    // 1. 写RX_ADDR_P0锟斤拷A锟斤拷B锟侥碉拷址 ADDR_AB锟斤拷
     NRF24L01_Write_Buf(NRF_WRITE_REG + RX_ADDR_P0, ADDR_AB, ADDR_AB_LEN);
     
-    // 2. �⺯��Ĭ�����ã����ֲ��䣬���޸�Ƶ���͵�ַ��
-    NRF24L01_Write_Reg(NRF_WRITE_REG + EN_AA, 0x01);        // ʹ��ͨ��0�Զ�Ӧ����A�ش�ACK��
-    NRF24L01_Write_Reg(NRF_WRITE_REG + EN_RXADDR, 0x01);    // ʹ��ͨ��0���յ�ַ
-    NRF24L01_Write_Reg(NRF_WRITE_REG + RF_CH, CH_AB);       // �л���A-BƵ�� 30
-    NRF24L01_Write_Reg(NRF_WRITE_REG + RX_PW_P0, DATA_WIDTH); // ���ݳ���32�ֽ�
-    NRF24L01_Write_Reg(NRF_WRITE_REG + RF_SETUP, 0x0f);     // 0db���棬2Mbps�����������濪��
-    NRF24L01_Write_Reg(NRF_WRITE_REG + CONFIG, 0x0f);       // ����ģʽ��PWR_UP��EN_CRC
+    // 2. 锟解函锟斤拷默锟斤拷锟斤拷锟矫ｏ拷锟斤拷锟街诧拷锟戒，锟斤拷锟睫革拷频锟斤拷锟酵碉拷址锟斤拷
+    NRF24L01_Write_Reg(NRF_WRITE_REG + EN_AA, 0x01);        // 使锟斤拷通锟斤拷0锟皆讹拷应锟斤拷锟斤拷A锟截达拷ACK锟斤拷
+    NRF24L01_Write_Reg(NRF_WRITE_REG + EN_RXADDR, 0x01);    // 使锟斤拷通锟斤拷0锟斤拷锟秸碉拷址
+    NRF24L01_Write_Reg(NRF_WRITE_REG + RF_CH, CH_AB);       // 锟叫伙拷锟斤拷A-B频锟斤拷 30
+    NRF24L01_Write_Reg(NRF_WRITE_REG + RX_PW_P0, DATA_WIDTH); // 锟斤拷锟捷筹拷锟斤拷32锟街斤拷
+    NRF24L01_Write_Reg(NRF_WRITE_REG + RF_SETUP, 0x0f);     // 0db锟斤拷锟芥，2Mbps锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟芥开锟斤拷
+    NRF24L01_Write_Reg(NRF_WRITE_REG + CONFIG, 0x0f);       // 锟斤拷锟斤拷模式锟斤拷PWR_UP锟斤拷EN_CRC
     
-    NRF24L01_CE_HIGH();  // ����CE���������״�
-    HAL_Delay(100);   // ��ʱ��֤������Ч������ģʽ��ͻ
+    NRF24L01_CE_HIGH();  // 锟斤拷锟斤拷CE锟斤拷锟斤拷锟斤拷锟斤拷锟阶刺
+    HAL_Delay(100);   // 锟斤拷时锟斤拷证锟斤拷锟斤拷锟斤拷效锟斤拷锟斤拷锟斤拷模式锟斤拷突
 }
 
 /**
- * @brief  Bģ������2���л�Ϊ���������ݸ�C����ģʽ��B-C������
- * @note   ���ڿ⺯��nrf24l01_tx_mode()�޸ģ�����ADDR_BC��CH_BC
+ * @brief  B模锟斤拷锟斤拷锟斤拷2锟斤拷锟叫伙拷为锟斤拷锟斤拷锟斤拷锟斤拷锟捷革拷C锟斤拷锟斤拷模式锟斤拷B-C锟斤拷锟斤拷锟斤拷
+ * @note   锟斤拷锟节库函锟斤拷nrf24l01_tx_mode()锟睫改ｏ拷锟斤拷锟斤拷ADDR_BC锟斤拷CH_BC
  */
 void B_nrf24l01_switch_tx_to_C(void)
 {
-    NRF24L01_CE_LOW();  // ����CE����������ģʽ��ֹͣ��ǰģʽ��
+    NRF24L01_CE_LOW();  // 锟斤拷锟斤拷CE锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷模式锟斤拷停止锟斤拷前模式锟斤拷
     
-    // 1. дTX��ַ��B��C�ĵ�ַ ADDR_BC��
+    // 1. 写TX锟斤拷址锟斤拷B锟斤拷C锟侥碉拷址 ADDR_BC锟斤拷
     NRF24L01_Write_Buf(NRF_WRITE_REG + TX_ADDR, ADDR_BC, ADDR_BC_LEN);
-    // 2. дRX_ADDR_P0��ʹ��ACK��������C��TX��ַһ�£���ADDR_BC��
+    // 2. 写RX_ADDR_P0锟斤拷使锟斤拷ACK锟斤拷锟斤拷锟斤拷锟斤拷C锟斤拷TX锟斤拷址一锟铰ｏ拷锟斤拷ADDR_BC锟斤拷
     NRF24L01_Write_Buf(NRF_WRITE_REG + RX_ADDR_P0, ADDR_BC, ADDR_BC_LEN);
     
-    // 3. �⺯��Ĭ�����ã����ֲ��䣬���޸�Ƶ���͵�ַ��
-    NRF24L01_Write_Reg(NRF_WRITE_REG + EN_AA, 0x01);        // ʹ��ͨ��0�Զ�Ӧ��
-    NRF24L01_Write_Reg(NRF_WRITE_REG + EN_RXADDR, 0x01);    // ʹ��ͨ��0���յ�ַ
-    NRF24L01_Write_Reg(NRF_WRITE_REG + SETUP_RETR, 0x1a);   // �Զ��ط���10�Σ����500us+86us
-    NRF24L01_Write_Reg(NRF_WRITE_REG + RF_CH, CH_BC);       // �л���B-CƵ�� 40
-    NRF24L01_Write_Reg(NRF_WRITE_REG + RF_SETUP, 0x0f);     // 0db���棬2Mbps�����������濪��
-    NRF24L01_Write_Reg(NRF_WRITE_REG + CONFIG, 0x0e);       // ����ģʽ��PWR_UP��EN_CRC
+    // 3. 锟解函锟斤拷默锟斤拷锟斤拷锟矫ｏ拷锟斤拷锟街诧拷锟戒，锟斤拷锟睫革拷频锟斤拷锟酵碉拷址锟斤拷
+    NRF24L01_Write_Reg(NRF_WRITE_REG + EN_AA, 0x01);        // 使锟斤拷通锟斤拷0锟皆讹拷应锟斤拷
+    NRF24L01_Write_Reg(NRF_WRITE_REG + EN_RXADDR, 0x01);    // 使锟斤拷通锟斤拷0锟斤拷锟秸碉拷址
+    NRF24L01_Write_Reg(NRF_WRITE_REG + SETUP_RETR, 0x1a);   // 锟皆讹拷锟截凤拷锟斤拷10锟轿ｏ拷锟斤拷锟500us+86us
+    NRF24L01_Write_Reg(NRF_WRITE_REG + RF_CH, CH_BC);       // 锟叫伙拷锟斤拷B-C频锟斤拷 40
+    NRF24L01_Write_Reg(NRF_WRITE_REG + RF_SETUP, 0x0f);     // 0db锟斤拷锟芥，2Mbps锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟芥开锟斤拷
+    NRF24L01_Write_Reg(NRF_WRITE_REG + CONFIG, 0x0e);       // 锟斤拷锟斤拷模式锟斤拷PWR_UP锟斤拷EN_CRC
     
-    HAL_Delay(100);   // ��ʱ��֤������Ч��������������CE������ʱ��nrf24l01_tx_packet������
+    HAL_Delay(100);   // 锟斤拷时锟斤拷证锟斤拷锟斤拷锟斤拷效锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷CE锟斤拷锟斤拷锟斤拷时锟斤拷nrf24l01_tx_packet锟斤拷锟斤拷锟斤拷
 }
 
 /**
- * @brief  Cģ�����ã�����Bת�������ݣ�ʹ��B-Cͨ�Ų�����
- * @note   ���ڿ⺯��nrf24l01_rx_mode()�޸ģ��滻��ַ��Ƶ��ΪADDR_BC��CH_BC
+ * @brief  C模锟斤拷锟斤拷锟矫ｏ拷锟斤拷锟斤拷B转锟斤拷锟斤拷锟斤拷锟捷ｏ拷使锟斤拷B-C通锟脚诧拷锟斤拷锟斤拷
+ * @note   锟斤拷锟节库函锟斤拷nrf24l01_rx_mode()锟睫改ｏ拷锟芥换锟斤拷址锟斤拷频锟斤拷为ADDR_BC锟斤拷CH_BC
  */
 void C_nrf24l01_rx_from_B(void)
 {
-    NRF24L01_CE_LOW();  // ����CE����������ģʽ
+    NRF24L01_CE_LOW();  // 锟斤拷锟斤拷CE锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷模式
     
-    // 1. дRX_ADDR_P0��B��C�ĵ�ַ ADDR_BC��
+    // 1. 写RX_ADDR_P0锟斤拷B锟斤拷C锟侥碉拷址 ADDR_BC锟斤拷
     NRF24L01_Write_Buf(NRF_WRITE_REG + RX_ADDR_P0, ADDR_BC, ADDR_BC_LEN);
     
-    // 2. �⺯��Ĭ�����ã��Զ�Ӧ�����ݿ��ȵȣ����ֲ��䣩
-    NRF24L01_Write_Reg(NRF_WRITE_REG + EN_AA, 0x01);        // ʹ��ͨ��0�Զ�Ӧ����B�ش�ACK��
-    NRF24L01_Write_Reg(NRF_WRITE_REG + EN_RXADDR, 0x01);    // ʹ��ͨ��0���յ�ַ
-    NRF24L01_Write_Reg(NRF_WRITE_REG + RF_CH, CH_BC);       // ����ΪB-CƵ�� 40
-    NRF24L01_Write_Reg(NRF_WRITE_REG + RX_PW_P0, DATA_WIDTH); // ���ݳ���32�ֽ�
-    NRF24L01_Write_Reg(NRF_WRITE_REG + RF_SETUP, 0x0f);     // 0db���棬2Mbps�����������濪��
-    NRF24L01_Write_Reg(NRF_WRITE_REG + CONFIG, 0x0f);       // ����ģʽ��PWR_UP��EN_CRC
+    // 2. 锟解函锟斤拷默锟斤拷锟斤拷锟矫ｏ拷锟皆讹拷应锟斤拷锟斤拷锟捷匡拷锟饺等ｏ拷锟斤拷锟街诧拷锟戒）
+    NRF24L01_Write_Reg(NRF_WRITE_REG + EN_AA, 0x01);        // 使锟斤拷通锟斤拷0锟皆讹拷应锟斤拷锟斤拷B锟截达拷ACK锟斤拷
+    NRF24L01_Write_Reg(NRF_WRITE_REG + EN_RXADDR, 0x01);    // 使锟斤拷通锟斤拷0锟斤拷锟秸碉拷址
+    NRF24L01_Write_Reg(NRF_WRITE_REG + RF_CH, CH_BC);       // 锟斤拷锟斤拷为B-C频锟斤拷 40
+    NRF24L01_Write_Reg(NRF_WRITE_REG + RX_PW_P0, DATA_WIDTH); // 锟斤拷锟捷筹拷锟斤拷32锟街斤拷
+    NRF24L01_Write_Reg(NRF_WRITE_REG + RF_SETUP, 0x0f);     // 0db锟斤拷锟芥，2Mbps锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟芥开锟斤拷
+    NRF24L01_Write_Reg(NRF_WRITE_REG + CONFIG, 0x0f);       // 锟斤拷锟斤拷模式锟斤拷PWR_UP锟斤拷EN_CRC
     
-    NRF24L01_CE_HIGH();  // ����CE�������������״�
-    HAL_Delay(100);   // ��ʱ��֤������Ч
+    NRF24L01_CE_HIGH();  // 锟斤拷锟斤拷CE锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟阶刺
+    HAL_Delay(100);   // 锟斤拷时锟斤拷证锟斤拷锟斤拷锟斤拷效
 }
 
 static void nrf24_dump_regs(const char *tag)

@@ -7,28 +7,28 @@
 
 
 /******************************************************************************************/
-/* SPI2 “˝Ω≈ ∂®“Â */
+/* SPI2 ÂºïËÑö ÂÆö‰πâ */
 
 #define SPI2_SCK_GPIO_PORT              GPIOB
 #define SPI2_SCK_GPIO_PIN               GPIO_PIN_13
-#define SPI2_SCK_GPIO_CLK_ENABLE()      do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PBø⁄ ±÷” πƒ‹ */
+#define SPI2_SCK_GPIO_CLK_ENABLE()      do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PBÂè£Êó∂Èíü‰ΩøËÉΩ */
 
 #define SPI2_MISO_GPIO_PORT             GPIOB
 #define SPI2_MISO_GPIO_PIN              GPIO_PIN_14
-#define SPI2_MISO_GPIO_CLK_ENABLE()     do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PBø⁄ ±÷” πƒ‹ */
+#define SPI2_MISO_GPIO_CLK_ENABLE()     do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PBÂè£Êó∂Èíü‰ΩøËÉΩ */
 
 #define SPI2_MOSI_GPIO_PORT             GPIOB
 #define SPI2_MOSI_GPIO_PIN              GPIO_PIN_15
-#define SPI2_MOSI_GPIO_CLK_ENABLE()     do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PBø⁄ ±÷” πƒ‹ */
+#define SPI2_MOSI_GPIO_CLK_ENABLE()     do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PBÂè£Êó∂Èíü‰ΩøËÉΩ */
 
-/* SPI2œ‡πÿ∂®“Â */
+/* SPI2Áõ∏ÂÖ≥ÂÆö‰πâ */
 #define SPI2_SPI                        SPI2
-#define SPI2_SPI_CLK_ENABLE()           do{ __HAL_RCC_SPI2_CLK_ENABLE(); }while(0)    /* SPI2 ±÷” πƒ‹ */
+#define SPI2_SPI_CLK_ENABLE()           do{ __HAL_RCC_SPI2_CLK_ENABLE(); }while(0)    /* SPI2Êó∂Èíü‰ΩøËÉΩ */
 
 /******************************************************************************************/
 
 
-/* SPI◊‹œﬂÀŸ∂»…Ë÷√ */
+/* SPIÊÄªÁ∫øÈÄüÂ∫¶ËÆæÁΩÆ */
 #define SPI_SPEED_2         0
 #define SPI_SPEED_4         1
 #define SPI_SPEED_8         2

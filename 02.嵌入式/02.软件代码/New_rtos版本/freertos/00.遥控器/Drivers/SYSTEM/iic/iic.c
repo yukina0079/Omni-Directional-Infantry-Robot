@@ -1,88 +1,88 @@
 #include "iic.h"
 
-/* Ó²¼şI2C¾ä±ú¶¨Òå */
+/* ç¡¬ä»¶I2Cå¥æŸ„å®šä¹‰ */
 I2C_HandleTypeDef hi2c2;
 
 /**
- * @brief Ó²¼şI2C2³õÊ¼»¯£¨Ìæ´úÔ­Ä£ÄâI2C³õÊ¼»¯£©
- * @note  ÊÊÅäGPIOB10(SCL)/GPIOB11(SDA)£¬¸´ÓÃÎªI2C2¹¦ÄÜ
+ * @brief ç¡¬ä»¶I2C2åˆå§‹åŒ–ï¼ˆæ›¿ä»£åŸæ¨¡æ‹ŸI2Cåˆå§‹åŒ–ï¼‰
+ * @note  é€‚é…GPIOB10(SCL)/GPIOB11(SDA)ï¼Œå¤ç”¨ä¸ºI2C2åŠŸèƒ½
  */
 void i2c_init(void)
 {
-  hi2c2.Instance = I2C2;                    // Ñ¡ÔñI2C2ÍâÉè
-  hi2c2.Init.ClockSpeed = 400000;           // 400KHz¸ßËÙÄ£Ê½£¨Ò²¿ÉÉè100000Îª±ê×¼Ä£Ê½£©
-  hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;   // Õ¼¿Õ±È2:1
-  hi2c2.Init.OwnAddress1 = 0x00;            // Ö÷»úÄ£Ê½£¬×ÔÉíµØÖ·ÉèÎª0
-  hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT; // 7Î»µØÖ·Ä£Ê½£¨¼æÈİ¾ø´ó¶àÊı´«¸ĞÆ÷£©
+  hi2c2.Instance = I2C2;                    // é€‰æ‹©I2C2å¤–è®¾
+  hi2c2.Init.ClockSpeed = 400000;           // 400KHzé«˜é€Ÿæ¨¡å¼ï¼ˆä¹Ÿå¯è®¾100000ä¸ºæ ‡å‡†æ¨¡å¼ï¼‰
+  hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;   // å ç©ºæ¯”2:1
+  hi2c2.Init.OwnAddress1 = 0x00;            // ä¸»æœºæ¨¡å¼ï¼Œè‡ªèº«åœ°å€è®¾ä¸º0
+  hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT; // 7ä½åœ°å€æ¨¡å¼ï¼ˆå…¼å®¹ç»å¤§å¤šæ•°ä¼ æ„Ÿå™¨ï¼‰
   hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
   hi2c2.Init.OwnAddress2 = 0x00;
   hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
   
-  // ³õÊ¼»¯I2CÍâÉè
+  // åˆå§‹åŒ–I2Cå¤–è®¾
   if (HAL_I2C_Init(&hi2c2) != HAL_OK){}
 }
 
 /**
- * @brief HAL¿âI2Cµ×²ãÓ²¼ş³õÊ¼»¯£¨×Ô¶¯±»HAL_I2C_Initµ÷ÓÃ£©
- * @note  ÅäÖÃGPIO¸´ÓÃ¡¢Ê±ÖÓ¡¢ÉÏÀ­µÈ
+ * @brief HALåº“I2Cåº•å±‚ç¡¬ä»¶åˆå§‹åŒ–ï¼ˆè‡ªåŠ¨è¢«HAL_I2C_Initè°ƒç”¨ï¼‰
+ * @note  é…ç½®GPIOå¤ç”¨ã€æ—¶é’Ÿã€ä¸Šæ‹‰ç­‰
  */
 void HAL_I2C_MspInit(I2C_HandleTypeDef* i2cHandle)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   if(i2cHandle->Instance==I2C2)
   {
-    /* 1. Ê¹ÄÜI2C2Ê±ÖÓ */
+    /* 1. ä½¿èƒ½I2C2æ—¶é’Ÿ */
     __HAL_RCC_I2C2_CLK_ENABLE();
 
-    /* 2. Ê¹ÄÜGPIOBÊ±ÖÓ */
+    /* 2. ä½¿èƒ½GPIOBæ—¶é’Ÿ */
     __HAL_RCC_GPIOB_CLK_ENABLE();
     
-    /**I2C2 GPIOÅäÖÃ
+    /**I2C2 GPIOé…ç½®
     PB10     ------> I2C2_SCL
     PB11     ------> I2C2_SDA
     */
     GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_11;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;    // ¿ªÂ©Êä³ö£¨I2C±ØĞë£©
-    GPIO_InitStruct.Pull = GPIO_PULLUP;        // ÉÏÀ­£¨I2CÍÆ¼ö£©
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;    // å¼€æ¼è¾“å‡ºï¼ˆI2Cå¿…é¡»ï¼‰
+    GPIO_InitStruct.Pull = GPIO_PULLUP;        // ä¸Šæ‹‰ï¼ˆI2Cæ¨èï¼‰
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
   }
 }
 
 /**
- * @brief µ¥¼Ä´æÆ÷Ğ´£¨±£³ÖÔ­½Ó¿Ú£©
- * @param i2c_address: ´Ó»ú7Î»µØÖ·£¨ÎŞĞè×óÒÆ£©
- * @param address: ¼Ä´æÆ÷µØÖ·
- * @param data: Ğ´ÈëµÄÊı¾İ
+ * @brief å•å¯„å­˜å™¨å†™ï¼ˆä¿æŒåŸæ¥å£ï¼‰
+ * @param i2c_address: ä»æœº7ä½åœ°å€ï¼ˆæ— éœ€å·¦ç§»ï¼‰
+ * @param address: å¯„å­˜å™¨åœ°å€
+ * @param data: å†™å…¥çš„æ•°æ®
  */
 void i2c_write_register(uint8_t i2c_address, uint8_t address, uint8_t data)
 {
-  // HAL_I2C_Mem_Write£ºÖ÷»úĞ´´Ó»ú¼Ä´æÆ÷
-  // ²ÎÊı£ºI2C¾ä±ú¡¢´Ó»úµØÖ·(7Î»)¡¢¼Ä´æÆ÷µØÖ·¡¢µØÖ·³¤¶È(8Î»=1)¡¢Êı¾İÖ¸Õë¡¢Êı¾İ³¤¶È¡¢³¬Ê±Ê±¼ä
+  // HAL_I2C_Mem_Writeï¼šä¸»æœºå†™ä»æœºå¯„å­˜å™¨
+  // å‚æ•°ï¼šI2Cå¥æŸ„ã€ä»æœºåœ°å€(7ä½)ã€å¯„å­˜å™¨åœ°å€ã€åœ°å€é•¿åº¦(8ä½=1)ã€æ•°æ®æŒ‡é’ˆã€æ•°æ®é•¿åº¦ã€è¶…æ—¶æ—¶é—´
   HAL_I2C_Mem_Write(&hi2c2, (i2c_address << 1), address, I2C_MEMADD_SIZE_8BIT, &data, 1, 100);
 }
 
 /**
- * @brief µ¥¼Ä´æÆ÷¶Á£¨±£³ÖÔ­½Ó¿Ú£©
- * @param i2c_address: ´Ó»ú7Î»µØÖ·£¨ÎŞĞè×óÒÆ£©
- * @param address: ¼Ä´æÆ÷µØÖ·
- * @return ¶ÁÈ¡µ½µÄÊı¾İ
+ * @brief å•å¯„å­˜å™¨è¯»ï¼ˆä¿æŒåŸæ¥å£ï¼‰
+ * @param i2c_address: ä»æœº7ä½åœ°å€ï¼ˆæ— éœ€å·¦ç§»ï¼‰
+ * @param address: å¯„å­˜å™¨åœ°å€
+ * @return è¯»å–åˆ°çš„æ•°æ®
  */
 uint8_t i2c_read_register(uint8_t i2c_address, uint8_t address)
 {
   uint8_t data = 0;
-  // HAL_I2C_Mem_Read£ºÖ÷»ú¶Á´Ó»ú¼Ä´æÆ÷
+  // HAL_I2C_Mem_Readï¼šä¸»æœºè¯»ä»æœºå¯„å­˜å™¨
   HAL_I2C_Mem_Read(&hi2c2, (i2c_address << 1), address, I2C_MEMADD_SIZE_8BIT, &data, 1, 100);
   return data;
 }
 
 /**
- * @brief ¶à×Ö½ÚĞ´£¨±£³ÖÔ­½Ó¿Ú£©
- * @param i2c_address: ´Ó»ú7Î»µØÖ·
- * @param reg_addr: ÆğÊ¼¼Ä´æÆ÷µØÖ·
- * @param len: Ğ´Èë×Ö½ÚÊı
- * @param data: ´ıĞ´ÈëÊı¾İÖ¸Õë
+ * @brief å¤šå­—èŠ‚å†™ï¼ˆä¿æŒåŸæ¥å£ï¼‰
+ * @param i2c_address: ä»æœº7ä½åœ°å€
+ * @param reg_addr: èµ·å§‹å¯„å­˜å™¨åœ°å€
+ * @param len: å†™å…¥å­—èŠ‚æ•°
+ * @param data: å¾…å†™å…¥æ•°æ®æŒ‡é’ˆ
  */
 void i2c_write_len(uint8_t i2c_address, uint8_t reg_addr, uint8_t len, uint8_t *data)
 {
@@ -90,11 +90,11 @@ void i2c_write_len(uint8_t i2c_address, uint8_t reg_addr, uint8_t len, uint8_t *
 }
 
 /**
- * @brief ¶à×Ö½Ú¶Á£¨±£³ÖÔ­½Ó¿Ú£©
- * @param i2c_address: ´Ó»ú7Î»µØÖ·
- * @param reg_addr: ÆğÊ¼¼Ä´æÆ÷µØÖ·
- * @param len: ¶ÁÈ¡×Ö½ÚÊı
- * @param data: ½ÓÊÕÊı¾İ»º³åÇøÖ¸Õë
+ * @brief å¤šå­—èŠ‚è¯»ï¼ˆä¿æŒåŸæ¥å£ï¼‰
+ * @param i2c_address: ä»æœº7ä½åœ°å€
+ * @param reg_addr: èµ·å§‹å¯„å­˜å™¨åœ°å€
+ * @param len: è¯»å–å­—èŠ‚æ•°
+ * @param data: æ¥æ”¶æ•°æ®ç¼“å†²åŒºæŒ‡é’ˆ
  */
 void i2c_read_len(uint8_t i2c_address, uint8_t reg_addr, uint8_t len, uint8_t *data)
 {

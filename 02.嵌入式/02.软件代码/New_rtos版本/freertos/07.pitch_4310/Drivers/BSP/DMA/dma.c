@@ -10,19 +10,19 @@ void dma_init(void)
 {
 		__HAL_RCC_DMA1_CLK_ENABLE();
 	
-		dam_handle.Instance = DMA1_Channel7;												//¶¨Ê±Æ÷1Í¨µÀ4  uart1_tx				
-		dam_handle.Init.Direction	= DMA_MEMORY_TO_PERIPH;						//·½Ïò  ÄÚ´æµ½ÍâÉè
+		dam_handle.Instance = DMA1_Channel7;												//å®šæ—¶å™¨1é€šé“4  uart1_tx				
+		dam_handle.Init.Direction	= DMA_MEMORY_TO_PERIPH;						//æ–¹å‘  å†…å­˜åˆ°å¤–è®¾
 		
-		//ÄÚ´æÏà¹ØÅäÖÃ
-		dam_handle.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;		  //Êı¾İ¶ÔÆë·½Ê½
-		dam_handle.Init.MemInc =	DMA_MINC_ENABLE;						      //Ôö³¤·½Ê½
+		//å†…å­˜ç›¸å…³é…ç½®
+		dam_handle.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;		  //æ•°æ®å¯¹é½æ–¹å¼
+		dam_handle.Init.MemInc =	DMA_MINC_ENABLE;						      //å¢é•¿æ–¹å¼
 	
-		//ÍâÉèÏà¹ØÅäÖÃ
-		dam_handle.Init.PeriphDataAlignment	=	DMA_PDATAALIGN_BYTE;  //Êı¾İ¶ÔÆë·½Ê½
-		dam_handle.Init.PeriphInc	=	DMA_PINC_DISABLE;				        //Ôö³¤·½Ê½  ÍâÉè²»µİÔö
+		//å¤–è®¾ç›¸å…³é…ç½®
+		dam_handle.Init.PeriphDataAlignment	=	DMA_PDATAALIGN_BYTE;  //æ•°æ®å¯¹é½æ–¹å¼
+		dam_handle.Init.PeriphInc	=	DMA_PINC_DISABLE;				        //å¢é•¿æ–¹å¼  å¤–è®¾ä¸é€’å¢
 	
-		dam_handle.Init.Priority	=	DMA_PRIORITY_MEDIUM;						//ÓÅÏÈ¼¶
-		dam_handle.Init.Mode	=		DMA_CIRCULAR;												//Ä£Ê½£ºÑ­»·£¬·ÇÑ­»·
+		dam_handle.Init.Priority	=	DMA_PRIORITY_MEDIUM;						//ä¼˜å…ˆçº§
+		dam_handle.Init.Mode	=		DMA_CIRCULAR;												//æ¨¡å¼ï¼šå¾ªç¯ï¼Œéå¾ªç¯
 	
 		HAL_DMA_Init(&dam_handle);
 	

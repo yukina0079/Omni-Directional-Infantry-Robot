@@ -3,10 +3,10 @@
 
 #include "sys.h"
 
-void delay_ms(uint32_t nms);            /* ÑÓÊ±nms */
-void delay_us(uint32_t nus);            /* ÑÓÊ±nus */
-void delay_s(uint32_t ns);              /* ÑÓÊ±ns */
-void HAL_Delay(uint32_t nms);           /* ÑÓÊ±nms */
+void delay_ms(uint32_t nms);            /* å»¶æ—¶nms */
+void delay_us(uint32_t nus);            /* å»¶æ—¶nus */
+void delay_s(uint32_t ns);              /* å»¶æ—¶ns */
+void HAL_Delay(uint32_t nms);           /* å»¶æ—¶nms */
 
 
 #endif

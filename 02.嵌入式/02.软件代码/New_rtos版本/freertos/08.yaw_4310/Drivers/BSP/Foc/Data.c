@@ -17,8 +17,8 @@
 #include "Pid.h"
 #include "adc.h"
 
-uint8_t uart_recv[20] = {0};
-uint8_t send_angal[20] = {0x55,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0xff};
+uint8_t uart_recv[FRAME13_LEN] = {0};
+uint8_t send_angal[FRAME13_LEN] = {0x55,0,0,0,0,0,0,0,0,0,0,0,0xff};
 
 float yaw_num = 0.0f;
 float joy_num = 0.0f;
@@ -152,7 +152,7 @@ float last_iq = 0.0f;      /* exposed for telemetry / debug printing */
  *
  * This exists because of a hardware constraint: this board has exactly one
  * usable UART (USART2 on PA2/PA3). Once the chassis MCU is wired to it, that
- * wire carries the 20-byte binary protocol in both directions and printf() can
+ * wire carries the 13-byte binary protocol in both directions and printf() can
  * no longer be used -- debug text would corrupt the link, and the link's binary
  * frames would bury the text. So the moment the axis is in its real
  * configuration is exactly the moment the serial console stops being available.
@@ -180,7 +180,7 @@ typedef struct {
     float    err_rad;         /* cmd - angle                             */
     float    velocity;        /* rad/s                                   */
     float    iq_amps;         /* filtered q-axis current                 */
-    float    yaw_pid_num;     /* raw command from the chassis, bytes 14/15 */
+    float    yaw_pid_num;     /* raw command from the chassis, bytes 10/11 */
 } yaw_monitor_t;
 
 /* Not static: the linker must emit a symbol so the .map file can be searched
@@ -387,8 +387,8 @@ void data_change(void)
 	uart1_poll();
 
 	joy_num     = two_uint8_to_float_signed(uart_recv[6],  uart_recv[7]);
-	yaw_num     = two_uint8_to_float_signed(uart_recv[12], uart_recv[13]);
-	yaw_pid_num = two_uint8_to_float_signed(uart_recv[14], uart_recv[15]);
+	yaw_num     = two_uint8_to_float_signed(uart_recv[F13_ATT_H], uart_recv[F13_ATT_L]);
+	yaw_pid_num = two_uint8_to_float_signed(uart_recv[F13_CMD_H], uart_recv[F13_CMD_L]);
 
 	/*
 	 * --- 2. sample the encoder ONCE for this cycle ---
@@ -687,25 +687,21 @@ float two_uint8_to_float_signed(uint8_t high_byte, uint8_t low_byte)
 //串口字符排序
 uint8_t frame_sync(uint8_t byte, uint8_t *frame_out)
 {
-    static uint8_t ring[20];
+    static uint8_t ring[FRAME13_LEN];
     static uint8_t w_idx = 0;
     static uint8_t count = 0;
 
     ring[w_idx] = byte;
-    w_idx = (w_idx + 1) % 20;
-    if (count < 20) count++;
+    w_idx = (w_idx + 1) % FRAME13_LEN;
+    if (count < FRAME13_LEN) count++;
 
-    if (count >= 20) {
-        uint8_t start = w_idx;
-        if (ring[start] == 0x55 && ring[(start + 19) % 20] == 0xFF) {
-            for (uint8_t i = 0; i < 20; i++) {
-                frame_out[i] = ring[(start + i) % 20];
+    if (count >= FRAME13_LEN) {
+        uint8_t start = w_idx;   /* oldest byte: the candidate header */
+        if (ring[start] == FRAME13_HEAD && ring[(start + F13_TAIL_IDX) % FRAME13_LEN] == FRAME13_TAIL) {
+            for (uint8_t i = 0; i < FRAME13_LEN; i++) {
+                frame_out[i] = ring[(start + i) % FRAME13_LEN];
             }
-            count = 0;   // 清空计数器，避免重复输出同一帧
-            /* Feed the comms watchdog: this is the only place a frame is
-             * confirmed well-formed. */
-            last_frame_us = micros();
-            s_frame_count++;
+            count = 0;   /* consume the window so one frame is never delivered twice */
             return 1;
         }
     }

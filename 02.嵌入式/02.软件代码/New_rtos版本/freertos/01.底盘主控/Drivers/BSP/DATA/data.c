@@ -24,9 +24,9 @@ int8_t joy[5] = {0};
 float joy_yaw_num = 0.0f;
 int wheel_speeds[4];
 
-uint8_t C_rx_buf[32] = {0};
-uint8_t Uart_sand_byte[20] = {0};
-uint8_t Uart_recv_byte[20] = {0};
+uint8_t C_rx_buf[FRAME13_LEN] = {0};
+uint8_t Uart_sand_byte[FRAME13_LEN] = {0};
+uint8_t Uart_recv_byte[FRAME13_LEN] = {0};
 
 pid_type_def yaw_gimble_pid;
 pid_type_def yaw_chassis_pid;
@@ -128,7 +128,7 @@ static uint32_t link_age_ms(uint32_t last_ms)
 }
 
 /* Snapshot of Uart_sand_byte handed to the TX DMA. See uart_sand(). */
-static uint8_t foc_dma_buf[20];
+static uint8_t foc_dma_buf[FRAME13_LEN];
 
 void data_init(void)
 {
@@ -147,7 +147,7 @@ void data_init(void)
  *
  *   yaw_gimble_pid   "where should the GIMBAL point?"  Compares the operator's
  *     integrated stick angle against the chassis IMU heading. Its output leaves
- *     the board as frame bytes 14/15 for the yaw FOC board to act on; nothing
+ *     the board as frame bytes 10/11 for the yaw FOC board to act on; nothing
  *     local consumes it. Live only when CHASSIS_IMU_ENABLE is 1.
  *
  *   yaw_chassis_pid  "how fast should the CHASSIS rotate?"  Compares the
@@ -184,45 +184,33 @@ void pid_calculate(void)
 		yaw_output[1] = PID_calc(&yaw_chassis_pid, gimble_angal ,normal_yaw);  /* follow loop: arg1=target offset, arg2=measured -> error = measured - target */
 }
 /*
- * FRAME LAYOUT -- 20 bytes, the same on both links.
+ * FRAME LAYOUT -- 13 bytes, canonical definition in Drivers/frame13.h.
  *
- * The remote builds it (00.yaokongqi Drivers/BSP/DATA/data.c, data_change) and
- * broadcasts over nRF24L01 every 3 ms. This board receives it into C_rx_buf,
- * consumes some fields, overwrites four bytes, and relays the whole thing to the
- * yaw FOC board over USART3 every 1 ms.
+ * The remote builds it and broadcasts over nRF24L01 every 3 ms. This board
+ * receives it into C_rx_buf, consumes the right stick, and relays 13 bytes to
+ * the yaw FOC board over USART3 every 1 ms, rewriting bytes 8..11 on the way.
  *
- *   byte   field      meaning                            written by
- *   -----  ---------  ---------------------------------  --------------
- *    0     0x55       header                             remote
- *    1     key_num    8 key bits, idle 0xFF, active low  remote
- *    2     enl        left knob, 0..127                  remote
- *    3     enr        right knob, 0..127                 remote
- *   4-5    lxh lxl    left stick X, INTEGRATED, rad*100  remote
- *   6-7    lyh lyl    left stick Y, INTEGRATED, rad*1000 remote
- *   8-9    rxh rxl    right stick X, +-128, *100         remote
- *  10-11   ryh ryl    right stick Y, +-128, *100         remote
- *  12-13   yaw        chassis IMU yaw, rad*100           THIS BOARD
- *  14-15   pid        yaw command, rad*100               THIS BOARD
- *  16-18   0          unused                             remote
- *   19     0xFF       tail                               remote
+ *   byte  field    meaning                              written by
+ *   ----  -------  -----------------------------------  ----------------
+ *    0    0x55     header                               remote
+ *    1    key_num  8 key bits, idle 0xFF, active low    remote
+ *    2    enl      left knob, 0..127                    remote
+ *    3    enr      right knob, 0..127                   remote
+ *   4-5   lx       left stick X, INTEGRATED, rad*100    remote
+ *   6-7   ly       left stick Y, INTEGRATED, rad*1000   remote
+ *   8-9   rx       right stick X, +-127                 remote | yaw: att
+ *  10-11  ry       right stick Y, +-127                 remote | yaw: cmd
+ *   12    0xFF     tail                                remote
  *
- * All 16-bit fields are big-endian signed, scaled by 100 (bytes 6/7 by 1000) --
- * see float_to_two_uint8_signed() below. Header and tail are the ONLY integrity
- * check anywhere on either link: no CRC, no sequence number. Any payload that
- * starts 0x55 and ends 0xFF is trusted.
+ * The two right-stick fields are only meaningful on the radio link. The yaw
+ * board has no use for a chassis translation velocity, so this board overwrites
+ * 8..11 with its own IMU yaw and the yaw command before forwarding. Header and
+ * tail are the only integrity check on either link: no CRC, no sequence number.
  *
- * Two properties of this layout drive most of the code below:
- *
- *   - The left stick arrives ALREADY INTEGRATED, as an absolute angle. The
- *     remote does the integration (Joystick_Points_kp in its data.h), so the
- *     gimbal command is a position and this board integrates nothing to steer
- *     the turret.
- *   - The right stick arrives as instantaneous deflection, i.e. a velocity.
- *     That is what feeds the chassis kinematics.
- *
- *   left stick -> gimbal (position)     right stick -> chassis (velocity)
- *   left knob  -> spin rate             right knob  -> friction wheels
- *   key bit 0  -> spin / follow mode
+ * The left stick arrives ALREADY INTEGRATED, as an absolute angle -- the remote
+ * does the integration (Joystick_Points_kp in its data.h) -- so the gimbal
+ * command is a position, not a rate. The right stick arrives as instantaneous
+ * deflection and feeds the chassis kinematics.
  */
 void data_change(void)
 {
@@ -238,7 +226,7 @@ void data_change(void)
 			 * last complete frame.
 			 *
 			 * Freezing the frame rather than zeroing it is the correct failsafe
-			 * for this protocol: bytes 14/15 are an INCREMENTAL command on the
+			 * for this protocol: bytes 10/11 are an INCREMENTAL command on the
 			 * yaw board (08.yaw_4310/Drivers/BSP/Foc/Data.c:478 does
 			 * s_cmd += dcmd), so repeating the same value yields dcmd == 0 and
 			 * the axis holds position while staying energised. Zeroing the bytes
@@ -254,29 +242,26 @@ void data_change(void)
 			return;
 		}
 	
-		/* Relay the remote's frame verbatim; [12]..[15] get overwritten below. */
-
-		
-		/* Relay the remote's frame verbatim into the outgoing buffer; bytes
-		 * [12]..[15] are overwritten further down. Copying all 20 rather than
-		 * just the fields this board cares about is what makes the chassis a
-		 * relay: the yaw board needs the sticks and keys too, and it has no
-		 * radio of its own. */
-		for(int i=0;i<20;i++){Uart_sand_byte[i] = C_rx_buf[i];};
+		/*
+		 * Rebuild the outgoing 13-byte frame. Bytes 1..7 are the operator's own
+		 * fields, relayed unchanged; bytes 8..11 are filled in below with this
+		 * board's attitude and the yaw command, because the yaw board has no
+		 * use for a chassis translation velocity. Byte 12 is the tail.
+		 */
+		Uart_sand_byte[0] = FRAME13_HEAD;
+		for (uint8_t i = F13_KEY; i <= F13_LY_L; i++) {
+			Uart_sand_byte[i] = C_rx_buf[i];
+		}
 
 		/*
-		 * Decode. joy[] is int8_t, which is worth pausing on: joy[3] and joy[4]
-		 * are assigned from a float that legitimately reaches +-128.0, while
-		 * int8_t tops out at +127. Full deflection in the positive direction
-		 * therefore wraps to -128 -- the stick pushed hard one way commands full
-		 * speed the OTHER way, for exactly that extreme value.
-		 *
-		 * Reachable rather than theoretical: map0_4096To128_128WithMaskOpt() on
-		 * the remote rescales the live stick range so the mechanical stop maps to
-		 * precisely 128. Left as-is because the fix belongs on one side only --
-		 * clamp to 127 on the remote, or widen joy[] to int16_t here -- and the
-		 * gimbal and shooter boards decode the same bytes, so changing their wire
-		 * meaning is not a local decision.
+		 * Decode. joy[] is int8_t and the right-stick fields are +-127 on the
+		 * wire, so the assignment is exact. It was worth checking: the remote
+		 * rescales full deflection into that byte pair, and any result above 127
+		 * would read back as a large negative number -- full stick forward,
+		 * full speed backward. The old scale (x128/120) actually topped out at
+		 * 126, so the wrap was unreachable, but it also meant the stop lost a
+		 * count. The mapping now lands on exactly +-JOY_MAX and both problems
+		 * are gone at the source, for every consumer of the same bytes.
 		 */
 		joy[0] = C_rx_buf[1];  /* key bitmask, idle 0xFF; bit0 selects spin vs follow */
 		joy[1] = C_rx_buf[2];  /* left knob 0..127 -> spin rate */
@@ -285,49 +270,20 @@ void data_change(void)
 		joy[4] = two_uint8_to_float_signed(C_rx_buf[10],C_rx_buf[11]);  /* right stick Y, instantaneous */
 		joy_yaw_num = -two_uint8_to_float_signed(C_rx_buf[4],C_rx_buf[5]);  /* left stick X: already INTEGRATED by the remote, so an angle in rad, not a rate. Negated to match the yaw axis sense. */
 
-		/*
-		 * Overwrite the two chassis-authored fields. Everything else in
-		 * Uart_sand_byte is still the remote's own bytes, copied above, so the
-		 * yaw board receives the operator's inputs and this board's attitude in
-		 * a single frame.
-		 */
-		float_to_two_uint8_signed(INS_angle_filtered[0],&Uart_sand_byte[12],&Uart_sand_byte[13]);  /* bytes 12/13: chassis IMU yaw */
+		/* Bytes 8..11: this board's attitude and the yaw command. Everything
+		 * else in the frame is still the operator's own bytes, so the yaw board
+		 * receives the sticks, the keys and this board's attitude together. */
+		float_to_two_uint8_signed(INS_angle_filtered[0], &Uart_sand_byte[F13_ATT_H], &Uart_sand_byte[F13_ATT_L]);
 #if CHASSIS_IMU_ENABLE
-		float_to_two_uint8_signed(yaw_output[0],&Uart_sand_byte[14],&Uart_sand_byte[15]);				//yaw_pid
+		float_to_two_uint8_signed(yaw_output[0], &Uart_sand_byte[F13_CMD_H], &Uart_sand_byte[F13_CMD_L]);
 #else
-		/*
-		 * IMU not fitted yet: pass the stick's own angle command straight to the
-		 * yaw board instead of the (never-computed) gimbal PID output.
-		 *
-		 * Why this works without the IMU. The remote already integrates the lx
-		 * stick into an angular setpoint -- 00.遥控器/Drivers/BSP/DATA/data.c:58,
-		 * Joystick_Points_value[0] += lx * 0.0002f every millisecond -- so
-		 * joy_yaw_num is a position command in radians, not a rate. The yaw board
-		 * closes its own position loop on its AS5600 encoder, so it can follow
-		 * that command with no attitude reference of any kind.
-		 *
-		 * What is LOST versus the IMU path: this makes the gimbal follow the
-		 * STICK, not hold a heading in the world frame. Rotate the chassis and the
-		 * gimbal rotates with it, because nothing tells it that it was carried
-		 * away. The IMU stage is what turns "point where I push" into "stay
-		 * pointed there" -- a refinement, not a prerequisite for motion. Setting
-		 * CHASSIS_IMU_ENABLE to 1 restores the original path unchanged.
-		 *
-		 * Sent unclamped. The yaw axis rotates a full 360 degrees, so there is
-		 * no excursion to limit, and clamping here only hid how far the stick
-		 * had actually been pushed -- during bench testing a clamped value sat
-		 * at exactly the limit whether the operator was steering or the remote
-		 * had dropped its link, which made the two indistinguishable.
-		 *
-		 * The remote's lx integrator is unbounded (its limit_float() call is
-		 * commented out at 00.遥控器/data.c:62, unlike ly on the line above), so
-		 * this value grows without limit while the stick is held over. On a
-		 * continuous-rotation axis that is the correct behaviour: the gimbal
-		 * keeps turning as long as the operator keeps pushing.
-		 */
-		float_to_two_uint8_signed(joy_yaw_num,
-		                          &Uart_sand_byte[14], &Uart_sand_byte[15]);
+		/* No IMU: hand the stick's own integrated angle straight to the yaw
+		 * board. It is already a position command in radians, and that board
+		 * closes its own position loop on the AS5600, so this path needs no
+		 * attitude reference. */
+		float_to_two_uint8_signed(joy_yaw_num, &Uart_sand_byte[F13_CMD_H], &Uart_sand_byte[F13_CMD_L]);
 #endif
+		Uart_sand_byte[F13_TAIL_IDX] = FRAME13_TAIL;
 
 		/*
 		 * Decode the yaw board's reported shaft angle, but only while its reply is
@@ -392,16 +348,16 @@ void data_change(void)
 void uart_sand(void)
 {
 	/*
-	 * 20 bytes at 115200 baud is 1.74 ms. The old blocking HAL_UART_Transmit()
-	 * therefore demanded 174% of a 1 ms task period: the wire was saturated with
+	 * 13 bytes at 115200 baud is 1.13 ms. The old blocking HAL_UART_Transmit()
+	 * therefore demanded 113% of a 1 ms task period: the wire was saturated with
 	 * no idle gap, the real frame rate collapsed to roughly 250 Hz instead of the
 	 * intended 1 kHz, and the idle task never ran at all.
 	 *
 	 * It also tore frames. HAL walks Uart_sand_byte byte by byte across those
-	 * 1.74 ms while data_exchange_task -- which runs at a HIGHER priority and
+	 * 1.13 ms while data_exchange_task -- which runs at a HIGHER priority and
 	 * rewrites the same array every millisecond -- preempts it. A frame on the
-	 * wire could carry bytes 0-7 from one control cycle and bytes 8-19 from the
-	 * next; split across the 14/15 pair that is a position command the shaft was
+	 * wire could carry bytes 0-7 from one control cycle and bytes 8-11 from the
+	 * next; split across the 10/11 pair that is a position command the shaft was
 	 * never asked for. The yaw board guards its own reply against exactly this
 	 * (reply_publish()); this direction had no guard.
 	 *
@@ -417,7 +373,7 @@ void uart_sand(void)
 	 * Snapshot under a critical section. The copy is what makes the frame atomic
 	 * with respect to data_exchange_task; without the guard the memcpy itself can
 	 * be preempted and mix two cycles, which is the same defect in a smaller
-	 * window. 20 bytes is a few tens of cycles at 168 MHz, so the added interrupt
+	 * window. 13 bytes is a few tens of cycles at 168 MHz, so the added interrupt
 	 * latency is negligible. (The gimbal board copies without this guard and
 	 * still has that window.)
 	 */
@@ -709,24 +665,23 @@ float low_pass_filter(float input, float *prev_output)
 }
 uint8_t frame_sync(uint8_t byte, uint8_t *frame_out)
 {
-    static uint8_t ring[20];
+    static uint8_t ring[FRAME13_LEN];
     static uint8_t w_idx = 0;
     static uint8_t count = 0;
 
     ring[w_idx] = byte;
-    w_idx = (w_idx + 1) % 20;
-    if (count < 20) count++;
+    w_idx = (w_idx + 1) % FRAME13_LEN;
+    if (count < FRAME13_LEN) count++;
 
-    if (count >= 20) {
-        uint8_t start = w_idx;
-        if (ring[start] == 0x55 && ring[(start + 19) % 20] == 0xFF) {
-            for (uint8_t i = 0; i < 20; i++) {
-                frame_out[i] = ring[(start + i) % 20];
+    if (count >= FRAME13_LEN) {
+        uint8_t start = w_idx;   /* oldest byte: the candidate header */
+        if (ring[start] == FRAME13_HEAD && ring[(start + F13_TAIL_IDX) % FRAME13_LEN] == FRAME13_TAIL) {
+            for (uint8_t i = 0; i < FRAME13_LEN; i++) {
+                frame_out[i] = ring[(start + i) % FRAME13_LEN];
             }
             count = 0;   /* consume the window so one frame is never delivered twice */
             /* The only place a reply frame is confirmed well-formed, so the
-             * only honest place to stamp the link. Mirrors the yaw board's own
-             * frame_sync() (08.yaw_4310/Drivers/BSP/Foc/Data.c:692). */
+             * only honest place to stamp the link. */
             s_yaw_last_ms = HAL_GetTick();
             g_yaw_frames++;
             return 1;

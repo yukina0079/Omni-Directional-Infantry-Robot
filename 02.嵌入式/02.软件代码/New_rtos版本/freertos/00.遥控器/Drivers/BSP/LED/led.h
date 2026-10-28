@@ -3,7 +3,7 @@
 
 #include "sys.h"
 
-/* 引脚定义 */
+/* 寮曡剼瀹氫箟 */
 #define LED0_GPIO_PORT          GPIOA
 #define LED0_GPIO_PIN           GPIO_PIN_8
 #define LED0_GPIO_CLK_ENABLE()  do { __HAL_RCC_GPIOA_CLK_ENABLE(); } while (0)
@@ -14,7 +14,7 @@
 #define LED2_GPIO_PIN           GPIO_PIN_1
 #define LED2_GPIO_CLK_ENABLE()  do { __HAL_RCC_GPIOB_CLK_ENABLE(); } while (0)
 
-/* IO操作 */
+/* IO鎿嶄綔 */
 #define LED0(x)                 do { (x) ?                                                              \
                                     HAL_GPIO_WritePin(LED0_GPIO_PORT, LED0_GPIO_PIN, GPIO_PIN_SET):     \
                                     HAL_GPIO_WritePin(LED0_GPIO_PORT, LED0_GPIO_PIN, GPIO_PIN_RESET);   \
@@ -30,7 +30,7 @@
 #define LED0_TOGGLE()           do { HAL_GPIO_TogglePin(LED0_GPIO_PORT, LED0_GPIO_PIN); } while (0)
 #define LED1_TOGGLE()           do { HAL_GPIO_TogglePin(LED1_GPIO_PORT, LED1_GPIO_PIN); } while (0)
 #define LED2_TOGGLE()           do { HAL_GPIO_TogglePin(LED2_GPIO_PORT, LED2_GPIO_PIN); } while (0)
-/* 函数声明 */
-void led_init(void);    /* 初始化LED */
+/* 鍑芥暟澹版槑 */
+void led_init(void);    /* 鍒濆鍖朙ED */
 
 #endif

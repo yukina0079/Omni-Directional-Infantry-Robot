@@ -3,24 +3,24 @@
 #include "delay.h"
 #include "ws2812b.h"
 
-/* --- ºê¶¨Òå --- */
-#define KEY_PRESSED  GPIO_PIN_SET    // °´ÏÂ = ¸ßµçÆ½
-#define KEY_RELEASED GPIO_PIN_RESET  // Ä¬ÈÏ = µÍµçÆ½
+/* --- å®å®šä¹‰ --- */
+#define KEY_PRESSED  GPIO_PIN_SET    // æŒ‰ä¸‹ = é«˜ç”µå¹³
+#define KEY_RELEASED GPIO_PIN_RESET  // é»˜è®¤ = ä½ç”µå¹³
 
-/* --- ¶ÀÁ¢°´¼ü¶ÁÈ¡ --- */
+/* --- ç‹¬ç«‹æŒ‰é”®è¯»å– --- */
 #define KEY1_READ    (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12))
 #define KEY2_READ    (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13))
 #define KEY3_READ    (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14))
 #define KEY4_READ    (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15))
 
-/* --- È«¾Ö±äÁ¿ --- */
+/* --- å…¨å±€å˜é‡ --- */
 uint8_t key_count = 0;
 static uint8_t s_edge_mask = 0;
 
-/* --- ¶ÀÁ¢°´¼ü×´Ì¬ --- */
-static GPIO_PinState key_prev[4] = {KEY_RELEASED}; // ¶ÀÁ¢±£´æÉÏÒ»´Î×´Ì¬
+/* --- ç‹¬ç«‹æŒ‰é”®çŠ¶æ€ --- */
+static GPIO_PinState key_prev[4] = {KEY_RELEASED}; // ç‹¬ç«‹ä¿å­˜ä¸Šä¸€æ¬¡çŠ¶æ€
 
-/* --- ¶ÀÁ¢±ßÑØ¼ì²â --- */
+/* --- ç‹¬ç«‹è¾¹æ²¿æ£€æµ‹ --- */
 bool key_edge_detect(void)
 {
     uint8_t i;
@@ -35,7 +35,7 @@ bool key_edge_detect(void)
 
     for(i=0; i<4; i++)
     {
-        // ÏÂ½µÑØ£ºÉÏÒ»´ÎµÍ£¬µ±Ç°¸ß ¡ú °´ÏÂ
+        // ä¸‹é™æ²¿ï¼šä¸Šä¸€æ¬¡ä½ï¼Œå½“å‰é«˜ â†’ æŒ‰ä¸‹
         if(key_prev[i] == KEY_RELEASED && curr[i] == KEY_PRESSED)
         {
             edge = true;
@@ -51,28 +51,28 @@ uint8_t key_edge_mask(void)
     return s_edge_mask;
 }
 
-/* °´¼ü³õÊ¼»¯ */
+/* æŒ‰é”®åˆå§‹åŒ– */
 void key_init(void)
 {
     GPIO_InitTypeDef gpio_initstruct;
     __HAL_RCC_GPIOB_CLK_ENABLE();
 
-    // ³£Ì¬µÍ ¡ú ÏÂÀ­Ä£Ê½ PULLDOWN
+    // å¸¸æ€ä½ â†’ ä¸‹æ‹‰æ¨¡å¼ PULLDOWN
     gpio_initstruct.Pin = GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
     gpio_initstruct.Mode = GPIO_MODE_INPUT;
-    gpio_initstruct.Pull = GPIO_PULLDOWN;  // ? ³£Ì¬µÍ
+    gpio_initstruct.Pull = GPIO_PULLDOWN;  // ? å¸¸æ€ä½
     gpio_initstruct.Speed = GPIO_SPEED_FREQ_LOW;
 
     HAL_GPIO_Init(GPIOB,&gpio_initstruct);
 
-    // ³õÊ¼×´Ì¬È«²¿ÎªµÍ
+    // åˆå§‹çŠ¶æ€å…¨éƒ¨ä¸ºä½
     key_prev[0] = KEY1_READ;
     key_prev[1] = KEY2_READ;
     key_prev[2] = KEY3_READ;
     key_prev[3] = KEY4_READ;
 }
 
-/* °´¼üÉ¨Ãè£¨¶ÀÁ¢´¥·¢£¬²»²¢·¢£© */
+/* æŒ‰é”®æ‰«æï¼ˆç‹¬ç«‹è§¦å‘ï¼Œä¸å¹¶å‘ï¼‰ */
 void key_scan(void)
 {
     if(key_edge_detect())

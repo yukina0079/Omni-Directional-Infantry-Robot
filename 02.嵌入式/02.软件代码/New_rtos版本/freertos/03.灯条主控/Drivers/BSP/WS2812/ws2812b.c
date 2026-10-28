@@ -94,23 +94,23 @@ void WS2812_Updata(void)
 	HAL_TIM_PWM_Start_DMA(&htim2, TIM_CHANNEL_3,(uint32_t*)data[3], WS_BUF_LEN);
 	HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_4,(uint32_t*)data[4], WS_BUF_LEN);
 }
-// »ù´¡Á÷Ë®µÆĞ§¹û
+// åŸºç¡€æµæ°´ç¯æ•ˆæœ
 void WS2812_FlowLight(uint8_t r, uint8_t g, uint8_t b, uint16_t delay_ms, uint8_t direction)
 {
-    // direction: 0=´Ó×óµ½ÓÒ, 1=´ÓÓÒµ½×ó, 2=´ÓÖĞ¼äµ½Á½±ß, 3=´ÓÁ½±ßµ½ÖĞ¼ä
+    // direction: 0=ä»å·¦åˆ°å³, 1=ä»å³åˆ°å·¦, 2=ä»ä¸­é—´åˆ°ä¸¤è¾¹, 3=ä»ä¸¤è¾¹åˆ°ä¸­é—´
     
     if(direction == 0) {
-        // ´Ó×óµ½ÓÒ
+        // ä»å·¦åˆ°å³
         for(uint8_t i = 1; i < LED_COUNT; i++) {
-            WS2812_SetALL(0, 0, 0);  // È«²¿¹Ø±Õ
+            WS2812_SetALL(0, 0, 0);  // å…¨éƒ¨å…³é—­
 			WS2812_Set(0,140, 0, 180);
-            WS2812_Set(i, r, g, b);  // µãÁÁµ±Ç°µÆÖé
+            WS2812_Set(i, r, g, b);  // ç‚¹äº®å½“å‰ç¯ç 
             WS2812_Updata();
             HAL_Delay(delay_ms);
         }
     }
     else if(direction == 1) {
-        // ´ÓÓÒµ½×ó
+        // ä»å³åˆ°å·¦
         for(int8_t i = LED_COUNT - 1; i >= 0; i--) {
             WS2812_SetALL(0, 0, 0);
             WS2812_Set(i, r, g, b);
@@ -119,7 +119,7 @@ void WS2812_FlowLight(uint8_t r, uint8_t g, uint8_t b, uint16_t delay_ms, uint8_
         }
     }
     else if(direction == 2) {
-        // ´ÓÖĞ¼äµ½Á½±ß
+        // ä»ä¸­é—´åˆ°ä¸¤è¾¹
         uint8_t mid = LED_COUNT / 2;
         for(uint8_t offset = 0; offset <= mid; offset++) {
             WS2812_SetALL(0, 0, 0);
@@ -139,28 +139,28 @@ void pwm_init(uint16_t arr,uint16_t psc)
 		htim1.Instance = TIM1;					
 		htim1.Init.Prescaler = psc;
 		htim1.Init.Period = arr;
-		htim1.Init.CounterMode = TIM_COUNTERMODE_UP;//ÏòÉÏ¼ÆÊı
+		htim1.Init.CounterMode = TIM_COUNTERMODE_UP;//å‘ä¸Šè®¡æ•°
 		htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 		htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;		
 		HAL_TIM_PWM_Init(&htim1);
 		
-		htim1_config.OCMode = TIM_OCMODE_PWM1; //Í¨ÓÃ¶¨Ê±Æ÷
+		htim1_config.OCMode = TIM_OCMODE_PWM1; //é€šç”¨å®šæ—¶å™¨
 		htim1_config.Pulse  = 0;
-		htim1_config.OCPolarity = TIM_OCPOLARITY_HIGH;//¼ÆÊı·½Ê½
+		htim1_config.OCPolarity = TIM_OCPOLARITY_HIGH;//è®¡æ•°æ–¹å¼
 		htim1_config.OCFastMode = TIM_OCFAST_DISABLE;
 		HAL_TIM_PWM_ConfigChannel(&htim1,&htim1_config,TIM_CHANNEL_4);
 
 		htim2.Instance = TIM2;					
 		htim2.Init.Prescaler = psc;
 		htim2.Init.Period = arr;
-		htim2.Init.CounterMode = TIM_COUNTERMODE_UP;//ÏòÉÏ¼ÆÊı
+		htim2.Init.CounterMode = TIM_COUNTERMODE_UP;//å‘ä¸Šè®¡æ•°
 		htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 		htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;		
 		HAL_TIM_PWM_Init(&htim2);
 		
-		htim2_config.OCMode = TIM_OCMODE_PWM1; //Í¨ÓÃ¶¨Ê±Æ÷
+		htim2_config.OCMode = TIM_OCMODE_PWM1; //é€šç”¨å®šæ—¶å™¨
 		htim2_config.Pulse  = 0;
-		htim2_config.OCPolarity = TIM_OCPOLARITY_HIGH;//¼ÆÊı·½Ê½
+		htim2_config.OCPolarity = TIM_OCPOLARITY_HIGH;//è®¡æ•°æ–¹å¼
 		htim2_config.OCFastMode = TIM_OCFAST_DISABLE;
 		HAL_TIM_PWM_ConfigChannel(&htim2,&htim2_config,TIM_CHANNEL_3);
 		HAL_TIM_PWM_ConfigChannel(&htim2,&htim2_config,TIM_CHANNEL_4);
@@ -168,56 +168,56 @@ void pwm_init(uint16_t arr,uint16_t psc)
 		htim3.Instance = TIM3;					
 		htim3.Init.Prescaler = psc;
 		htim3.Init.Period = arr;
-		htim3.Init.CounterMode = TIM_COUNTERMODE_UP;//ÏòÉÏ¼ÆÊı
+		htim3.Init.CounterMode = TIM_COUNTERMODE_UP;//å‘ä¸Šè®¡æ•°
 		htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 		htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;		
 		HAL_TIM_PWM_Init(&htim3);
 		
-		htim3_config.OCMode = TIM_OCMODE_PWM1; //Í¨ÓÃ¶¨Ê±Æ÷
+		htim3_config.OCMode = TIM_OCMODE_PWM1; //é€šç”¨å®šæ—¶å™¨
 		htim3_config.Pulse  = 0;
-		htim3_config.OCPolarity = TIM_OCPOLARITY_HIGH;//¼ÆÊı·½Ê½
+		htim3_config.OCPolarity = TIM_OCPOLARITY_HIGH;//è®¡æ•°æ–¹å¼
 		htim3_config.OCFastMode = TIM_OCFAST_DISABLE;
 		HAL_TIM_PWM_ConfigChannel(&htim3,&htim3_config,TIM_CHANNEL_3);
 		HAL_TIM_PWM_ConfigChannel(&htim3,&htim3_config,TIM_CHANNEL_4);
 }
-void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)		//PWMÓ²¼ş²ÎÊı
+void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)		//PWMç¡¬ä»¶å‚æ•°
 {
 	if(htim->Instance == TIM1){
-		GPIO_InitTypeDef gpio_initstruct;//¶¨Òå½á¹¹Ìå²ÎÊı
+		GPIO_InitTypeDef gpio_initstruct;//å®šä¹‰ç»“æ„ä½“å‚æ•°
 			
-		__HAL_RCC_TIM1_CLK_ENABLE();		//¶¨Ê±Æ÷4Ê±ÖÓÊ¹ÄÜ	
-		__HAL_RCC_GPIOA_CLK_ENABLE();		//¿ªÆôGPIOB×éÒı½Å
+		__HAL_RCC_TIM1_CLK_ENABLE();		//å®šæ—¶å™¨4æ—¶é’Ÿä½¿èƒ½	
+		__HAL_RCC_GPIOA_CLK_ENABLE();		//å¼€å¯GPIOBç»„å¼•è„š
 	
-		gpio_initstruct.Pin = GPIO_PIN_11;//ÅäÖÃÒı½ÅºÅ
-		gpio_initstruct.Mode = GPIO_MODE_AF_PP;//ÅäÖÃ¹¤×÷Ä£Ê½ ¸´ÓÃÍÆÍìÊä³ö
-		gpio_initstruct.Pull = GPIO_PULLUP;//ÅäÖÃÉÏÀ­ÏÂÀ­
-		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//ÅäÖÃÊä³öËÙ¶È
+		gpio_initstruct.Pin = GPIO_PIN_11;//é…ç½®å¼•è„šå·
+		gpio_initstruct.Mode = GPIO_MODE_AF_PP;//é…ç½®å·¥ä½œæ¨¡å¼ å¤ç”¨æ¨æŒ½è¾“å‡º
+		gpio_initstruct.Pull = GPIO_PULLUP;//é…ç½®ä¸Šæ‹‰ä¸‹æ‹‰
+		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//é…ç½®è¾“å‡ºé€Ÿåº¦
 	
 		HAL_GPIO_Init(GPIOA,&gpio_initstruct);		
 	}
 	if(htim->Instance == TIM2){
-		GPIO_InitTypeDef gpio_initstruct;//¶¨Òå½á¹¹Ìå²ÎÊı
+		GPIO_InitTypeDef gpio_initstruct;//å®šä¹‰ç»“æ„ä½“å‚æ•°
 			
-		__HAL_RCC_TIM2_CLK_ENABLE();		//¶¨Ê±Æ÷4Ê±ÖÓÊ¹ÄÜ	
-		__HAL_RCC_GPIOA_CLK_ENABLE();		//¿ªÆôGPIOB×éÒı½Å
+		__HAL_RCC_TIM2_CLK_ENABLE();		//å®šæ—¶å™¨4æ—¶é’Ÿä½¿èƒ½	
+		__HAL_RCC_GPIOA_CLK_ENABLE();		//å¼€å¯GPIOBç»„å¼•è„š
 	
-		gpio_initstruct.Pin = GPIO_PIN_2|GPIO_PIN_3;//ÅäÖÃÒı½ÅºÅ
-		gpio_initstruct.Mode = GPIO_MODE_AF_PP;//ÅäÖÃ¹¤×÷Ä£Ê½ ¸´ÓÃÍÆÍìÊä³ö
-		gpio_initstruct.Pull = GPIO_PULLUP;//ÅäÖÃÉÏÀ­ÏÂÀ­
-		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//ÅäÖÃÊä³öËÙ¶È
+		gpio_initstruct.Pin = GPIO_PIN_2|GPIO_PIN_3;//é…ç½®å¼•è„šå·
+		gpio_initstruct.Mode = GPIO_MODE_AF_PP;//é…ç½®å·¥ä½œæ¨¡å¼ å¤ç”¨æ¨æŒ½è¾“å‡º
+		gpio_initstruct.Pull = GPIO_PULLUP;//é…ç½®ä¸Šæ‹‰ä¸‹æ‹‰
+		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//é…ç½®è¾“å‡ºé€Ÿåº¦
 	
 		HAL_GPIO_Init(GPIOA,&gpio_initstruct);		
 	}
 	if(htim->Instance == TIM3){
-		GPIO_InitTypeDef gpio_initstruct;//¶¨Òå½á¹¹Ìå²ÎÊı
+		GPIO_InitTypeDef gpio_initstruct;//å®šä¹‰ç»“æ„ä½“å‚æ•°
 			
-		__HAL_RCC_TIM3_CLK_ENABLE();		//¶¨Ê±Æ÷4Ê±ÖÓÊ¹ÄÜ	
-		__HAL_RCC_GPIOB_CLK_ENABLE();		//¿ªÆôGPIOB×éÒı½Å
+		__HAL_RCC_TIM3_CLK_ENABLE();		//å®šæ—¶å™¨4æ—¶é’Ÿä½¿èƒ½	
+		__HAL_RCC_GPIOB_CLK_ENABLE();		//å¼€å¯GPIOBç»„å¼•è„š
 	
-		gpio_initstruct.Pin = GPIO_PIN_0|GPIO_PIN_1;//ÅäÖÃÒı½ÅºÅ
-		gpio_initstruct.Mode = GPIO_MODE_AF_PP;//ÅäÖÃ¹¤×÷Ä£Ê½ ¸´ÓÃÍÆÍìÊä³ö
-		gpio_initstruct.Pull = GPIO_PULLUP;//ÅäÖÃÉÏÀ­ÏÂÀ­
-		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//ÅäÖÃÊä³öËÙ¶È
+		gpio_initstruct.Pin = GPIO_PIN_0|GPIO_PIN_1;//é…ç½®å¼•è„šå·
+		gpio_initstruct.Mode = GPIO_MODE_AF_PP;//é…ç½®å·¥ä½œæ¨¡å¼ å¤ç”¨æ¨æŒ½è¾“å‡º
+		gpio_initstruct.Pull = GPIO_PULLUP;//é…ç½®ä¸Šæ‹‰ä¸‹æ‹‰
+		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//é…ç½®è¾“å‡ºé€Ÿåº¦
 	
 		HAL_GPIO_Init(GPIOB,&gpio_initstruct);		
 	}

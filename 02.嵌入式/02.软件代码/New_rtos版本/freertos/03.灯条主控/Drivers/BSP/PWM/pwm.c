@@ -1,6 +1,6 @@
 #include "pwm.h"
 
-//TIM_HandleTypeDef pwm_handle = {0};			//¶¨Òå¶¨Ê±Æ÷²ÎÊı½á¹¹Ìå
+//TIM_HandleTypeDef pwm_handle = {0};			//å®šä¹‰å®šæ—¶å™¨å‚æ•°ç»“æ„ä½“
 
 //void pwm_init(uint16_t arr,uint16_t psc)
 //{
@@ -9,29 +9,29 @@
 //		pwm_handle.Instance = TIM2;					
 //		pwm_handle.Init.Prescaler = psc;
 //		pwm_handle.Init.Period = arr;
-//		pwm_handle.Init.CounterMode = TIM_COUNTERMODE_UP;//ÏòÉÏ¼ÆÊı
+//		pwm_handle.Init.CounterMode = TIM_COUNTERMODE_UP;//å‘ä¸Šè®¡æ•°
 //		
 //		HAL_TIM_PWM_Init(&pwm_handle);
 //		
-//		pwm_config.OCMode = TIM_OCMODE_PWM1; //Í¨ÓÃ¶¨Ê±Æ÷
+//		pwm_config.OCMode = TIM_OCMODE_PWM1; //é€šç”¨å®šæ—¶å™¨
 //		pwm_config.Pulse  = 0;
-//		pwm_config.OCPolarity = TIM_OCPOLARITY_LOW;//¼ÆÊı·½Ê½
+//		pwm_config.OCPolarity = TIM_OCPOLARITY_LOW;//è®¡æ•°æ–¹å¼
 //		HAL_TIM_PWM_ConfigChannel(&pwm_handle,&pwm_config,TIM_CHANNEL_3);
 //		
-//		HAL_TIM_PWM_Start(&pwm_handle,TIM_CHANNEL_3); //¿ªÆô¶¨Ê±Æ÷
+//		HAL_TIM_PWM_Start(&pwm_handle,TIM_CHANNEL_3); //å¼€å¯å®šæ—¶å™¨
 //}
-//void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)		//PWMÓ²¼ş²ÎÊı
+//void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)		//PWMç¡¬ä»¶å‚æ•°
 //{
 //	if(htim->Instance == TIM2){
-//		GPIO_InitTypeDef gpio_initstruct;//¶¨Òå½á¹¹Ìå²ÎÊı
+//		GPIO_InitTypeDef gpio_initstruct;//å®šä¹‰ç»“æ„ä½“å‚æ•°
 //			
-//		__HAL_RCC_TIM2_CLK_ENABLE();		//¶¨Ê±Æ÷4Ê±ÖÓÊ¹ÄÜ	
-//		__HAL_RCC_GPIOA_CLK_ENABLE();		//¿ªÆôGPIOB×éÒı½Å
+//		__HAL_RCC_TIM2_CLK_ENABLE();		//å®šæ—¶å™¨4æ—¶é’Ÿä½¿èƒ½	
+//		__HAL_RCC_GPIOA_CLK_ENABLE();		//å¼€å¯GPIOBç»„å¼•è„š
 //	
-//		gpio_initstruct.Pin = GPIO_PIN_3;//ÅäÖÃÒı½ÅºÅ
-//		gpio_initstruct.Mode = GPIO_MODE_AF_PP;//ÅäÖÃ¹¤×÷Ä£Ê½ ¸´ÓÃÍÆÍìÊä³ö
-//		gpio_initstruct.Pull = GPIO_PULLUP;//ÅäÖÃÉÏÀ­ÏÂÀ­
-//		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//ÅäÖÃÊä³öËÙ¶È
+//		gpio_initstruct.Pin = GPIO_PIN_3;//é…ç½®å¼•è„šå·
+//		gpio_initstruct.Mode = GPIO_MODE_AF_PP;//é…ç½®å·¥ä½œæ¨¡å¼ å¤ç”¨æ¨æŒ½è¾“å‡º
+//		gpio_initstruct.Pull = GPIO_PULLUP;//é…ç½®ä¸Šæ‹‰ä¸‹æ‹‰
+//		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//é…ç½®è¾“å‡ºé€Ÿåº¦
 //	
 //		HAL_GPIO_Init(GPIOA,&gpio_initstruct);		
 //	}

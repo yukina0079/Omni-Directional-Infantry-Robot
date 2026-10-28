@@ -1,7 +1,7 @@
 #include "motor.h"
 
 /**
- * @file µç»úÒı½Å
+ * @file ç”µæœºå¼•è„š
  * motro:PB15 PB8  PWM:PA8 TIM1_CH1
  */
 #define GPIO2_PORT GPIOB
@@ -15,7 +15,7 @@
 static uint8_t feeder_direction = 0U;
 
 
-/*************************³õÊ¼»¯**************************/
+/*************************åˆå§‹åŒ–**************************/
 void motor_init(void)
 {
 		GPIO_InitTypeDef gpio_initstruct;
@@ -28,22 +28,22 @@ void motor_init(void)
 		HAL_GPIO_Init(GPIO2_PORT,&gpio_initstruct);	
 	
 }
-TIM_HandleTypeDef pwm_handle = {0};			//¶¨Òå¶¨Ê±Æ÷²ÎÊı½á¹¹Ìå
+TIM_HandleTypeDef pwm_handle = {0};			//å®šä¹‰å®šæ—¶å™¨å‚æ•°ç»“æ„ä½“
 
 void pwm_init(uint16_t arr,uint16_t psc)
 {
 		TIM_OC_InitTypeDef pwm_config = {0};
 	
-		pwm_handle.Instance = TIM1;					//¶¨Ê±Æ÷Í¨µÀ
+		pwm_handle.Instance = TIM1;					//å®šæ—¶å™¨é€šé“
 		pwm_handle.Init.Prescaler = psc;
 		pwm_handle.Init.Period = arr;
-		pwm_handle.Init.CounterMode = TIM_COUNTERMODE_UP;//ÏòÉÏ¼ÆÊı
+		pwm_handle.Init.CounterMode = TIM_COUNTERMODE_UP;//å‘ä¸Šè®¡æ•°
 		
 		HAL_TIM_PWM_Init(&pwm_handle);
 		
-		pwm_config.OCMode = TIM_OCMODE_PWM1; //Í¨ÓÃ¶¨Ê±Æ÷
+		pwm_config.OCMode = TIM_OCMODE_PWM1; //é€šç”¨å®šæ—¶å™¨
 		pwm_config.Pulse  = 0;
-		pwm_config.OCPolarity = TIM_OCPOLARITY_HIGH;//¼ÆÊı·½Ê½
+		pwm_config.OCPolarity = TIM_OCPOLARITY_HIGH;//è®¡æ•°æ–¹å¼
 		HAL_TIM_PWM_ConfigChannel(&pwm_handle,&pwm_config,TIM_CHANNEL_1);
 
 		HAL_TIM_PWM_Start(&pwm_handle,TIM_CHANNEL_1); 
@@ -58,10 +58,10 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 		__HAL_RCC_TIM1_CLK_ENABLE();		
 		__HAL_RCC_GPIOA_CLK_ENABLE();		
 	
-		Biu_initstruct.Pin = GPIO_PIN_8;//ÅäÖÃÒı½ÅºÅ
-		Biu_initstruct.Mode = GPIO_MODE_AF_PP;//ÅäÖÃ¹¤×÷Ä£Ê½ ¸´ÓÃÍÆÍìÊä³ö
-		Biu_initstruct.Pull = GPIO_PULLUP;//ÅäÖÃÉÏÀ­ÏÂÀ­
-		Biu_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//ÅäÖÃÊä³öËÙ¶È
+		Biu_initstruct.Pin = GPIO_PIN_8;//é…ç½®å¼•è„šå·
+		Biu_initstruct.Mode = GPIO_MODE_AF_PP;//é…ç½®å·¥ä½œæ¨¡å¼ å¤ç”¨æ¨æŒ½è¾“å‡º
+		Biu_initstruct.Pull = GPIO_PULLUP;//é…ç½®ä¸Šæ‹‰ä¸‹æ‹‰
+		Biu_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//é…ç½®è¾“å‡ºé€Ÿåº¦
 		
 		HAL_GPIO_Init(GPIOA,&Biu_initstruct);
 		}
@@ -73,10 +73,10 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 		__HAL_RCC_TIM2_CLK_ENABLE();		
 		__HAL_RCC_GPIOA_CLK_ENABLE();		
 	
-		Biu_initstruct.Pin = GPIO_PIN_2|GPIO_PIN_3;//ÅäÖÃÒı½ÅºÅ
-		Biu_initstruct.Mode = GPIO_MODE_AF_PP;//ÅäÖÃ¹¤×÷Ä£Ê½ ¸´ÓÃÍÆÍìÊä³ö
-		Biu_initstruct.Pull = GPIO_PULLUP;//ÅäÖÃÉÏÀ­ÏÂÀ­
-		Biu_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//ÅäÖÃÊä³öËÙ¶È
+		Biu_initstruct.Pin = GPIO_PIN_2|GPIO_PIN_3;//é…ç½®å¼•è„šå·
+		Biu_initstruct.Mode = GPIO_MODE_AF_PP;//é…ç½®å·¥ä½œæ¨¡å¼ å¤ç”¨æ¨æŒ½è¾“å‡º
+		Biu_initstruct.Pull = GPIO_PULLUP;//é…ç½®ä¸Šæ‹‰ä¸‹æ‹‰
+		Biu_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//é…ç½®è¾“å‡ºé€Ÿåº¦
 		
 		HAL_GPIO_Init(GPIOA,&Biu_initstruct);
 		}
@@ -87,32 +87,32 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 		__HAL_RCC_TIM3_CLK_ENABLE();		
 		__HAL_RCC_GPIOB_CLK_ENABLE();		
 	
-		Biu_initstruct.Pin = GPIO_PIN_0|GPIO_PIN_1;//ÅäÖÃÒı½ÅºÅ
-		Biu_initstruct.Mode = GPIO_MODE_AF_PP;//ÅäÖÃ¹¤×÷Ä£Ê½ ¸´ÓÃÍÆÍìÊä³ö
-		Biu_initstruct.Pull = GPIO_PULLUP;//ÅäÖÃÉÏÀ­ÏÂÀ­
-		Biu_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//ÅäÖÃÊä³öËÙ¶È
+		Biu_initstruct.Pin = GPIO_PIN_0|GPIO_PIN_1;//é…ç½®å¼•è„šå·
+		Biu_initstruct.Mode = GPIO_MODE_AF_PP;//é…ç½®å·¥ä½œæ¨¡å¼ å¤ç”¨æ¨æŒ½è¾“å‡º
+		Biu_initstruct.Pull = GPIO_PULLUP;//é…ç½®ä¸Šæ‹‰ä¸‹æ‹‰
+		Biu_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//é…ç½®è¾“å‡ºé€Ÿåº¦
 	
 		HAL_GPIO_Init(GPIOB,&Biu_initstruct);	
 	
 		}
 
 	if(htim->Instance == TIM4){
-		GPIO_InitTypeDef gpio_initstruct;//¶¨Òå½á¹¹Ìå²ÎÊı
+		GPIO_InitTypeDef gpio_initstruct;//å®šä¹‰ç»“æ„ä½“å‚æ•°
 			
-		__HAL_RCC_TIM4_CLK_ENABLE();		//¶¨Ê±Æ÷4Ê±ÖÓÊ¹ÄÜ	
-		__HAL_RCC_GPIOB_CLK_ENABLE();		//¿ªÆôGPIOB×éÒı½Å
+		__HAL_RCC_TIM4_CLK_ENABLE();		//å®šæ—¶å™¨4æ—¶é’Ÿä½¿èƒ½	
+		__HAL_RCC_GPIOB_CLK_ENABLE();		//å¼€å¯GPIOBç»„å¼•è„š
 	
-		gpio_initstruct.Pin = GPIO_PIN_7;//ÅäÖÃÒı½ÅºÅ
-		gpio_initstruct.Mode = GPIO_MODE_AF_PP;//ÅäÖÃ¹¤×÷Ä£Ê½ ¸´ÓÃÍÆÍìÊä³ö
-		gpio_initstruct.Pull = GPIO_PULLUP;//ÅäÖÃÉÏÀ­ÏÂÀ­
-		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//ÅäÖÃÊä³öËÙ¶È
+		gpio_initstruct.Pin = GPIO_PIN_7;//é…ç½®å¼•è„šå·
+		gpio_initstruct.Mode = GPIO_MODE_AF_PP;//é…ç½®å·¥ä½œæ¨¡å¼ å¤ç”¨æ¨æŒ½è¾“å‡º
+		gpio_initstruct.Pull = GPIO_PULLUP;//é…ç½®ä¸Šæ‹‰ä¸‹æ‹‰
+		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//é…ç½®è¾“å‡ºé€Ÿåº¦
 	
 		HAL_GPIO_Init(GPIOB,&gpio_initstruct);		
 	}
 
 }
 
-/*************************Èí¼şÏà¹Ø**************************/
+/*************************è½¯ä»¶ç›¸å…³**************************/
 
 void GO_forward(void)
 {

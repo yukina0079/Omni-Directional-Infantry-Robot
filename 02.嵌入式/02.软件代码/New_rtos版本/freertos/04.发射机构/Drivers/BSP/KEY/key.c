@@ -1,19 +1,19 @@
 #include "key.h"
 #include "sys.h"
 #include "delay.h"
-//³õÊ¼»¯GPIO¿Ú
+//åˆå§‹åŒ–GPIOå£
 #define Key_port GPIOB
 #define Key1_pin GPIO_PIN_5
 void key_init(void)
 {
 	
-		GPIO_InitTypeDef gpio_initstruct;//¶¨Òå½á¹¹Ìå²ÎÊı
-		__HAL_RCC_GPIOB_CLK_ENABLE();		//¿ªÆôGPIOA×éÒı½Å
+		GPIO_InitTypeDef gpio_initstruct;//å®šä¹‰ç»“æ„ä½“å‚æ•°
+		__HAL_RCC_GPIOB_CLK_ENABLE();		//å¼€å¯GPIOAç»„å¼•è„š
 	
-		gpio_initstruct.Pin = Key1_pin;//ÅäÖÃÒı½ÅºÅ
-		gpio_initstruct.Mode = GPIO_MODE_INPUT;//ÅäÖÃ¹¤×÷Ä£Ê½ ÍÆÍìÊä³ö
-		gpio_initstruct.Pull = GPIO_PULLUP;//ÅäÖÃÉÏÀ­ÏÂÀ­
-		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//ÅäÖÃÊä³öËÙ¶È
+		gpio_initstruct.Pin = Key1_pin;//é…ç½®å¼•è„šå·
+		gpio_initstruct.Mode = GPIO_MODE_INPUT;//é…ç½®å·¥ä½œæ¨¡å¼ æ¨æŒ½è¾“å‡º
+		gpio_initstruct.Pull = GPIO_PULLUP;//é…ç½®ä¸Šæ‹‰ä¸‹æ‹‰
+		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//é…ç½®è¾“å‡ºé€Ÿåº¦
 	
 		HAL_GPIO_Init(Key_port,&gpio_initstruct);
 }

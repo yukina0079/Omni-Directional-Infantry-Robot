@@ -1,13 +1,14 @@
 #ifndef __DATA_H
 #define __DATA_H
 #include "sys.h"
+#include "frame13.h"
 #include "pid.h"
 
 #define PI          3.1415926f
 
-extern uint8_t B_rx_A_buf[32];
-extern uint8_t Uart_sand_byte[20];
-extern uint8_t Uart_recv_byte[20];
+extern uint8_t B_rx_A_buf[FRAME13_LEN];
+extern uint8_t Uart_sand_byte[FRAME13_LEN];
+extern uint8_t Uart_recv_byte[FRAME13_LEN];
 
 extern float INS_angle_filtered[3];
 extern float angle_lpf[3];

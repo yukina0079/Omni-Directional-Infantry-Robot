@@ -1,8 +1,8 @@
 #include "sys.h"
 #include "usart.h"
-#include "data.h"          /* °üº¬ frame_sync ºÍ uart_recv_byte */
+#include "data.h"          /* åŒ…å« frame_sync å’Œ uart_recv_byte */
 
-/* ---------------- ÒÑ×¢ÊÍ£ºÔ­Éú FreeRTOS ²»ĞèÒª os.h ---------------- */
+/* ---------------- å·²æ³¨é‡Šï¼šåŸç”Ÿ FreeRTOS ä¸éœ€è¦ os.h ---------------- */
 /*
 #if SYS_SUPPORT_OS
 #include "os.h"
@@ -10,15 +10,15 @@
 */
 
 /******************************************************************************************/
-/* ¼ÓÈëÒÔÏÂ´úÂë, Ö§³Öprintfº¯Êı, ¶ø²»ĞèÒªÑ¡Ôñuse MicroLIB (±£³ÖÔ­ÓĞ USART3 Êä³ö) */
+/* åŠ å…¥ä»¥ä¸‹ä»£ç , æ”¯æŒprintfå‡½æ•°, è€Œä¸éœ€è¦é€‰æ‹©use MicroLIB (ä¿æŒåŸæœ‰ USART3 è¾“å‡º) */
 
 #if 1
-#if (__ARMCC_VERSION >= 6010050)                    /* Ê¹ÓÃAC6±àÒëÆ÷Ê± */
-__asm(".global __use_no_semihosting\n\t");          /* ÉùÃ÷²»Ê¹ÓÃ°ëÖ÷»úÄ£Ê½ */
-__asm(".global __ARM_use_no_argv \n\t");            /* AC6ÏÂĞèÒªÉùÃ÷mainº¯ÊıÎªÎŞ²ÎÊı¸ñÊ½ */
+#if (__ARMCC_VERSION >= 6010050)                    /* ä½¿ç”¨AC6ç¼–è¯‘å™¨æ—¶ */
+__asm(".global __use_no_semihosting\n\t");          /* å£°æ˜ä¸ä½¿ç”¨åŠä¸»æœºæ¨¡å¼ */
+__asm(".global __ARM_use_no_argv \n\t");            /* AC6ä¸‹éœ€è¦å£°æ˜mainå‡½æ•°ä¸ºæ— å‚æ•°æ ¼å¼ */
 
 #else
-/* Ê¹ÓÃAC5±àÒëÆ÷Ê±, ÒªÔÚÕâÀï¶¨Òå__FILE ºÍ ²»Ê¹ÓÃ°ëÖ÷»úÄ£Ê½ */
+/* ä½¿ç”¨AC5ç¼–è¯‘å™¨æ—¶, è¦åœ¨è¿™é‡Œå®šä¹‰__FILE å’Œ ä¸ä½¿ç”¨åŠä¸»æœºæ¨¡å¼ */
 #pragma import(__use_no_semihosting)
 
 struct __FILE
@@ -33,29 +33,29 @@ void _sys_exit(int x) { x = x; }
 char *_sys_command_string(char *cmd, int len) { return NULL; }
 FILE __stdout;
 
-/* ÖØ¶¨Òåfputcº¯Êı, printfÊä³öµ½USART3 */
+/* é‡å®šä¹‰fputcå‡½æ•°, printfè¾“å‡ºåˆ°USART3 */
 int fputc(int ch, FILE *f)
 {
-    while ((USART3->SR & 0X40) == 0);               /* µÈ´ı·¢ËÍÍê³É */
+    while ((USART3->SR & 0X40) == 0);               /* ç­‰å¾…å‘é€å®Œæˆ */
     USART3->DR = (uint8_t)ch;
     return ch;
 }
 #endif
 /***********************************************END*******************************************/
 
-/* ---------- Ô­ÓĞ DMA ·¢ËÍ¾ä±ú ---------- */
+/* ---------- åŸæœ‰ DMA å‘é€å¥æŸ„ ---------- */
 DMA_HandleTypeDef g_uart3_dma_tx_handle;
 
-/* ---------- ĞÂÔö£ºDMA ½ÓÊÕÏà¹ØÈ«¾Ö±äÁ¿ ---------- */
+/* ---------- æ–°å¢ï¼šDMA æ¥æ”¶ç›¸å…³å…¨å±€å˜é‡ ---------- */
 DMA_HandleTypeDef g_hdma_usart_rx;
 uint8_t g_uart_rx_buf[FRAME_SIZE];
 static uint16_t last_dma_pos = 0;
 
-/* ---------- Ô­ÓĞ²âÊÔÊı¾İ ---------- */
+/* ---------- åŸæœ‰æµ‹è¯•æ•°æ® ---------- */
 uint8_t g_uart3_tx_buf[] = "USART3 DMA Single Send: Hello F407!\r\n";
 const uint16_t g_uart3_tx_buf_len = sizeof(g_uart3_tx_buf) - 1;
 
-/* ---------- ±£ÁôÔ­ÓĞ±äÁ¿¶¨Òå (¼æÈİ¾É´úÂë) ---------- */
+/* ---------- ä¿ç•™åŸæœ‰å˜é‡å®šä¹‰ (å…¼å®¹æ—§ä»£ç ) ---------- */
 #if USART_EN_RX
 uint8_t g_usart_rx_buf[USART_REC_LEN];
 uint16_t g_usart_rx_sta = 0;
@@ -64,12 +64,12 @@ UART_HandleTypeDef g_uart1_handle;
 #endif
 
 /**
- * @brief  ´®¿Ú³õÊ¼»¯º¯Êı (ÒÑĞŞ¸Ä£ºÔö¼Ó DMA Ñ­»·½ÓÊÕ)
- * @param  baudrate: ²¨ÌØÂÊ
+ * @brief  ä¸²å£åˆå§‹åŒ–å‡½æ•° (å·²ä¿®æ”¹ï¼šå¢åŠ  DMA å¾ªç¯æ¥æ”¶)
+ * @param  baudrate: æ³¢ç‰¹ç‡
  */
 void usart_init(uint32_t baudrate)
 {
-    /* 1. ÅäÖÃUART»ù´¡²ÎÊı (USART3) */
+    /* 1. é…ç½®UARTåŸºç¡€å‚æ•° (USART3) */
     g_uart1_handle.Instance = USART_UX;
     g_uart1_handle.Init.BaudRate = baudrate;
     g_uart1_handle.Init.WordLength = UART_WORDLENGTH_8B;
@@ -79,7 +79,7 @@ void usart_init(uint32_t baudrate)
     g_uart1_handle.Init.Mode = UART_MODE_TX_RX;
     HAL_UART_Init(&g_uart1_handle);
 
-    /* 2. Ô­ÓĞ£ºDMA·¢ËÍÅäÖÃ (µ¥´ÎÄ£Ê½) */
+    /* 2. åŸæœ‰ï¼šDMAå‘é€é…ç½® (å•æ¬¡æ¨¡å¼) */
     g_uart3_dma_tx_handle.Instance = DMA1_Stream3;
     g_uart3_dma_tx_handle.Init.Channel = DMA_CHANNEL_4;
     g_uart3_dma_tx_handle.Init.Direction = DMA_MEMORY_TO_PERIPH;
@@ -93,8 +93,8 @@ void usart_init(uint32_t baudrate)
     HAL_DMA_Init(&g_uart3_dma_tx_handle);
     __HAL_LINKDMA(&g_uart1_handle, hdmatx, g_uart3_dma_tx_handle);
 
-    /* 3. ĞÂÔö£ºDMA½ÓÊÕÅäÖÃ (Ñ­»·Ä£Ê½ CIRCULAR) */
-    /* USART3_RX ¶ÔÓ¦ DMA1_Stream1, Channel4 */
+    /* 3. æ–°å¢ï¼šDMAæ¥æ”¶é…ç½® (å¾ªç¯æ¨¡å¼ CIRCULAR) */
+    /* USART3_RX å¯¹åº” DMA1_Stream1, Channel4 */
     g_hdma_usart_rx.Instance = DMA1_Stream1;
     g_hdma_usart_rx.Init.Channel = DMA_CHANNEL_4;
     g_hdma_usart_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
@@ -102,24 +102,24 @@ void usart_init(uint32_t baudrate)
     g_hdma_usart_rx.Init.MemInc = DMA_MINC_ENABLE;
     g_hdma_usart_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     g_hdma_usart_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-    g_hdma_usart_rx.Init.Mode = DMA_CIRCULAR;      /* Ñ­»·Ä£Ê½ */
+    g_hdma_usart_rx.Init.Mode = DMA_CIRCULAR;      /* å¾ªç¯æ¨¡å¼ */
     g_hdma_usart_rx.Init.Priority = DMA_PRIORITY_HIGH;
     g_hdma_usart_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     HAL_DMA_Init(&g_hdma_usart_rx);
     __HAL_LINKDMA(&g_uart1_handle, hdmarx, g_hdma_usart_rx);
 
-    /* 4. Æô¶¯ DMA Ñ­»·½ÓÊÕ */
+    /* 4. å¯åŠ¨ DMA å¾ªç¯æ¥æ”¶ */
     HAL_UART_Receive_DMA(&g_uart1_handle, g_uart_rx_buf, FRAME_SIZE);
     
-    /* 5. ³õÊ¼»¯ÉÏ´ÎÎ»ÖÃ */
+    /* 5. åˆå§‹åŒ–ä¸Šæ¬¡ä½ç½® */
     last_dma_pos = FRAME_SIZE - __HAL_DMA_GET_COUNTER(&g_hdma_usart_rx);
 
-    /* 6. ×¢ÊÍµôÔ­ÓĞ½ÓÊÕÖĞ¶Ï£¬¸ÄÎª´¿ÂÖÑ¯ */
+    /* 6. æ³¨é‡Šæ‰åŸæœ‰æ¥æ”¶ä¸­æ–­ï¼Œæ”¹ä¸ºçº¯è½®è¯¢ */
     // HAL_UART_Receive_IT(&g_uart1_handle, (uint8_t *)g_rx_buffer, RXBUFFERSIZE);
 }
 
 /**
- * @brief  UARTµ×²ãÇı¶¯³õÊ¼»¯ (ÒÑĞŞ¸Ä£ºÔö¼Ó DMA ½ÓÊÕÒı½ÅºÍÊ±ÖÓ)
+ * @brief  UARTåº•å±‚é©±åŠ¨åˆå§‹åŒ– (å·²ä¿®æ”¹ï¼šå¢åŠ  DMA æ¥æ”¶å¼•è„šå’Œæ—¶é’Ÿ)
  */
 void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {
@@ -127,12 +127,12 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 
     if (huart->Instance == USART_UX)
     {
-        /* 1. Ê¹ÄÜÊ±ÖÓ */
+        /* 1. ä½¿èƒ½æ—¶é’Ÿ */
         __HAL_RCC_GPIOC_CLK_ENABLE();
         __HAL_RCC_USART3_CLK_ENABLE();
-        __HAL_RCC_DMA1_CLK_ENABLE();        /* DMA1 Ê±ÖÓ */
+        __HAL_RCC_DMA1_CLK_ENABLE();        /* DMA1 æ—¶é’Ÿ */
 
-        /* 2. ÅäÖÃ TX (PC11) */
+        /* 2. é…ç½® TX (PC11) */
         gpio_init_struct.Pin = USART_TX_GPIO_PIN;
         gpio_init_struct.Mode = GPIO_MODE_AF_PP;
         gpio_init_struct.Pull = GPIO_PULLUP;
@@ -140,56 +140,56 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
         gpio_init_struct.Alternate = USART_TX_GPIO_AF;
         HAL_GPIO_Init(USART_TX_GPIO_PORT, &gpio_init_struct);
 
-        /* 3. ÅäÖÃ RX (PC10) */
+        /* 3. é…ç½® RX (PC10) */
         gpio_init_struct.Pin = USART_RX_GPIO_PIN;
-        gpio_init_struct.Mode = GPIO_MODE_AF_PP;      /* ¸´ÓÃÍÆÍìÊäÈë */
+        gpio_init_struct.Mode = GPIO_MODE_AF_PP;      /* å¤ç”¨æ¨æŒ½è¾“å…¥ */
         gpio_init_struct.Pull = GPIO_NOPULL;
         gpio_init_struct.Alternate = USART_RX_GPIO_AF;
         HAL_GPIO_Init(USART_RX_GPIO_PORT, &gpio_init_struct);
 
-        /* 4. Ô­ÓĞ£ºDMA·¢ËÍ³õÊ¼»¯ÒÑÔÚÉÏÃæÍ³Ò»´¦Àí£¬ÕâÀï²»ĞèÒªÖØ¸´ */
+        /* 4. åŸæœ‰ï¼šDMAå‘é€åˆå§‹åŒ–å·²åœ¨ä¸Šé¢ç»Ÿä¸€å¤„ç†ï¼Œè¿™é‡Œä¸éœ€è¦é‡å¤ */
         
-        /* 5. ²»Ê¹ÄÜ UART ÖĞ¶Ï£¬´¿ÂÖÑ¯ */
+        /* 5. ä¸ä½¿èƒ½ UART ä¸­æ–­ï¼Œçº¯è½®è¯¢ */
     }
 }
 
 /**
- * @brief  ĞÂÔö£ºÂÖÑ¯´¦Àí½ÓÊÕµ½µÄÊı¾İ (ĞèÔÚÖ÷Ñ­»· while(1) ÖĞµ÷ÓÃ)
+ * @brief  æ–°å¢ï¼šè½®è¯¢å¤„ç†æ¥æ”¶åˆ°çš„æ•°æ® (éœ€åœ¨ä¸»å¾ªç¯ while(1) ä¸­è°ƒç”¨)
  */
 void usart_poll(void)
 {
     uint16_t current_pos = FRAME_SIZE - __HAL_DMA_GET_COUNTER(&g_hdma_usart_rx);
     uint16_t new_bytes;
 
-    /* ¼ÆËãĞÂÊÕµ½µÄ×Ö½ÚÊı */
+    /* è®¡ç®—æ–°æ”¶åˆ°çš„å­—èŠ‚æ•° */
     if (current_pos >= last_dma_pos) {
         new_bytes = current_pos - last_dma_pos;
     } else {
         new_bytes = (FRAME_SIZE - last_dma_pos) + current_pos;
     }
 
-    /* Öğ¸ö´¦ÀíĞÂ×Ö½Ú */
+    /* é€ä¸ªå¤„ç†æ–°å­—èŠ‚ */
     for (uint16_t i = 0; i < new_bytes; i++) {
         uint16_t index = (last_dma_pos + i) % FRAME_SIZE;
         uint8_t byte = g_uart_rx_buf[index];
 
-        /* µ÷ÓÃÖğ×Ö½ÚÍ¬²½º¯Êı */
+        /* è°ƒç”¨é€å­—èŠ‚åŒæ­¥å‡½æ•° */
         if (frame_sync(byte, Uart_recv_byte)) {
-            // Ö¡´¦ÀíÍê³É£¬ÔÚ´ËÌí¼ÓÄãµÄ´úÂë
+            // å¸§å¤„ç†å®Œæˆï¼Œåœ¨æ­¤æ·»åŠ ä½ çš„ä»£ç 
         }
     }
 
-    /* ¸üĞÂÎ»ÖÃ */
+    /* æ›´æ–°ä½ç½® */
     last_dma_pos = current_pos;
 
-    /* Çå³ıÒç³ö±êÖ¾ */
+    /* æ¸…é™¤æº¢å‡ºæ ‡å¿— */
     if (__HAL_UART_GET_FLAG(&g_uart1_handle, UART_FLAG_ORE) != RESET) {
         __HAL_UART_CLEAR_OREFLAG(&g_uart1_handle);
     }
 }
 
 /**
- * @brief  Ô­ÓĞ£ºÖÕ¼«°æ USART3 DMA Á¬Ğø·¢ËÍº¯Êı (±£³Ö²»±ä)
+ * @brief  åŸæœ‰ï¼šç»ˆæç‰ˆ USART3 DMA è¿ç»­å‘é€å‡½æ•° (ä¿æŒä¸å˜)
  */
 void usart3_dma_send(uint8_t *pbuf, uint16_t len)
 {
@@ -206,14 +206,14 @@ void usart3_dma_send(uint8_t *pbuf, uint16_t len)
 }
 
 /**
- * @brief  Ô­ÓĞ£ºÖĞÖ¹DMA·¢ËÍ (±£³Ö²»±ä)
+ * @brief  åŸæœ‰ï¼šä¸­æ­¢DMAå‘é€ (ä¿æŒä¸å˜)
  */
 void usart3_dma_stop_send(void)
 {
     HAL_UART_AbortTransmit(&g_uart1_handle);
 }
 
-/* ---------------- ÒÑ×¢ÊÍ£ºÔ­ÓĞ½ÓÊÕÖĞ¶ÏÏà¹Øº¯Êı (ÒòÎª¸ÄÎª´¿ÂÖÑ¯) ---------------- */
+/* ---------------- å·²æ³¨é‡Šï¼šåŸæœ‰æ¥æ”¶ä¸­æ–­ç›¸å…³å‡½æ•° (å› ä¸ºæ”¹ä¸ºçº¯è½®è¯¢) ---------------- */
 /*
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) { ... }
 void USART_UX_IRQHandler(void) { ... }

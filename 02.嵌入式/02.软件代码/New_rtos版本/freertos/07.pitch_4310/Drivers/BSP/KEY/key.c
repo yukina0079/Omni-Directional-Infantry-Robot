@@ -1,7 +1,7 @@
 #include "key.h"
 #include "sys.h"
 #include "delay.h"
-//³õÊ¼»¯GPIO¿Ú
+//åˆå§‹åŒ–GPIOå£
 void key_init(void)
 {
 	

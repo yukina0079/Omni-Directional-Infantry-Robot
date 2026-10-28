@@ -1,0 +1,15 @@
+# Normalise line endings in the repository; check out with the host default.
+* text=auto
+
+*.c    text
+*.h    text
+*.md   text
+*.py   text
+*.txt  text
+*.uvprojx text
+*.uvoptx  text
+
+# Binary design files must never be normalised.
+*.epro2 binary
+*.lib   binary
+*.pack  binary

@@ -1,10 +1,10 @@
 #include "motor.h"
 #include "stdlib.h"
 /*
-	MOTOR1;PB8, PB9, PC9-TIM8_CH4 ÓÒÉÏ
-	MOTOR2;PE0, PE1, PC8-TIM8_CH3 ÓÒÏÂ
-	MOTOR3;PE12,PE13,PC7-TIM8_CH2 ×óÉÏ
-	MOTOR4;PE14,PE15,PC6-TIM8_CH1 ×óÏÂ
+	MOTOR1;PB8, PB9, PC9-TIM8_CH4 å³ä¸Š
+	MOTOR2;PE0, PE1, PC8-TIM8_CH3 å³ä¸‹
+	MOTOR3;PE12,PE13,PC7-TIM8_CH2 å·¦ä¸Š
+	MOTOR4;PE14,PE15,PC6-TIM8_CH1 å·¦ä¸‹
 	Tout=((arr+1)*(psc+1))/168Mhz
 */
 
@@ -55,9 +55,9 @@
 #define MOTOR4_GPIO_P1 GPIO_PIN_14
 #define MOTOR4_GPIO_P2 GPIO_PIN_15
 
-TIM_HandleTypeDef pwm_handle = {0};			//¶¨Òå¶¨Ê±Æ÷²ÎÊı½á¹¹Ìå
+TIM_HandleTypeDef pwm_handle = {0};			//å®šä¹‰å®šæ—¶å™¨å‚æ•°ç»“æ„ä½“
 
-//³õÊ¼»¯GPIO¿Ú
+//åˆå§‹åŒ–GPIOå£
 /*
  * Direction pins only -- the PWM pins are handled by HAL_TIM_PWM_MspInit().
  *
@@ -127,16 +127,16 @@ void pwm_init(uint16_t arr,uint16_t psc)
 {
 		TIM_OC_InitTypeDef pwm_config = {0};
 	
-		pwm_handle.Instance = TIM8;					//¶¨Ê±Æ÷Í¨µÀ
+		pwm_handle.Instance = TIM8;					//å®šæ—¶å™¨é€šé“
 		pwm_handle.Init.Prescaler = psc;
 		pwm_handle.Init.Period = arr;
-		pwm_handle.Init.CounterMode = TIM_COUNTERMODE_UP;//ÏòÉÏ¼ÆÊı
+		pwm_handle.Init.CounterMode = TIM_COUNTERMODE_UP;//å‘ä¸Šè®¡æ•°
 		
 		HAL_TIM_PWM_Init(&pwm_handle);
 		
-		pwm_config.OCMode = TIM_OCMODE_PWM1; //Í¨ÓÃ¶¨Ê±Æ÷
+		pwm_config.OCMode = TIM_OCMODE_PWM1; //é€šç”¨å®šæ—¶å™¨
 		pwm_config.Pulse  = 0;
-		pwm_config.OCPolarity = TIM_OCPOLARITY_HIGH;//¼ÆÊı·½Ê½
+		pwm_config.OCPolarity = TIM_OCPOLARITY_HIGH;//è®¡æ•°æ–¹å¼
 		
 		HAL_TIM_PWM_ConfigChannel(&pwm_handle,&pwm_config,TIM_CHANNEL_1);
 		HAL_TIM_PWM_ConfigChannel(&pwm_handle,&pwm_config,TIM_CHANNEL_2);
@@ -179,7 +179,7 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
         gpio_initstruct.Mode = GPIO_MODE_AF_PP;
         gpio_initstruct.Pull = GPIO_PULLUP;
         gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;
-        gpio_initstruct.Alternate = GPIO_AF3_TIM8; // ¡¾¹Ø¼üĞŞ¸´¡¿ÉèÖÃ¸´ÓÃ¹¦ÄÜÎªTIM8
+        gpio_initstruct.Alternate = GPIO_AF3_TIM8; // ã€å…³é”®ä¿®å¤ã€‘è®¾ç½®å¤ç”¨åŠŸèƒ½ä¸ºTIM8
 
         HAL_GPIO_Init(GPIOC, &gpio_initstruct);
     }

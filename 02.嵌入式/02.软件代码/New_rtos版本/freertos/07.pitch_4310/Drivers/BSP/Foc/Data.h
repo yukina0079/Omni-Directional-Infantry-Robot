@@ -2,6 +2,7 @@
 #define DATA_H
 
 #include "Pid.h"
+#include "frame13.h"
 
 #define PI 3.1415926f
 #define _PI 3.14159265359f
@@ -17,8 +18,8 @@ extern float pitch_num;
 extern float joy_num;
 extern float pitch_pid_num;
 
-extern uint8_t uart_recv[20];
-extern uint8_t send_angal[20];
+extern uint8_t uart_recv[FRAME13_LEN];
+extern uint8_t send_angal[FRAME13_LEN];
 
 extern float sensor_direction;//编码器方向
 extern float pole_pairs;//电机极对数
@@ -50,8 +51,9 @@ extern float current_a,current_c;//A相和C相电流
 extern uint32_t last_frame_us;
 
 /*
- * Encoder position mode. Bytes 14/15 are the remote's integrated ly
- * angle in radians. The first good frame captures the current shaft
+ * Encoder position mode. Bytes 10/11 are the pitch command in radians, either
+ * the gimbal's pitch PID output or, with no IMU fitted, the remote's integrated
+ * ly angle re-encoded at rad*100. The first good frame captures the current shaft
  * angle as the session origin, so the barrel is not yanked to a
  * stored horizon. Stick centre holds; stick deflection slews the
  * setpoint. BMI055 is not required -- that is only for world-frame

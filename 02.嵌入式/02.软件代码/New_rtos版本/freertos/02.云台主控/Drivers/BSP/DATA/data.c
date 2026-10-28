@@ -31,7 +31,7 @@
  * the chassis board's job -- and it drives no motor itself. Every actuator
  * decision is made downstream on the 4310 board.
  *
- * Mirror-image of 01.底盘主控/Drivers/BSP/DATA/data.c: same 20-byte frame, same
+ * Mirror-image of 01.底盘主控/Drivers/BSP/DATA/data.c: same 13-byte frame, same
  * PID module, same task skeleton. Three differences are worth knowing because
  * they are the reason the two files are not interchangeable:
  *
@@ -119,9 +119,9 @@ float INS_quat[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 float INS_angle[3] = {0.0f, 0.0f, 0.0f};    
 /*************************/
 int8_t joy[5] = {0};
-uint8_t B_rx_A_buf[32] = {0};
-uint8_t Uart_sand_byte[20] = {0};
-uint8_t Uart_recv_byte[20] = {0};
+uint8_t B_rx_A_buf[FRAME13_LEN] = {0};
+uint8_t Uart_sand_byte[FRAME13_LEN] = {0};
+uint8_t Uart_recv_byte[FRAME13_LEN] = {0};
 pid_type_def pitch_pos_pid;
 
 float pitch_position[3] = {0.3f, 0.0f, 0.01f};
@@ -129,7 +129,7 @@ float pitch_val[3] = {0.0f,0.0f,0.0f};
 volatile uint32_t nrf_last_ms = 0;
 
 static float pid_out_lpf = 0.0f;
-static uint8_t foc_dma_buf[20];
+static uint8_t foc_dma_buf[FRAME13_LEN];
 
 void nrf_mark_rx(void)
 {
@@ -187,7 +187,7 @@ static float slew_limit(float prev, float want, float dt)
  * One loop on this board: pitch position.
  *
  * max_out 1.2 and max_iout 0.4 are in RADIANS, because that is how the FOC board
- * interprets bytes 14/15 -- an angle command, not a voltage or a rate. 1.2 rad is
+ * interprets bytes 10/11 -- an angle command, not a voltage or a rate. 1.2 rad is
  * about 69 degrees, comfortably outside the roughly 50-degree mechanical window,
  * so this limit is a sanity bound rather than the travel limit; the real ends are
  * enforced on the 4310 board from its AS5600 absolute reading. max_iout at a
@@ -204,7 +204,7 @@ void data_init(void)
 	/* Soft limits: FOC treats this output as radians around 0.2 rad centre. */
 	PID_init(&pitch_pos_pid, PID_POSITION, pitch_position, 1.2f, 0.4f);
 	Uart_sand_byte[0] = FOC_FRAME_HEAD;
-	Uart_sand_byte[19] = FOC_FRAME_TAIL;
+	Uart_sand_byte[F13_TAIL_IDX] = FOC_FRAME_TAIL;
 }
 
 /*
@@ -276,17 +276,17 @@ void pid_calculate(void)
 /*
  * Rebuild the outgoing FOC frame from the latest radio data. Runs every 1 ms.
  *
- * Bytes 1..11 are the operator's own fields, relayed unchanged: keys, both knobs,
+ * Bytes 1..7 are the operator's own fields, relayed unchanged: keys, both knobs,
  * both sticks. The pitch board needs them because it has no radio of its own.
- * Bytes 12/13 carry this board's measured pitch, 14/15 the pitch command.
+ * Bytes 8/9 carry this board's measured pitch, 10/11 the pitch command.
  *
  * ZEROING versus FREEZING on radio loss -- this board and the chassis do OPPOSITE
  * things, and both are right for their own link:
  *
- *   here (gimbal)  the fields are ZEROED. Byte 14/15 is an ABSOLUTE angle for the
+ *   here (gimbal)  the fields are ZEROED. Bytes 10/11 are an ABSOLUTE angle for
  *                  pitch axis, so zero means "return to the neutral angle", which
  *                  is a safe, defined pose for a barrel.
- *   chassis        the frame is left FROZEN. Its byte 14/15 is an INCREMENTAL yaw
+ *   chassis        the frame is left FROZEN. Its bytes 10/11 are an INCREMENTAL
  *                  command, so repeating the last value yields a delta of zero and
  *                  the yaw axis holds position. Zeroing there would read as one
  *                  large negative increment and slew the turret.
@@ -314,50 +314,32 @@ void data_change(void)
 	Uart_sand_byte[0] = FOC_FRAME_HEAD;
 	if (nrf_age_ms() <= NRF_HOLD_MS)
 	{
-		Uart_sand_byte[1] = B_rx_A_buf[1];
-		Uart_sand_byte[2] = B_rx_A_buf[2];
-		Uart_sand_byte[3] = B_rx_A_buf[3];
-		Uart_sand_byte[4] = B_rx_A_buf[4];
-		Uart_sand_byte[5] = B_rx_A_buf[5];
-		Uart_sand_byte[6] = B_rx_A_buf[6];
-		Uart_sand_byte[7] = B_rx_A_buf[7];
-		Uart_sand_byte[8] = B_rx_A_buf[8];
-		Uart_sand_byte[9] = B_rx_A_buf[9];
-		Uart_sand_byte[10] = B_rx_A_buf[10];
-		Uart_sand_byte[11] = B_rx_A_buf[11];
-		pitch_val[0] = two_uint8_to_float_signed(B_rx_A_buf[6], B_rx_A_buf[7]);
+		for (uint8_t i = F13_KEY; i <= F13_LY_L; i++) {
+			Uart_sand_byte[i] = B_rx_A_buf[i];
+		}
+		pitch_val[0] = two_uint8_to_float_signed(B_rx_A_buf[F13_LY_H], B_rx_A_buf[F13_LY_L]);
 	}
 	else
 	{
-		Uart_sand_byte[1] = 0;
-		Uart_sand_byte[2] = 0;
-		Uart_sand_byte[3] = 0;
-		Uart_sand_byte[4] = 0;
-		Uart_sand_byte[5] = 0;
-		Uart_sand_byte[6] = 0;
-		Uart_sand_byte[7] = 0;
-		Uart_sand_byte[8] = 0;
-		Uart_sand_byte[9] = 0;
-		Uart_sand_byte[10] = 0;
-		Uart_sand_byte[11] = 0;
+		for (uint8_t i = F13_KEY; i <= F13_LY_L; i++) {
+			Uart_sand_byte[i] = 0;
+		}
 		pitch_val[0] = 0.0f;
 	}
 
-	float_to_two_uint8_signed(INS_angle_filtered[1], &Uart_sand_byte[12], &Uart_sand_byte[13]);
+	/* Bytes 8..11: this board's attitude and the pitch command. */
+	float_to_two_uint8_signed(INS_angle_filtered[1], &Uart_sand_byte[F13_ATT_H], &Uart_sand_byte[F13_ATT_L]);
 #if GIMBAL_IMU_ENABLE
-	float_to_two_uint8_signed(pitch_val[1], &Uart_sand_byte[14], &Uart_sand_byte[15]);
+	float_to_two_uint8_signed(pitch_val[1], &Uart_sand_byte[F13_CMD_H], &Uart_sand_byte[F13_CMD_L]);
 #else
-	/*
-	 * Pass ly bytes through unchanged. The remote now uses 0.001 rad
-	 * LSBs; a decode/re-encode at 0.01 rad would throw that away.
-	 */
-	Uart_sand_byte[14] = B_rx_A_buf[6];
-	Uart_sand_byte[15] = B_rx_A_buf[7];
+	/* No IMU: the stick's own angle is the command. Re-encode at rad*100 so the
+	 * field means one thing on both branches -- the pitch board decodes it with
+	 * two_uint8_to_float_signed() (/100). The old code passed the 0.001-LSB ly
+	 * bytes through unchanged while that board divided by 1000, which pinned the
+	 * command ten times too small. */
+	float_to_two_uint8_signed(pitch_val[0], &Uart_sand_byte[F13_CMD_H], &Uart_sand_byte[F13_CMD_L]);
 #endif
-	Uart_sand_byte[16] = 0;
-	Uart_sand_byte[17] = 0;
-	Uart_sand_byte[18] = 0;
-	Uart_sand_byte[19] = FOC_FRAME_TAIL;
+	Uart_sand_byte[F13_TAIL_IDX] = FOC_FRAME_TAIL;
 
 	joy[0] = (int8_t)Uart_sand_byte[1];
 	joy[1] = (int8_t)Uart_sand_byte[2];
@@ -376,13 +358,13 @@ void data_change(void)
  * construction. That safety is a property of the task layout, not of this code --
  * move uart_sand() into its own task, as the chassis does, and this becomes a
  * torn-frame bug: the copy could take bytes 0..7 from one control cycle and 8..19
- * from the next, which across the 14/15 pair is a pitch command the axis was
+ * from the next, which across the 10/11 pair is a pitch command the axis was
  * never asked for. The chassis version wraps the same memcpy in
  * taskENTER_CRITICAL() for exactly that reason.
  */
 void uart_sand(void)
 {
-	/* 20 bytes @ 115200 takes ~1.74 ms. Skip rather than tear a live DMA. */
+	/* 13 bytes @ 115200 takes ~1.13 ms. Skip rather than tear a live DMA. */
 	if (DMA1_Stream3->CR & DMA_SxCR_EN)
 	{
 		return;
@@ -529,14 +511,14 @@ float low_pass_filter(float input, float *prev_output, float dt)
  * Byte-at-a-time frame synchroniser for the FOC board's reply. Fed from
  * usart_poll(), which drains the circular RX DMA.
  *
- * A 20-byte sliding window: after the write index advances it points at the
- * OLDEST byte, so ring[w_idx] is the candidate header and ring[w_idx+19] the
+ * A 13-byte sliding window: after the write index advances it points at the
+ * OLDEST byte, so ring[w_idx] is the candidate header and ring[w_idx+12] the
  * candidate tail. Clearing count on a hit consumes the window, so one frame is
  * never delivered twice.
  *
  * The header/tail pair is the only validation on this link -- no CRC, no
- * sequence -- so any 20 bytes that happen to start 0x55 and end 0xFF are
- * accepted. With a fixed 20-byte frame arriving continuously that is adequate;
+ * sequence -- so any 13 bytes that happen to start 0x55 and end 0xFF are
+ * accepted. With a fixed 13-byte frame arriving continuously that is adequate;
  * it would not be on a link carrying variable-length traffic.
  *
  * DIFFERENCE FROM THE CHASSIS: that board stamps a timestamp here
@@ -549,19 +531,19 @@ float low_pass_filter(float input, float *prev_output, float dt)
  */
 uint8_t frame_sync(uint8_t byte, uint8_t *frame_out)
 {
-    static uint8_t ring[20];
+    static uint8_t ring[FRAME13_LEN];
     static uint8_t w_idx = 0;
     static uint8_t count = 0;
 
     ring[w_idx] = byte;
-    w_idx = (w_idx + 1) % 20;
-    if (count < 20) count++;
+    w_idx = (w_idx + 1) % FRAME13_LEN;
+    if (count < FRAME13_LEN) count++;
 
-    if (count >= 20) {
-        uint8_t start = w_idx;
-        if (ring[start] == 0x55 && ring[(start + 19) % 20] == 0xFF) {
-            for (uint8_t i = 0; i < 20; i++) {
-                frame_out[i] = ring[(start + i) % 20];
+    if (count >= FRAME13_LEN) {
+        uint8_t start = w_idx;   /* oldest byte: the candidate header */
+        if (ring[start] == FRAME13_HEAD && ring[(start + F13_TAIL_IDX) % FRAME13_LEN] == FRAME13_TAIL) {
+            for (uint8_t i = 0; i < FRAME13_LEN; i++) {
+                frame_out[i] = ring[(start + i) % FRAME13_LEN];
             }
             count = 0;   /* consume the window so one frame is never delivered twice */
             return 1;

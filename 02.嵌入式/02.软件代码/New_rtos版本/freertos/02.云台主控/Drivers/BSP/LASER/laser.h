@@ -6,20 +6,20 @@
 
 
 /******************************************************************************************/
-/* “˝Ω≈ ∂®“Â */
+/* ÂºïËÑö ÂÆö‰πâ */
 
 
 #define LASER1_GPIO_PORT                  GPIOC
 #define LASER1_GPIO_PIN                   GPIO_PIN_8
-#define LASER1_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)             /* PFø⁄ ±÷” πƒ‹ */
+#define LASER1_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)             /* PFÂè£Êó∂Èíü‰ΩøËÉΩ */
 
 #define LASER2_GPIO_PORT                  GPIOC
 #define LASER2_GPIO_PIN                   GPIO_PIN_9
-#define LASER2_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)             /* PFø⁄ ±÷” πƒ‹ */
+#define LASER2_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)             /* PFÂè£Êó∂Èíü‰ΩøËÉΩ */
 
 /******************************************************************************************/
 
-/* LED∂Àø⁄∂®“Â */
+/* LEDÁ´ØÂè£ÂÆö‰πâ */
 #define LASER1(x)   do{ x ? \
                       HAL_GPIO_WritePin(LASER1_GPIO_PORT, LASER1_GPIO_PIN, GPIO_PIN_SET) : \
                       HAL_GPIO_WritePin(LASER1_GPIO_PORT, LASER1_GPIO_PIN, GPIO_PIN_RESET); \
@@ -31,7 +31,7 @@
                   }while(0)       /* LED1 = GREEN */
 
 /******************************************************************************************/
-/* Õ‚≤øΩ”ø⁄∫Ø ˝*/
-void laser_init(void);                                                                            /* ≥ı ºªØ */
+/* Â§ñÈÉ®Êé•Âè£ÂáΩÊï∞*/
+void laser_init(void);                                                                            /* ÂàùÂßãÂåñ */
 
 #endif

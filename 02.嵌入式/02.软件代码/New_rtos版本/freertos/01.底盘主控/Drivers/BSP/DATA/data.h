@@ -1,8 +1,9 @@
 #ifndef __DATA_H
 #define __DATA_H
 #include "sys.h"
+#include "frame13.h"
 
-// »úÆ÷ÈË²ÎÊı
+// æœºå™¨äººå‚æ•°
 /*
  * Chassis geometry -- but NOT SI units, despite what the comments below say.
  *
@@ -35,10 +36,10 @@
  *     fast as it can. Fixing that needs a vector-wide scale factor, not a
  *     per-element clamp.
  */
-#define LX 0.15f   // ÂÖ×Óµ½ÖĞĞÄµÄ X ·½Ïò¾àÀë£¨Ã×£©
-#define LY 0.15f   // ÂÖ×Óµ½ÖĞĞÄµÄ Y ·½Ïò¾àÀë£¨Ã×£©
-#define MAX_SPEED 100  // ×î´óËÙ¶È£¨m/s »ò PWM ×î´óÖµ£©
-// ºËĞÄ³£Á¿£¨¾«¼ò¶¨Òå£©
+#define LX 0.15f   // è½®å­åˆ°ä¸­å¿ƒçš„ X æ–¹å‘è·ç¦»ï¼ˆç±³ï¼‰
+#define LY 0.15f   // è½®å­åˆ°ä¸­å¿ƒçš„ Y æ–¹å‘è·ç¦»ï¼ˆç±³ï¼‰
+#define MAX_SPEED 100  // æœ€å¤§é€Ÿåº¦ï¼ˆm/s æˆ– PWM æœ€å¤§å€¼ï¼‰
+// æ ¸å¿ƒå¸¸é‡ï¼ˆç²¾ç®€å®šä¹‰ï¼‰
 
 #define PI          3.1415926f
 #define PI_2        (2 * PI)
@@ -80,7 +81,7 @@
  * Raise alpha for less lag and more noise, lower it for the reverse. The
  * original comment's 0.05..0.3 band corresponds to about 8..56 Hz here.
  */
-#define LPF_ALPHA 0.15f  // ÂË²¨ÏµÊı£¨0.05~0.3Ö®¼äµ÷£¬Ô½Ğ¡Ô½Æ½»¬£©
+#define LPF_ALPHA 0.15f  // æ»¤æ³¢ç³»æ•°ï¼ˆ0.05~0.3ä¹‹é—´è°ƒï¼Œè¶Šå°è¶Šå¹³æ»‘ï¼‰
 
 /*
  * Unused, and would not compile if they were used: M_PI is not a standard C
@@ -95,22 +96,19 @@
 /*
  * Raw nRF24L01 receive buffer, written by DATA_COMM_task in my_task.c.
  *
- * 32 bytes because that is the radio's payload size; only bytes 0..19 carry the
- * remote's frame (0x55 header, 0xFF tail at [19]) and the remaining 12 are
- * whatever the module returned. data_change() copies all 20 into
- * Uart_sand_byte and then overwrites [12]..[15] before forwarding to the yaw
- * board, so the chassis is a relay for the remote's frame as much as a consumer
- * of it.
+ * FRAME13_LEN bytes: the radio payload and the frame are now the same length.
+ * data_change() forwards the operator's fields to the yaw board and overwrites
+ * bytes 8..11 with the chassis attitude and the yaw command, so this board is a
+ * relay for the remote's frame as much as a consumer of it.
  *
  * Not volatile and not double-buffered: DATA_COMM_task (priority 8) writes it
  * while data_exchange_task (priority 7) reads it, so a decode can in principle
- * straddle two payloads. Benign in practice because each field is read once and
- * the fields are independent, but it is the reason the header/tail check lives
- * in the receive task rather than here -- a torn buffer must not be able to
- * refresh the failsafe timer.
+ * straddle two payloads. Benign in practice because each field is read once,
+ * but it is the reason the header/tail check lives in the receive task rather
+ * than here -- a torn buffer must not refresh the failsafe timer.
  */
-extern uint8_t C_rx_buf[32];
-extern uint8_t Uart_recv_byte[20];
+extern uint8_t C_rx_buf[FRAME13_LEN];
+extern uint8_t Uart_recv_byte[FRAME13_LEN];
 
 extern float INS_angle_filtered[3];
 extern float angle_lpf[3];

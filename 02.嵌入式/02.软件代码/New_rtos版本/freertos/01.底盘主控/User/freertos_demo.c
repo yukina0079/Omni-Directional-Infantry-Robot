@@ -7,31 +7,31 @@
 #include "task.h"
 
 /******************************************************************************************************/
-/*FreeRTOSÅäÖÃ*/
+/*FreeRTOSé…ç½®*/
 
-/* START_TASK ÈÎÎñ ÅäÖÃ
- * °üÀ¨: ÈÎÎñ¾ä±ú ÈÎÎñÓÅÏÈ¼¶ ¶ÑÕ»´óĞ¡ ´´½¨ÈÎÎñ
+/* START_TASK ä»»åŠ¡ é…ç½®
+ * åŒ…æ‹¬: ä»»åŠ¡å¥æŸ„ ä»»åŠ¡ä¼˜å…ˆçº§ å †æ ˆå¤§å° åˆ›å»ºä»»åŠ¡
  */
-#define START_TASK_PRIO 1                   /* ÈÎÎñÓÅÏÈ¼¶ */
-#define START_STK_SIZE  128                 /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
-TaskHandle_t            StartTask_Handler;  /* ÈÎÎñ¾ä±ú */
-void start_task(void *pvParameters);        /* ÈÎÎñº¯Êı */
+#define START_TASK_PRIO 1                   /* ä»»åŠ¡ä¼˜å…ˆçº§ */
+#define START_STK_SIZE  128                 /* ä»»åŠ¡å †æ ˆå¤§å° */
+TaskHandle_t            StartTask_Handler;  /* ä»»åŠ¡å¥æŸ„ */
+void start_task(void *pvParameters);        /* ä»»åŠ¡å‡½æ•° */
 
-/* TASK1 ÈÎÎñ ÅäÖÃ
- * °üÀ¨: ÈÎÎñ¾ä±ú ÈÎÎñÓÅÏÈ¼¶ ¶ÑÕ»´óĞ¡ ´´½¨ÈÎÎñ
+/* TASK1 ä»»åŠ¡ é…ç½®
+ * åŒ…æ‹¬: ä»»åŠ¡å¥æŸ„ ä»»åŠ¡ä¼˜å…ˆçº§ å †æ ˆå¤§å° åˆ›å»ºä»»åŠ¡
  */
-#define TASK1_PRIO      2                   /* ÈÎÎñÓÅÏÈ¼¶ */
-#define TASK1_STK_SIZE  128                 /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
-TaskHandle_t            Task1Task_Handler;  /* ÈÎÎñ¾ä±ú */
-void task1(void *pvParameters);             /* ÈÎÎñº¯Êı */
+#define TASK1_PRIO      2                   /* ä»»åŠ¡ä¼˜å…ˆçº§ */
+#define TASK1_STK_SIZE  128                 /* ä»»åŠ¡å †æ ˆå¤§å° */
+TaskHandle_t            Task1Task_Handler;  /* ä»»åŠ¡å¥æŸ„ */
+void task1(void *pvParameters);             /* ä»»åŠ¡å‡½æ•° */
 
-/* TASK2 ÈÎÎñ ÅäÖÃ
- * °üÀ¨: ÈÎÎñ¾ä±ú ÈÎÎñÓÅÏÈ¼¶ ¶ÑÕ»´óĞ¡ ´´½¨ÈÎÎñ
+/* TASK2 ä»»åŠ¡ é…ç½®
+ * åŒ…æ‹¬: ä»»åŠ¡å¥æŸ„ ä»»åŠ¡ä¼˜å…ˆçº§ å †æ ˆå¤§å° åˆ›å»ºä»»åŠ¡
  */
-#define TASK2_PRIO      3                   /* ÈÎÎñÓÅÏÈ¼¶ */
-#define TASK2_STK_SIZE  128                 /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
-TaskHandle_t            Task2Task_Handler;  /* ÈÎÎñ¾ä±ú */
-void task2(void *pvParameters);             /* ÈÎÎñº¯Êı */
+#define TASK2_PRIO      3                   /* ä»»åŠ¡ä¼˜å…ˆçº§ */
+#define TASK2_STK_SIZE  128                 /* ä»»åŠ¡å †æ ˆå¤§å° */
+TaskHandle_t            Task2Task_Handler;  /* ä»»åŠ¡å¥æŸ„ */
+void task2(void *pvParameters);             /* ä»»åŠ¡å‡½æ•° */
 
 /******************************************************************************************************/
 
@@ -39,45 +39,45 @@ void freertos_demo(void)
 {
 
     
-    xTaskCreate((TaskFunction_t )start_task,            /* ÈÎÎñº¯Êı */
-                (const char*    )"start_task",          /* ÈÎÎñÃû³Æ */
-                (uint16_t       )START_STK_SIZE,        /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
-                (void*          )NULL,                  /* ´«Èë¸øÈÎÎñº¯ÊıµÄ²ÎÊı */
-                (UBaseType_t    )START_TASK_PRIO,       /* ÈÎÎñÓÅÏÈ¼¶ */
-                (TaskHandle_t*  )&StartTask_Handler);   /* ÈÎÎñ¾ä±ú */
+    xTaskCreate((TaskFunction_t )start_task,            /* ä»»åŠ¡å‡½æ•° */
+                (const char*    )"start_task",          /* ä»»åŠ¡åç§° */
+                (uint16_t       )START_STK_SIZE,        /* ä»»åŠ¡å †æ ˆå¤§å° */
+                (void*          )NULL,                  /* ä¼ å…¥ç»™ä»»åŠ¡å‡½æ•°çš„å‚æ•° */
+                (UBaseType_t    )START_TASK_PRIO,       /* ä»»åŠ¡ä¼˜å…ˆçº§ */
+                (TaskHandle_t*  )&StartTask_Handler);   /* ä»»åŠ¡å¥æŸ„ */
     vTaskStartScheduler();
 }
 
 /**
  * @brief       start_task
- * @param       pvParameters : ´«Èë²ÎÊı(Î´ÓÃµ½)
- * @retval      ÎŞ
+ * @param       pvParameters : ä¼ å…¥å‚æ•°(æœªç”¨åˆ°)
+ * @retval      æ— 
  */
 void start_task(void *pvParameters)
 {
-    taskENTER_CRITICAL();           /* ½øÈëÁÙ½çÇø */
-    /* ´´½¨ÈÎÎñ1 */
+    taskENTER_CRITICAL();           /* è¿›å…¥ä¸´ç•ŒåŒº */
+    /* åˆ›å»ºä»»åŠ¡1 */
     xTaskCreate((TaskFunction_t )task1,
                 (const char*    )"task1",
                 (uint16_t       )TASK1_STK_SIZE,
                 (void*          )NULL,
                 (UBaseType_t    )TASK1_PRIO,
                 (TaskHandle_t*  )&Task1Task_Handler);
-    /* ´´½¨ÈÎÎñ2 */
+    /* åˆ›å»ºä»»åŠ¡2 */
     xTaskCreate((TaskFunction_t )task2,
                 (const char*    )"task2",
                 (uint16_t       )TASK2_STK_SIZE,
                 (void*          )NULL,
                 (UBaseType_t    )TASK2_PRIO,
                 (TaskHandle_t*  )&Task2Task_Handler);
-    vTaskDelete(StartTask_Handler); /* É¾³ı¿ªÊ¼ÈÎÎñ */
-    taskEXIT_CRITICAL();            /* ÍË³öÁÙ½çÇø */
+    vTaskDelete(StartTask_Handler); /* åˆ é™¤å¼€å§‹ä»»åŠ¡ */
+    taskEXIT_CRITICAL();            /* é€€å‡ºä¸´ç•ŒåŒº */
 }
 
 /**
  * @brief       task1
- * @param       pvParameters : ´«Èë²ÎÊı(Î´ÓÃµ½)
- * @retval      ÎŞ
+ * @param       pvParameters : ä¼ å…¥å‚æ•°(æœªç”¨åˆ°)
+ * @retval      æ— 
  */
 void task1(void *pvParameters)
 {
@@ -85,15 +85,15 @@ void task1(void *pvParameters)
     while(1)
     {
 
-        LED0_TOGGLE();                                                  /* LED0ÉÁË¸ */
-        vTaskDelay(1000);                                               /* ÑÓÊ±1000ticks */
+        LED0_TOGGLE();                                                  /* LED0é—ªçƒ */
+        vTaskDelay(1000);                                               /* å»¶æ—¶1000ticks */
     }
 }
 
 /**
  * @brief       task2
- * @param       pvParameters : ´«Èë²ÎÊı(Î´ÓÃµ½)
- * @retval      ÎŞ
+ * @param       pvParameters : ä¼ å…¥å‚æ•°(æœªç”¨åˆ°)
+ * @retval      æ— 
  */
 void task2(void *pvParameters)
 {
@@ -101,8 +101,8 @@ void task2(void *pvParameters)
     
     while(1)
     {
-        float_num += 0.01f;                         /* ¸üĞÂÊıÖµ */
-        printf("float_num: %0.4f\r\n", float_num);  /* ´òÓ¡ÊıÖµ */
-        vTaskDelay(1000);                           /* ÑÓÊ±1000ticks */
+        float_num += 0.01f;                         /* æ›´æ–°æ•°å€¼ */
+        printf("float_num: %0.4f\r\n", float_num);  /* æ‰“å°æ•°å€¼ */
+        vTaskDelay(1000);                           /* å»¶æ—¶1000ticks */
     }
 }

@@ -2,14 +2,14 @@
 #define  __LVBO_H__
 #include "sys.h"
 /* ==============================
- * ¾ùÖµÂË²¨½á¹¹Ìå¼°º¯ÊıÉùÃ÷
+ * å‡å€¼æ»¤æ³¢ç»“æ„ä½“åŠå‡½æ•°å£°æ˜
  * ============================== 
  */
 
-#define SAMPLE_SIZE 16      // ÂË²¨²ÉÑùµãÊı
-#define DEAD_ZONE 15       // ËÀÇøãĞÖµ
+#define SAMPLE_SIZE 16      // æ»¤æ³¢é‡‡æ ·ç‚¹æ•°
+#define DEAD_ZONE 15       // æ­»åŒºé˜ˆå€¼
 
-// ÒÆ¶¯Æ½¾ùÂË²¨Æ÷½á¹¹Ìå
+// ç§»åŠ¨å¹³å‡æ»¤æ³¢å™¨ç»“æ„ä½“
 typedef struct {
     uint16_t buffer[SAMPLE_SIZE];
     uint8_t index;
@@ -17,7 +17,7 @@ typedef struct {
     uint8_t is_buffer_full;
 } moving_average_filter_t;
 
-// Ò¡¸ËÖá½á¹¹Ìå
+// æ‘‡æ†è½´ç»“æ„ä½“
 typedef struct {
     moving_average_filter_t filter;
     uint16_t last_stable_value;
@@ -26,20 +26,20 @@ typedef struct {
 } joystick_axis_t;
 
 /* ==============================
- * º¯ÊıÉùÃ÷
+ * å‡½æ•°å£°æ˜
  * ============================== 
 */
 
-// ÂË²¨Æ÷³õÊ¼»¯
+// æ»¤æ³¢å™¨åˆå§‹åŒ–
 void filter_init(moving_average_filter_t* filter);
 
-// ÒÆ¶¯Æ½¾ùÂË²¨
+// ç§»åŠ¨å¹³å‡æ»¤æ³¢
 uint16_t moving_average_filter(moving_average_filter_t* filter, uint16_t new_sample);
 
-// Ò¡¸ËÖá³õÊ¼»¯
+// æ‘‡æ†è½´åˆå§‹åŒ–
 void joystick_axis_init(joystick_axis_t* axis);
 
-// ´øËÀÇøµÄÒ¡¸ËÂË²¨
+// å¸¦æ­»åŒºçš„æ‘‡æ†æ»¤æ³¢
 uint16_t joystick_filter_with_deadzone(joystick_axis_t* axis, uint16_t new_sample);
 void float_to_two_uint8_signed(float num, uint8_t* high_byte, uint8_t* low_byte);
 float two_uint8_to_float_signed(uint8_t high_byte, uint8_t low_byte);

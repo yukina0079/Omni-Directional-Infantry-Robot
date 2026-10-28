@@ -1,6 +1,7 @@
 #ifndef  __DATA_H__
 #define __DATA_H__
 #include "sys.h"
+#include "frame13.h"
 
 /*
  * Integrator gain for the lx / ly sticks, in radians per (stick count * tick).
@@ -42,6 +43,23 @@
  * pot noise and mechanical centring error, and map0_4096To128_128WithMaskOpt()
  * now rescales the live range so the response leaves zero continuously.
  */
+/*
+ * Largest magnitude the stick is allowed to put on the wire.
+ *
+ * 127, not 128: the field is decoded into int8_t on every receiving board, so
+ * anything above 127 reads back as a large negative number. It is also the
+ * full-scale value the dead-zone rescale targets, which is what makes full
+ * deflection land on exactly +-127 instead of the old +-126.
+ */
+#define JOY_MAX 127
+
+/*
+ * Stick dead zone, in counts of the +-128 mapped range.
+ *
+ * A dead zone is mandatory here because lx and ly feed an INTEGRATOR: any
+ * non-zero reading at rest is not a small error, it is a constant drift rate
+ * that never stops accumulating.
+ */
 #define JOY_DEADZONE 8
 
 extern uint8_t key_num;
@@ -52,7 +70,7 @@ extern uint16_t adc_value[4];
 extern int16_t Joystick_value[4];
 extern int16_t encoder_value[2];
 extern float Joystick_Points_value[4];
-extern uint8_t Send_Out[32];
+extern uint8_t Send_Out[FRAME13_LEN];
 
 int16_t map0_4096To128_128WithMaskOpt(uint16_t raw_value);
 void floatToTwoSint8(float num, uint8_t* high_byte, uint8_t* low_byte);

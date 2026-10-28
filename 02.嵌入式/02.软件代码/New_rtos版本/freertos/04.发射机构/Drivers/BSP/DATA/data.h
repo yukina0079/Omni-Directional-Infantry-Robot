@@ -2,7 +2,7 @@
 #define __DATA_H__
 #include "sys.h"
 
-// ÏŞ·ùºê£º°Ñ val ÏŞÖÆÔÚ [min, max] Ö®¼ä
+// é™å¹…å®ï¼šæŠŠ val é™åˆ¶åœ¨ [min, max] ä¹‹é—´
 #define LIMIT(val, min, max) (((val) < (min)) ? (min) : (((val) > (max)) ? (max) : (val)))
 
 void data_print(void);

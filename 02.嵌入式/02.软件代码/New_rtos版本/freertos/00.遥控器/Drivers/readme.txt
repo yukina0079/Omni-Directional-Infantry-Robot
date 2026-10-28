@@ -1,20 +1,20 @@
-    ¸ÃÎÄ¼þ¼ÐÏÂ´æ·ÅÇý¶¯²ã´úÂë£¬°üÀ¨£º
-    1£¬CMSIS£ºARMÌá¹©µÄCMSIS´úÂë£¬Ö÷Òª°üÀ¨ÁË¸÷ÖÖÍ·ÎÄ¼þ
-    2£¬STM32F1xx_HAL_Driver£ºSTÌá¹©µÄSTM32F1xx HAL¿âÇý¶¯´úÂë
-    3£¬SYSTEM£ºÕýµãÔ­×ÓÌá¹©µÄÏµÍ³¼¶Çý¶¯´úÂë
-    4£¬BSP£ºÕýµãÔ­×ÓÌá¹©µÄBSPÇý¶¯´úÂë
+    è¯¥æ–‡ä»¶å¤¹ä¸‹å­˜æ”¾é©±åŠ¨å±‚ä»£ç ï¼ŒåŒ…æ‹¬ï¼š
+    1ï¼ŒCMSISï¼šARMæä¾›çš„CMSISä»£ç ï¼Œä¸»è¦åŒ…æ‹¬äº†å„ç§å¤´æ–‡ä»¶
+    2ï¼ŒSTM32F1xx_HAL_Driverï¼šSTæä¾›çš„STM32F1xx HALåº“é©±åŠ¨ä»£ç 
+    3ï¼ŒSYSTEMï¼šæ­£ç‚¹åŽŸå­æä¾›çš„ç³»ç»Ÿçº§é©±åŠ¨ä»£ç 
+    4ï¼ŒBSPï¼šæ­£ç‚¹åŽŸå­æä¾›çš„BSPé©±åŠ¨ä»£ç 
 
  ****************************************************************************************************************************************
- * ¹«Ë¾Ãû³Æ£º¹ãÖÝÊÐÐÇÒíµç×Ó¿Æ¼¼ÓÐÏÞ¹«Ë¾£¨ÕýµãÔ­×Ó£©
- * µç»°ºÅÂë£º020-38271790
- * ´«ÕæºÅÂë£º020-36773971
- * ¹«Ë¾ÍøÖ·£ºwww.alientek.com
- * ¹ºÂòµØÖ·£ºzhengdianyuanzi.tmall.com
- * ¼¼ÊõÂÛÌ³£ºhttp://www.openedv.com/forum.php
- * ×îÐÂ×ÊÁÏ£ºwww.openedv.com/docs/index.html
+ * å…¬å¸åç§°ï¼šå¹¿å·žå¸‚æ˜Ÿç¿¼ç”µå­ç§‘æŠ€æœ‰é™å…¬å¸ï¼ˆæ­£ç‚¹åŽŸå­ï¼‰
+ * ç”µè¯å·ç ï¼š020-38271790
+ * ä¼ çœŸå·ç ï¼š020-36773971
+ * å…¬å¸ç½‘å€ï¼šwww.alientek.com
+ * è´­ä¹°åœ°å€ï¼šzhengdianyuanzi.tmall.com
+ * æŠ€æœ¯è®ºå›ï¼šhttp://www.openedv.com/forum.php
+ * æœ€æ–°èµ„æ–™ï¼šwww.openedv.com/docs/index.html
  *
- * ÔÚÏßÊÓÆµ£ºwww.yuanzige.com
- * B Õ¾ÊÓÆµ£ºspace.bilibili.com/394620890
- * ¹« ÖÚ ºÅ £ºmp.weixin.qq.com/s/y--mG3qQT8gop0VRuER9bw
- * ¶¶     Òô £ºdouyin.com/user/MS4wLjABAAAAi5E95JUBpqsW5kgMEaagtIITIl15hAJvMO8vQMV1tT6PEsw-V5HbkNLlLMkFf1Bd
+ * åœ¨çº¿è§†é¢‘ï¼šwww.yuanzige.com
+ * B ç«™è§†é¢‘ï¼šspace.bilibili.com/394620890
+ * å…¬ ä¼— å· ï¼šmp.weixin.qq.com/s/y--mG3qQT8gop0VRuER9bw
+ * æŠ–     éŸ³ ï¼šdouyin.com/user/MS4wLjABAAAAi5E95JUBpqsW5kgMEaagtIITIl15hAJvMO8vQMV1tT6PEsw-V5HbkNLlLMkFf1Bd
  ****************************************************************************************************************************************

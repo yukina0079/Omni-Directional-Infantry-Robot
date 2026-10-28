@@ -2,17 +2,17 @@
 #include "font.h"
 void oled_gpio_init(void)
 {
-		GPIO_InitTypeDef gpio_initstruct;//¶¨Òå½á¹¹Ìå²ÎÊı
+		GPIO_InitTypeDef gpio_initstruct;//å®šä¹‰ç»“æ„ä½“å‚æ•°
 		OLED_I2C_SCL_CLK();
 		OLED_I2C_SDA_CLK();
 	
-		gpio_initstruct.Pin = OLED_I2C_SCL_PIN;//ÅäÖÃÒı½ÅºÅ
-		gpio_initstruct.Mode = GPIO_MODE_OUTPUT_PP;//ÅäÖÃ¹¤×÷Ä£Ê½ ÍÆÍìÊä³ö
-		gpio_initstruct.Pull = GPIO_PULLUP;//ÅäÖÃÉÏÀ­ÏÂÀ­
-		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//ÅäÖÃÊä³öËÙ¶È
+		gpio_initstruct.Pin = OLED_I2C_SCL_PIN;//é…ç½®å¼•è„šå·
+		gpio_initstruct.Mode = GPIO_MODE_OUTPUT_PP;//é…ç½®å·¥ä½œæ¨¡å¼ æ¨æŒ½è¾“å‡º
+		gpio_initstruct.Pull = GPIO_PULLUP;//é…ç½®ä¸Šæ‹‰ä¸‹æ‹‰
+		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//é…ç½®è¾“å‡ºé€Ÿåº¦
 		HAL_GPIO_Init(OLED_I2C_SCL_PORT,&gpio_initstruct);
 	
-		gpio_initstruct.Pin = OLED_I2C_SDA_PIN;//ÅäÖÃÒı½ÅºÅ
+		gpio_initstruct.Pin = OLED_I2C_SDA_PIN;//é…ç½®å¼•è„šå·
 		HAL_GPIO_Init(OLED_I2C_SDA_PORT,&gpio_initstruct);
 }
 void oled_i2c_start(void)
@@ -83,43 +83,43 @@ void oled_init(void)
     
     delay_ms(100);
     
-    oled_write_cmd(0xAE);    //ÉèÖÃÏÔÊ¾¿ªÆô/¹Ø±Õ£¬0xAE¹Ø±Õ£¬0xAF¿ªÆô
+    oled_write_cmd(0xAE);    //è®¾ç½®æ˜¾ç¤ºå¼€å¯/å…³é—­ï¼Œ0xAEå…³é—­ï¼Œ0xAFå¼€å¯
 
-    oled_write_cmd(0xD5);    //ÉèÖÃÏÔÊ¾Ê±ÖÓ·ÖÆµ±È/Õñµ´Æ÷ÆµÂÊ
+    oled_write_cmd(0xD5);    //è®¾ç½®æ˜¾ç¤ºæ—¶é’Ÿåˆ†é¢‘æ¯”/æŒ¯è¡å™¨é¢‘ç‡
     oled_write_cmd(0x80);    //0x00~0xFF
 
-    oled_write_cmd(0xA8);    //ÉèÖÃ¶àÂ·¸´ÓÃÂÊ
+    oled_write_cmd(0xA8);    //è®¾ç½®å¤šè·¯å¤ç”¨ç‡
     oled_write_cmd(0x3F);    //0x0E~0x3F
 
-    oled_write_cmd(0xD3);    //ÉèÖÃÏÔÊ¾Æ«ÒÆ
+    oled_write_cmd(0xD3);    //è®¾ç½®æ˜¾ç¤ºåç§»
     oled_write_cmd(0x00);    //0x00~0x7F
 
-    oled_write_cmd(0x40);    //ÉèÖÃÏÔÊ¾¿ªÊ¼ĞĞ£¬0x40~0x7F
+    oled_write_cmd(0x40);    //è®¾ç½®æ˜¾ç¤ºå¼€å§‹è¡Œï¼Œ0x40~0x7F
 
-    oled_write_cmd(0xA1);    //ÉèÖÃ×óÓÒ·½Ïò£¬0xA1Õı³££¬0xA0×óÓÒ·´ÖÃ
+    oled_write_cmd(0xA1);    //è®¾ç½®å·¦å³æ–¹å‘ï¼Œ0xA1æ­£å¸¸ï¼Œ0xA0å·¦å³åç½®
 
-    oled_write_cmd(0xC8);    //ÉèÖÃÉÏÏÂ·½Ïò£¬0xC8Õı³££¬0xC0ÉÏÏÂ·´ÖÃ
+    oled_write_cmd(0xC8);    //è®¾ç½®ä¸Šä¸‹æ–¹å‘ï¼Œ0xC8æ­£å¸¸ï¼Œ0xC0ä¸Šä¸‹åç½®
 
-    oled_write_cmd(0xDA);    //ÉèÖÃCOMÒı½ÅÓ²¼şÅäÖÃ
+    oled_write_cmd(0xDA);    //è®¾ç½®COMå¼•è„šç¡¬ä»¶é…ç½®
     oled_write_cmd(0x12);
 
-    oled_write_cmd(0x81);    //ÉèÖÃ¶Ô±È¶È
+    oled_write_cmd(0x81);    //è®¾ç½®å¯¹æ¯”åº¦
     oled_write_cmd(0xCF);    //0x00~0xFF
 
-    oled_write_cmd(0xD9);    //ÉèÖÃÔ¤³äµçÖÜÆÚ
+    oled_write_cmd(0xD9);    //è®¾ç½®é¢„å……ç”µå‘¨æœŸ
     oled_write_cmd(0xF1);
 
-    oled_write_cmd(0xDB);    //ÉèÖÃVCOMHÈ¡ÏûÑ¡Ôñ¼¶±ğ
+    oled_write_cmd(0xDB);    //è®¾ç½®VCOMHå–æ¶ˆé€‰æ‹©çº§åˆ«
     oled_write_cmd(0x30);
 
-    oled_write_cmd(0xA4);    //ÉèÖÃÕû¸öÏÔÊ¾´ò¿ª/¹Ø±Õ
+    oled_write_cmd(0xA4);    //è®¾ç½®æ•´ä¸ªæ˜¾ç¤ºæ‰“å¼€/å…³é—­
 
-    oled_write_cmd(0xA6);    //ÉèÖÃÕı³£/·´É«ÏÔÊ¾£¬0xA6Õı³££¬0xA7·´É«
+    oled_write_cmd(0xA6);    //è®¾ç½®æ­£å¸¸/åè‰²æ˜¾ç¤ºï¼Œ0xA6æ­£å¸¸ï¼Œ0xA7åè‰²
 
-    oled_write_cmd(0x8D);    //ÉèÖÃ³äµç±Ã
+    oled_write_cmd(0x8D);    //è®¾ç½®å……ç”µæ³µ
     oled_write_cmd(0x14);
 
-    oled_write_cmd(0xAF);    //¿ªÆôÏÔÊ¾
+    oled_write_cmd(0xAF);    //å¼€å¯æ˜¾ç¤º
  
 }
 

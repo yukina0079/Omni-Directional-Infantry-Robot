@@ -16,13 +16,8 @@
 02.嵌入式/_parse_oled.py
 02.嵌入式/_pcb_extract_chassis/
 02.嵌入式/_seekfree_imu660ra/
-02.嵌入式/02.软件代码/.zcode/
-02.嵌入式/02.软件代码/New_rtos版本/freertos/.claude/
 tools/
 tmp/
-embeddedskills/
-.embeddedskills/
-AGENTS.md
 tmp_bom_dump.txt
 更新日志.txt
 

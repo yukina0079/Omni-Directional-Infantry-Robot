@@ -3,8 +3,8 @@
 #include "math.h"
 
 /**
- * @brief ³õÊ¼»¯ÂË²¨Æ÷
- * @param filter ÂË²¨Æ÷½á¹¹ÌåÖ¸Õë
+ * @brief åˆå§‹åŒ–æ»¤æ³¢å™¨
+ * @param filter æ»¤æ³¢å™¨ç»“æ„ä½“æŒ‡é’ˆ
  */
 void filter_init(moving_average_filter_t* filter) {
     for(int i = 0; i < SAMPLE_SIZE; i++) {
@@ -16,10 +16,10 @@ void filter_init(moving_average_filter_t* filter) {
 }
 
 /**
- * @brief ÒÆ¶¯Æ½¾ùÂË²¨´¦Àí
- * @param filter ÂË²¨Æ÷½á¹¹ÌåÖ¸Õë
- * @param new_sample ĞÂ²ÉÑùÖµ
- * @return ÂË²¨ºóµÄÖµ
+ * @brief ç§»åŠ¨å¹³å‡æ»¤æ³¢å¤„ç†
+ * @param filter æ»¤æ³¢å™¨ç»“æ„ä½“æŒ‡é’ˆ
+ * @param new_sample æ–°é‡‡æ ·å€¼
+ * @return æ»¤æ³¢åçš„å€¼
  */
 uint16_t moving_average_filter(moving_average_filter_t* filter, uint16_t new_sample) {
     if(filter->is_buffer_full) {
@@ -39,21 +39,21 @@ uint16_t moving_average_filter(moving_average_filter_t* filter, uint16_t new_sam
 }
 
 /**
- * @brief Ò¡¸ËÖá³õÊ¼»¯
- * @param axis Ò¡¸ËÖá½á¹¹ÌåÖ¸Õë
+ * @brief æ‘‡æ†è½´åˆå§‹åŒ–
+ * @param axis æ‘‡æ†è½´ç»“æ„ä½“æŒ‡é’ˆ
  */
 void joystick_axis_init(joystick_axis_t* axis) {
     filter_init(&axis->filter);
-    axis->last_stable_value = 2048;  // ÖĞ¼äÖµ
+    axis->last_stable_value = 2048;  // ä¸­é—´å€¼
     axis->raw_value = 0;
     axis->filtered_value = 0;
 }
 
 /**
- * @brief ´øËÀÇøµÄÒ¡¸ËÂË²¨
- * @param axis Ò¡¸ËÖá½á¹¹ÌåÖ¸Õë
- * @param new_sample ĞÂ²ÉÑùÖµ
- * @return ÂË²¨ºóµÄÎÈ¶¨Öµ
+ * @brief å¸¦æ­»åŒºçš„æ‘‡æ†æ»¤æ³¢
+ * @param axis æ‘‡æ†è½´ç»“æ„ä½“æŒ‡é’ˆ
+ * @param new_sample æ–°é‡‡æ ·å€¼
+ * @return æ»¤æ³¢åçš„ç¨³å®šå€¼
  */
 uint16_t joystick_filter_with_deadzone(joystick_axis_t* axis, uint16_t new_sample) {
     axis->raw_value = new_sample;
@@ -67,96 +67,96 @@ uint16_t joystick_filter_with_deadzone(joystick_axis_t* axis, uint16_t new_sampl
     return axis->filtered_value;
 }
 /**
-  * @brief  ´ø·ûºÅ¸¡µãÊı×ªÁ½¸öuint8_t£¨·¶Î§-327.68~327.67£¬Á½Î»Ğ¡Êı£©
-  * @param  num: ÊäÈë¸¡µãÊı£¨·¶Î§-327.68~327.67£©
-  * @param  high_byte: ¸ßÎ»×Ö½ÚÊä³ö
-  * @param  low_byte: µÍÎ»×Ö½ÚÊä³ö
-  * @note   ¾«¶È0.01£¬ÓĞĞ§·¶Î§-327.68~327.67
+  * @brief  å¸¦ç¬¦å·æµ®ç‚¹æ•°è½¬ä¸¤ä¸ªuint8_tï¼ˆèŒƒå›´-327.68~327.67ï¼Œä¸¤ä½å°æ•°ï¼‰
+  * @param  num: è¾“å…¥æµ®ç‚¹æ•°ï¼ˆèŒƒå›´-327.68~327.67ï¼‰
+  * @param  high_byte: é«˜ä½å­—èŠ‚è¾“å‡º
+  * @param  low_byte: ä½ä½å­—èŠ‚è¾“å‡º
+  * @note   ç²¾åº¦0.01ï¼Œæœ‰æ•ˆèŒƒå›´-327.68~327.67
   */
 void float_to_two_uint8_signed(float num, uint8_t* high_byte, uint8_t* low_byte) 
 {
-    // ·¶Î§¼ì²é£¨¿ÉÑ¡£©
+    // èŒƒå›´æ£€æŸ¥ï¼ˆå¯é€‰ï¼‰
     if(num > 327.67f) num = 327.67f;
     if(num < -327.68f) num = -327.68f;
     
-    // ·Å´ó100±¶²¢ËÄÉáÎåÈë
+    // æ”¾å¤§100å€å¹¶å››èˆäº”å…¥
     int16_t scaled = (int16_t)(round(num * 100.0f));
     
-    // ½«int16_t²ğ·ÖÎªÁ½¸ö×Ö½Ú
+    // å°†int16_tæ‹†åˆ†ä¸ºä¸¤ä¸ªå­—èŠ‚
     *high_byte = (scaled >> 8) & 0xFF;
     *low_byte = scaled & 0xFF;
 }
 
 /**
-  * @brief  Á½¸öuint8_t»¹Ô­Îª´ø·ûºÅ¸¡µãÊı
-  * @param  high_byte: ¸ßÎ»×Ö½Ú
-  * @param  low_byte: µÍÎ»×Ö½Ú
-  * @retval »¹Ô­µÄ¸¡µãÊı£¨·¶Î§-327.68~327.67£©
+  * @brief  ä¸¤ä¸ªuint8_tè¿˜åŸä¸ºå¸¦ç¬¦å·æµ®ç‚¹æ•°
+  * @param  high_byte: é«˜ä½å­—èŠ‚
+  * @param  low_byte: ä½ä½å­—èŠ‚
+  * @retval è¿˜åŸçš„æµ®ç‚¹æ•°ï¼ˆèŒƒå›´-327.68~327.67ï¼‰
   */
 float two_uint8_to_float_signed(uint8_t high_byte, uint8_t low_byte) 
 {
-    // ×éºÏÎªint16_t£¨×¢Òâ£º¸ßÎ»ĞèÒª·ûºÅÀ©Õ¹£©
+    // ç»„åˆä¸ºint16_tï¼ˆæ³¨æ„ï¼šé«˜ä½éœ€è¦ç¬¦å·æ‰©å±•ï¼‰
     int16_t scaled = (int16_t)((high_byte << 8) | low_byte);
     
-    // ËõĞ¡100±¶
+    // ç¼©å°100å€
     return (float)scaled / 100.0f;
 }
 
 /* ==============================
- * Ê¹ÓÃ·½·¨
+ * ä½¿ç”¨æ–¹æ³•
  * ============================== */
 
 /*
-// 1. ¶¨ÒåÒ¡¸ËÖá±äÁ¿
+// 1. å®šä¹‰æ‘‡æ†è½´å˜é‡
 joystick_axis_t joy_x, joy_y;
 
-// 2. ÔÚ³õÊ¼»¯º¯ÊıÖĞ³õÊ¼»¯
+// 2. åœ¨åˆå§‹åŒ–å‡½æ•°ä¸­åˆå§‹åŒ–
 void System_Init(void) {
     joystick_axis_init(&joy_x);
     joystick_axis_init(&joy_y);
 }
 
-// 3. ÔÚÖ÷Ñ­»·ÖĞ¶ÁÈ¡ºÍÂË²¨
+// 3. åœ¨ä¸»å¾ªç¯ä¸­è¯»å–å’Œæ»¤æ³¢
 while(1) {
-    // ¶ÁÈ¡XÖáÔ­Ê¼ADCÖµ
+    // è¯»å–Xè½´åŸå§‹ADCå€¼
     uint16_t raw_adc_x = read_adc_channel(ADC_CHANNEL_0);
     
-    // ÂË²¨´¦Àí
+    // æ»¤æ³¢å¤„ç†
     uint16_t filtered_x = joystick_filter_with_deadzone(&joy_x, raw_adc_x);
     
-    // ¶ÁÈ¡YÖáÔ­Ê¼ADCÖµ  
+    // è¯»å–Yè½´åŸå§‹ADCå€¼  
     uint16_t raw_adc_y = read_adc_channel(ADC_CHANNEL_1);
     
-    // ÂË²¨´¦Àí
+    // æ»¤æ³¢å¤„ç†
     uint16_t filtered_y = joystick_filter_with_deadzone(&joy_y, raw_adc_y);
     
-    // Ê¹ÓÃÂË²¨ºóµÄÖµ
+    // ä½¿ç”¨æ»¤æ³¢åçš„å€¼
     float voltage_x = (float)filtered_x / 4095.0f * 3.3f;
     float voltage_y = (float)filtered_y / 4095.0f * 3.3f;
     
-    // ¿ØÖÆÂß¼­...
+    // æ§åˆ¶é€»è¾‘...
     HAL_Delay(50);
 }
 
-// 4. µ÷ÊÔÊä³ö£¨¿ÉÑ¡£©
+// 4. è°ƒè¯•è¾“å‡ºï¼ˆå¯é€‰ï¼‰
 void debug_output(void) {
     printf("X: raw=%d, filtered=%d\n", joy_x.raw_value, joy_x.filtered_value);
     printf("Y: raw=%d, filtered=%d\n", joy_y.raw_value, joy_y.filtered_value);
 }
 
-// ¸ù¾İÓ¦ÓÃµ÷ÕûÑÓÊ±
-HAL_Delay(20);   // 50Hz - ¿ìËÙÏìÓ¦
-HAL_Delay(50);   // 20Hz - Æ½ºâ
-HAL_Delay(100);  // 10Hz - Æ½»¬
+// æ ¹æ®åº”ç”¨è°ƒæ•´å»¶æ—¶
+HAL_Delay(20);   // 50Hz - å¿«é€Ÿå“åº”
+HAL_Delay(50);   // 20Hz - å¹³è¡¡
+HAL_Delay(100);  // 10Hz - å¹³æ»‘
 
-²ÉÑùµãÊıÑ¡Ôñ£º
-Çá¶ÈÂË²¨£º4-8¸öÑù±¾£¬ÏìÓ¦¿ì
-ÖĞ¶ÈÂË²¨£º8-16¸öÑù±¾£¬Æ½ºâÏìÓ¦ºÍÆ½»¬
-ÖØ¶ÈÂË²¨£º16-32¸öÑù±¾£¬·Ç³£Æ½»¬µ«ÏìÓ¦Âı
+é‡‡æ ·ç‚¹æ•°é€‰æ‹©ï¼š
+è½»åº¦æ»¤æ³¢ï¼š4-8ä¸ªæ ·æœ¬ï¼Œå“åº”å¿«
+ä¸­åº¦æ»¤æ³¢ï¼š8-16ä¸ªæ ·æœ¬ï¼Œå¹³è¡¡å“åº”å’Œå¹³æ»‘
+é‡åº¦æ»¤æ³¢ï¼š16-32ä¸ªæ ·æœ¬ï¼Œéå¸¸å¹³æ»‘ä½†å“åº”æ…¢
 
-ËÀÇø´óĞ¡£º
-¸ß¾«¶ÈÓ¦ÓÃ£º5-10£¨Ïû³ıÎ¢Ğ¡ÔëÉù£©
-ÓÎÏ·¿ØÖÆ£º15-30£¨·ÀÖ¹²Ù×÷¶¶¶¯£©
-»úĞµ¿ØÖÆ£º30-50£¨±ÜÃâÆµ·±µ÷Õû£©
+æ­»åŒºå¤§å°ï¼š
+é«˜ç²¾åº¦åº”ç”¨ï¼š5-10ï¼ˆæ¶ˆé™¤å¾®å°å™ªå£°ï¼‰
+æ¸¸æˆæ§åˆ¶ï¼š15-30ï¼ˆé˜²æ­¢æ“ä½œæŠ–åŠ¨ï¼‰
+æœºæ¢°æ§åˆ¶ï¼š30-50ï¼ˆé¿å…é¢‘ç¹è°ƒæ•´ï¼‰
 */
 

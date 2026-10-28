@@ -2,6 +2,7 @@
 #define DATA_H
 
 #include "Pid.h"
+#include "frame13.h"
 
 #define PI 3.1415926f
 #define _PI 3.14159265359f
@@ -17,8 +18,8 @@ extern float yaw_num;
 extern float joy_num;
 extern float yaw_pid_num;
 
-extern uint8_t uart_recv[20];
-extern uint8_t send_angal[20];
+extern uint8_t uart_recv[FRAME13_LEN];
+extern uint8_t send_angal[FRAME13_LEN];
 
 extern float sensor_direction;//编码器方向
 extern float pole_pairs;//电机极对数
@@ -50,7 +51,7 @@ extern float current_a,current_c;//A相和C相电流
 extern uint32_t last_frame_us;
 
 /*
- * Mapping from the chassis MCU's yaw command (frame bytes 14/15) to this
+ * Mapping from the chassis MCU's yaw command (frame bytes 10/11) to this
  * axis's mechanical position setpoint, in radians.
  *
  * Units, traced through the link (01.底盘主控/Drivers/BSP/DATA/data.c):

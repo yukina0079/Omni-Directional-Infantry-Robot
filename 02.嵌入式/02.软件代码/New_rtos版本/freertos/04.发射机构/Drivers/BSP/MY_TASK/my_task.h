@@ -6,54 +6,54 @@
 #include "task.h"
 #include "led.h"
 
-/* START_TASKÈÎÎñÅäÖÃ
- * ×¢Òâ£º¾ä±úÖ»ÉùÃ÷£¨extern£©£¬²»¶¨Òå£¡
+/* START_TASKä»»åŠ¡é…ç½®
+ * æ³¨æ„ï¼šå¥æŸ„åªå£°æ˜ï¼ˆexternï¼‰ï¼Œä¸å®šä¹‰ï¼
  */
-#define START_TASK_PRIO 10               /* ÈÎÎñÓÅÏÈ¼¶ */
-#define START_STK_SIZE  128             /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
-extern TaskHandle_t StartTask_Handler;  /* ÈÎÎñ¾ä±ú£ºÓÃexternÉùÃ÷£¬¸æËß±àÒëÆ÷ÔÚÆäËû.cÎÄ¼şÖĞ¶¨Òå */
-void start_task(void *pvParameters);    /* ÈÎÎñº¯ÊıÉùÃ÷ */
+#define START_TASK_PRIO 10               /* ä»»åŠ¡ä¼˜å…ˆçº§ */
+#define START_STK_SIZE  128             /* ä»»åŠ¡å †æ ˆå¤§å° */
+extern TaskHandle_t StartTask_Handler;  /* ä»»åŠ¡å¥æŸ„ï¼šç”¨externå£°æ˜ï¼Œå‘Šè¯‰ç¼–è¯‘å™¨åœ¨å…¶ä»–.cæ–‡ä»¶ä¸­å®šä¹‰ */
+void start_task(void *pvParameters);    /* ä»»åŠ¡å‡½æ•°å£°æ˜ */
 
 
-/* printÈÎÎñÅäÖÃ */
-#define print_PRIO      2                /* ÈÎÎñÓÅÏÈ¼¶ */
-#define print_STK_SIZE  128              /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
-extern TaskHandle_t printTask_Handler;   /* ÈÎÎñ¾ä±ú£º½öÉùÃ÷ */
-void print_task(void *pvParameters);     /* ÈÎÎñº¯ÊıÉùÃ÷ */
+/* printä»»åŠ¡é…ç½® */
+#define print_PRIO      2                /* ä»»åŠ¡ä¼˜å…ˆçº§ */
+#define print_STK_SIZE  128              /* ä»»åŠ¡å †æ ˆå¤§å° */
+extern TaskHandle_t printTask_Handler;   /* ä»»åŠ¡å¥æŸ„ï¼šä»…å£°æ˜ */
+void print_task(void *pvParameters);     /* ä»»åŠ¡å‡½æ•°å£°æ˜ */
 
 
-/* DATA_GET_ÈÎÎñÅäÖÃ */
-#define DATA_GET_PRIO      8                /* ÈÎÎñÓÅÏÈ¼¶ */
-#define DATA_GET_STK_SIZE  128              /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
-extern TaskHandle_t DATA_GET_Task_Handler;   /* ÈÎÎñ¾ä±ú£º½öÉùÃ÷ */
-void data_get_task(void *pvParameters);     /* ÈÎÎñº¯ÊıÉùÃ÷ */
+/* DATA_GET_ä»»åŠ¡é…ç½® */
+#define DATA_GET_PRIO      8                /* ä»»åŠ¡ä¼˜å…ˆçº§ */
+#define DATA_GET_STK_SIZE  128              /* ä»»åŠ¡å †æ ˆå¤§å° */
+extern TaskHandle_t DATA_GET_Task_Handler;   /* ä»»åŠ¡å¥æŸ„ï¼šä»…å£°æ˜ */
+void data_get_task(void *pvParameters);     /* ä»»åŠ¡å‡½æ•°å£°æ˜ */
 
-/*DATA_SENDÈÎÎñÅäÖÃ */
-#define DATA_SEND          7             /* ÈÎÎñÓÅÏÈ¼¶ */
-#define DATA_SEND_SIZE  128              /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
-extern TaskHandle_t DATA_SEND_Handler;   /* ÈÎÎñ¾ä±ú£º½öÉùÃ÷ */
-void DATA_SEND_task(void *pvParameters);     /* ÈÎÎñº¯ÊıÉùÃ÷ */
+/*DATA_SENDä»»åŠ¡é…ç½® */
+#define DATA_SEND          7             /* ä»»åŠ¡ä¼˜å…ˆçº§ */
+#define DATA_SEND_SIZE  128              /* ä»»åŠ¡å †æ ˆå¤§å° */
+extern TaskHandle_t DATA_SEND_Handler;   /* ä»»åŠ¡å¥æŸ„ï¼šä»…å£°æ˜ */
+void DATA_SEND_task(void *pvParameters);     /* ä»»åŠ¡å‡½æ•°å£°æ˜ */
 
-/*light_TASKÈÎÎñÅäÖÃ */
-#define light_TASK_PRIO    5             /* ÈÎÎñÓÅÏÈ¼¶ */
-#define light_TASK_SIZE  128              /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
-extern TaskHandle_t light_TASK_Handler;   /* ÈÎÎñ¾ä±ú£º½öÉùÃ÷ */
-void light_task(void *pvParameters);     /* ÈÎÎñº¯ÊıÉùÃ÷ */
+/*light_TASKä»»åŠ¡é…ç½® */
+#define light_TASK_PRIO    5             /* ä»»åŠ¡ä¼˜å…ˆçº§ */
+#define light_TASK_SIZE  128              /* ä»»åŠ¡å †æ ˆå¤§å° */
+extern TaskHandle_t light_TASK_Handler;   /* ä»»åŠ¡å¥æŸ„ï¼šä»…å£°æ˜ */
+void light_task(void *pvParameters);     /* ä»»åŠ¡å‡½æ•°å£°æ˜ */
 
-/*motor_TASKÈÎÎñÅäÖÃ */
-#define motor_TASK_PRIO    6             /* ÈÎÎñÓÅÏÈ¼¶ */
-#define motor_TASK_SIZE  128              /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
-extern TaskHandle_t motor_TASK_Handler;   /* ÈÎÎñ¾ä±ú£º½öÉùÃ÷ */
-void motor_task(void *pvParameters);     /* ÈÎÎñº¯ÊıÉùÃ÷ */
+/*motor_TASKä»»åŠ¡é…ç½® */
+#define motor_TASK_PRIO    6             /* ä»»åŠ¡ä¼˜å…ˆçº§ */
+#define motor_TASK_SIZE  128              /* ä»»åŠ¡å †æ ˆå¤§å° */
+extern TaskHandle_t motor_TASK_Handler;   /* ä»»åŠ¡å¥æŸ„ï¼šä»…å£°æ˜ */
+void motor_task(void *pvParameters);     /* ä»»åŠ¡å‡½æ•°å£°æ˜ */
 
-/* oled_show_taskÈÎÎñÅäÖÃ */
-#define OLED_SHOW_PRIO      3                /* ÈÎÎñÓÅÏÈ¼¶ */
-#define OLED_SHOW_STK_SIZE  128              /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
-extern TaskHandle_t OLED_SHOW_Task_Handler;   /* ÈÎÎñ¾ä±ú£º½öÉùÃ÷ */
-void oled_show_task(void *pvParameters);     /* ÈÎÎñº¯ÊıÉùÃ÷ */
+/* oled_show_taskä»»åŠ¡é…ç½® */
+#define OLED_SHOW_PRIO      3                /* ä»»åŠ¡ä¼˜å…ˆçº§ */
+#define OLED_SHOW_STK_SIZE  128              /* ä»»åŠ¡å †æ ˆå¤§å° */
+extern TaskHandle_t OLED_SHOW_Task_Handler;   /* ä»»åŠ¡å¥æŸ„ï¼šä»…å£°æ˜ */
+void oled_show_task(void *pvParameters);     /* ä»»åŠ¡å‡½æ•°å£°æ˜ */
 
 
-void create_task(void);  /* ÈÎÎñ´´½¨º¯ÊıÉùÃ÷ */
+void create_task(void);  /* ä»»åŠ¡åˆ›å»ºå‡½æ•°å£°æ˜ */
 
 
 #endif

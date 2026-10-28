@@ -41,7 +41,7 @@ __initial_sp
 ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-;Î´ÓÃµ½±àÒëÆ÷×Ô´øµÄÄÚ´æ¹ÜÀí(malloc,freeµÈ)£¬ÉèÖÃHeap_SzieÎª0
+;æœªç”¨åˆ°ç¼–è¯‘å™¨è‡ªå¸¦çš„å†…å­˜ç®¡ç†(malloc,freeç­‰)ï¼Œè®¾ç½®Heap_Szieä¸º0
 Heap_Size       EQU     0x00000000
 
                 AREA    HEAP, NOINIT, READWRITE, ALIGN=3
@@ -172,7 +172,7 @@ Reset_Handler    PROC
                  EXPORT  Reset_Handler             [WEAK]
         IMPORT  SystemInit
         IMPORT  __main
-                 LDR     R0, =0xE000ED88    ; Ê¹ÄÜ¸¡µãÔËËã CP10,CP11
+                 LDR     R0, =0xE000ED88    ; ä½¿èƒ½æµ®ç‚¹è¿ç®— CP10,CP11
                  LDR     R1,[R0]
                  ORR     R1,R1,#(0xF << 20)
                  STR     R1,[R0]

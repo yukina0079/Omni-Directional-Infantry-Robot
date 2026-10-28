@@ -1,12 +1,12 @@
 #include "ws2812b.h"
 #include "stdint.h"
-#include "main.h"  // HAL¿â±ØĞë°üº¬
+#include "main.h"  // HALåº“å¿…é¡»åŒ…å«
 
-// F407 ÕıÈ· DMA ¾ä±ú
+// F407 æ­£ç¡® DMA å¥æŸ„
 DMA_HandleTypeDef htim3_dma = {0};
 TIM_HandleTypeDef htim3 = {0};	
 
-// WS2812 Ê±Ğò²ÎÊı
+// WS2812 æ—¶åºå‚æ•°
 #define code0 30
 #define code1 60
 #define codeReset 0
@@ -45,13 +45,13 @@ void WS2812_Updata(void)
 	}
 	data[LED_COUNT * 24] = codeReset;
 	
-	// Í£Ö¹ DMA ²¢ÖØÆô
+	// åœæ­¢ DMA å¹¶é‡å¯
 	HAL_TIM_PWM_Stop_DMA(&htim3, TIM_CHANNEL_4);
 	__HAL_TIM_SetCounter(&htim3,0);
 	HAL_TIM_PWM_Start_DMA(&htim3, TIM_CHANNEL_4,(uint32_t*)data, LED_COUNT*24+1);
 }
 
-// Á÷Ë®µÆĞ§¹û
+// æµæ°´ç¯æ•ˆæœ
 void WS2812_FlowLight(uint8_t r, uint8_t g, uint8_t b, uint16_t delay_ms, uint8_t direction)
 {
     if(direction == 0) {
@@ -82,7 +82,7 @@ void WS2812_FlowLight(uint8_t r, uint8_t g, uint8_t b, uint16_t delay_ms, uint8_
     }
 }
 
-// PWM ³õÊ¼»¯£¨Ö»Ê¹ÓÃ TIM3_CH4£©
+// PWM åˆå§‹åŒ–ï¼ˆåªä½¿ç”¨ TIM3_CH4ï¼‰
 void pwm_init(uint16_t arr,uint16_t psc)
 {
 	TIM_OC_InitTypeDef htim3_config = {0};
@@ -96,7 +96,7 @@ void pwm_init(uint16_t arr,uint16_t psc)
 	
 	HAL_TIM_PWM_Init(&htim3);
 	
-	// Ö»ÅäÖÃ CH4
+	// åªé…ç½® CH4
 	htim3_config.OCMode = TIM_OCMODE_PWM1;
 	htim3_config.Pulse  = 0;
 	htim3_config.OCPolarity = TIM_OCPOLARITY_HIGH;
@@ -105,7 +105,7 @@ void pwm_init(uint16_t arr,uint16_t psc)
 	HAL_TIM_PWM_ConfigChannel(&htim3,&htim3_config,TIM_CHANNEL_4);
 }
 
-// µ×²ãÓ²¼ş³õÊ¼»¯£¨Ê±ÖÓ + GPIO£©
+// åº•å±‚ç¡¬ä»¶åˆå§‹åŒ–ï¼ˆæ—¶é’Ÿ + GPIOï¼‰
 void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == TIM3){
@@ -114,23 +114,23 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 		__HAL_RCC_TIM3_CLK_ENABLE();
 		__HAL_RCC_GPIOC_CLK_ENABLE();
 	
-		// PC9 ¡ú TIM3_CH4 ¸´ÓÃÍÆÍìÊä³ö
+		// PC9 â†’ TIM3_CH4 å¤ç”¨æ¨æŒ½è¾“å‡º
 		gpio_initstruct.Pin = GPIO_PIN_9;
 		gpio_initstruct.Mode = GPIO_MODE_AF_PP;
 		gpio_initstruct.Pull = GPIO_PULLUP;
 		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;
-		gpio_initstruct.Alternate = GPIO_AF2_TIM3;  // F4 ±ØĞëÅäÖÃ¸´ÓÃÓ³Éä
+		gpio_initstruct.Alternate = GPIO_AF2_TIM3;  // F4 å¿…é¡»é…ç½®å¤ç”¨æ˜ å°„
 	
-		HAL_GPIO_Init(GPIOC, &gpio_initstruct);  // ÕıÈ·¶Ë¿Ú£ºGPIOC
+		HAL_GPIO_Init(GPIOC, &gpio_initstruct);  // æ­£ç¡®ç«¯å£ï¼šGPIOC
 	}
 }
 
-// DMA ³õÊ¼»¯£¨F407 ÕıÈ·ÅäÖÃ£©
+// DMA åˆå§‹åŒ–ï¼ˆF407 æ­£ç¡®é…ç½®ï¼‰
 void dma_init(void)
 {
 	__HAL_RCC_DMA1_CLK_ENABLE();
 	
-	// TIM3_CH4 Ó²¼ş¹Ì¶¨£ºDMA1_Stream2 / Channel5
+	// TIM3_CH4 ç¡¬ä»¶å›ºå®šï¼šDMA1_Stream2 / Channel5
 	htim3_dma.Instance = DMA1_Stream2;
 	htim3_dma.Init.Channel = DMA_CHANNEL_5;
 	htim3_dma.Init.Direction = DMA_MEMORY_TO_PERIPH;
@@ -144,6 +144,6 @@ void dma_init(void)
 	
 	HAL_DMA_Init(&htim3_dma);
 	
-	// ¹ØÁª DMA µ½ TIM3_CH4
+	// å…³è” DMA åˆ° TIM3_CH4
 	__HAL_LINKDMA(&htim3, hdma[TIM_DMA_ID_CC4], htim3_dma);
 }

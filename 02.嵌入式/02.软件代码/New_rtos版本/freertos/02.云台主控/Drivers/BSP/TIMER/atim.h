@@ -1,31 +1,31 @@
 /**
  ****************************************************************************************************
  * @file        atim.h
- * @author      ÕýµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
+ * @author      æ­£ç‚¹åŽŸå­å›¢é˜Ÿ(ALIENTEK)
  * @version     V1.3
  * @date        2021-10-19
- * @brief       ¸ß¼¶¶¨Ê±Æ÷ Çý¶¯´úÂë
- * @license     Copyright (c) 2020-2032, ¹ãÖÝÊÐÐÇÒíµç×Ó¿Æ¼¼ÓÐÏÞ¹«Ë¾
+ * @brief       é«˜çº§å®šæ—¶å™¨ é©±åŠ¨ä»£ç 
+ * @license     Copyright (c) 2020-2032, å¹¿å·žå¸‚æ˜Ÿç¿¼ç”µå­ç§‘æŠ€æœ‰é™å…¬å¸
  ****************************************************************************************************
  * @attention
  *
- * ÊµÑéÆ½Ì¨:ÕýµãÔ­×Ó STM32F407¿ª·¢°å
- * ÔÚÏßÊÓÆµ:www.yuanzige.com
- * ¼¼ÊõÂÛÌ³:www.openedv.com
- * ¹«Ë¾ÍøÖ·:www.alientek.com
- * ¹ºÂòµØÖ·:openedv.taobao.com
+ * å®žéªŒå¹³å°:æ­£ç‚¹åŽŸå­ STM32F407å¼€å‘æ¿
+ * åœ¨çº¿è§†é¢‘:www.yuanzige.com
+ * æŠ€æœ¯è®ºå›:www.openedv.com
+ * å…¬å¸ç½‘å€:www.alientek.com
+ * è´­ä¹°åœ°å€:openedv.taobao.com
  *
- * ÐÞ¸ÄËµÃ÷
+ * ä¿®æ”¹è¯´æ˜Ž
  * V1.0 20211019
- * µÚÒ»´Î·¢²¼
+ * ç¬¬ä¸€æ¬¡å‘å¸ƒ
  * V1.1 20211019
- * 1, ÐÂÔöatim_timx_comp_pwm_initº¯Êý, ÊµÏÖÊä³ö±È½ÏÄ£Ê½PWMÊä³ö¹¦ÄÜ
+ * 1, æ–°å¢žatim_timx_comp_pwm_initå‡½æ•°, å®žçŽ°è¾“å‡ºæ¯”è¾ƒæ¨¡å¼PWMè¾“å‡ºåŠŸèƒ½
  * V1.2 20211019
- * 1, Ôö¼Óatim_timx_cplm_pwm_initº¯Êý
- * 2, Ôö¼Óatim_timx_cplm_pwm_setº¯Êý
+ * 1, å¢žåŠ atim_timx_cplm_pwm_initå‡½æ•°
+ * 2, å¢žåŠ atim_timx_cplm_pwm_setå‡½æ•°
  * V1.3 20211019
- * 1, Ôö¼Óatim_timx_pwmin_chy_initº¯Êý
- * 2, Ôö¼Óatim_timx_pwmin_chy_restartº¯Êý
+ * 1, å¢žåŠ atim_timx_pwmin_chy_initå‡½æ•°
+ * 2, å¢žåŠ atim_timx_pwmin_chy_restartå‡½æ•°
  *
  ****************************************************************************************************
  */
@@ -36,126 +36,126 @@
 #include "./SYSTEM/sys/sys.h"
 
 /******************************************************************************************/
-/* ¸ß¼¶¶¨Ê±Æ÷ ¶¨Òå */
+/* é«˜çº§å®šæ—¶å™¨ å®šä¹‰ */
 
- /* TIMX Êä³öÖ¸¶¨¸öÊýPWM ¶¨Òå 
- * ÕâÀïÊä³öµÄPWMÍ¨¹ýPC6(TIM8_CH1)Êä³ö, ÎÒÃÇÓÃ¶Å°îÏßÁ¬½ÓPC6ºÍPE5, È»ºóÔÚ³ÌÐòÀïÃæ½«PE5ÉèÖÃ³É¸¡¿ÕÊäÈë
- * ¾Í¿ÉÒÔ ¿´µ½TIM8_CH1¿ØÖÆLED1(GREEN)µÄÁÁÃð, ÁÁÃðÒ»´Î±íÊ¾Ò»¸öPWM²¨
- * Ä¬ÈÏÊ¹ÓÃµÄÊÇTIM8_CH1.
- * ×¢Òâ: Í¨¹ýÐÞ¸ÄÕâ¼¸¸öºê¶¨Òå, ¿ÉÒÔÖ§³ÖTIM1/TIM8¶¨Ê±Æ÷, ÈÎÒâÒ»¸öIO¿ÚÊä³öÖ¸¶¨¸öÊýµÄPWM
+ /* TIMX è¾“å‡ºæŒ‡å®šä¸ªæ•°PWM å®šä¹‰ 
+ * è¿™é‡Œè¾“å‡ºçš„PWMé€šè¿‡PC6(TIM8_CH1)è¾“å‡º, æˆ‘ä»¬ç”¨æœé‚¦çº¿è¿žæŽ¥PC6å’ŒPE5, ç„¶åŽåœ¨ç¨‹åºé‡Œé¢å°†PE5è®¾ç½®æˆæµ®ç©ºè¾“å…¥
+ * å°±å¯ä»¥ çœ‹åˆ°TIM8_CH1æŽ§åˆ¶LED1(GREEN)çš„äº®ç­, äº®ç­ä¸€æ¬¡è¡¨ç¤ºä¸€ä¸ªPWMæ³¢
+ * é»˜è®¤ä½¿ç”¨çš„æ˜¯TIM8_CH1.
+ * æ³¨æ„: é€šè¿‡ä¿®æ”¹è¿™å‡ ä¸ªå®å®šä¹‰, å¯ä»¥æ”¯æŒTIM1/TIM8å®šæ—¶å™¨, ä»»æ„ä¸€ä¸ªIOå£è¾“å‡ºæŒ‡å®šä¸ªæ•°çš„PWM
  */
 #define ATIM_TIMX_NPWM_CHY_GPIO_PORT            GPIOC
 #define ATIM_TIMX_NPWM_CHY_GPIO_PIN             GPIO_PIN_6
-#define ATIM_TIMX_NPWM_CHY_GPIO_CLK_ENABLE()    do{  __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)    /* PC¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define ATIM_TIMX_NPWM_CHY_GPIO_CLK_ENABLE()    do{  __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)    /* PCå£æ—¶é’Ÿä½¿èƒ½ */
 
 #define ATIM_TIMX_NPWM_CHY_GPIO_AF              GPIO_AF3_TIM8
 
 #define ATIM_TIMX_NPWM                          TIM8
 #define ATIM_TIMX_NPWM_IRQn                     TIM8_UP_TIM13_IRQn
 #define ATIM_TIMX_NPWM_IRQHandler               TIM8_UP_TIM13_IRQHandler
-#define ATIM_TIMX_NPWM_CHY                      TIM_CHANNEL_1                               /* Í¨µÀY,  1<= Y <=4 */
-#define ATIM_TIMX_NPWM_CHY_CCRX                 TIM8->CCR1                                  /* Í¨µÀYµÄÊä³ö±È½Ï¼Ä´æÆ÷ */
-#define ATIM_TIMX_NPWM_CHY_CLK_ENABLE()         do{ __HAL_RCC_TIM8_CLK_ENABLE(); }while(0)  /* TIM8 Ê±ÖÓÊ¹ÄÜ */
+#define ATIM_TIMX_NPWM_CHY                      TIM_CHANNEL_1                               /* é€šé“Y,  1<= Y <=4 */
+#define ATIM_TIMX_NPWM_CHY_CCRX                 TIM8->CCR1                                  /* é€šé“Yçš„è¾“å‡ºæ¯”è¾ƒå¯„å­˜å™¨ */
+#define ATIM_TIMX_NPWM_CHY_CLK_ENABLE()         do{ __HAL_RCC_TIM8_CLK_ENABLE(); }while(0)  /* TIM8 æ—¶é’Ÿä½¿èƒ½ */
 
 
-/* TIMX Êä³ö±È½ÏÄ£Ê½ ¶¨Òå 
- * ÕâÀïÍ¨¹ýTIM8µÄÊä³ö±È½ÏÄ£Ê½,¿ØÖÆPC6,PC7,PC8,PC9Êä³ö4Â·PWM,Õ¼¿Õ±È50%,²¢ÇÒÃ¿Ò»Â·PWMÖ®¼äµÄÏàÎ»²îÎª25%
- * ÐÞ¸ÄCCRx¿ÉÒÔÐÞ¸ÄÏàÎ».
- * Ä¬ÈÏÊÇÕë¶ÔTIM8
- * ×¢Òâ: Í¨¹ýÐÞ¸ÄÕâÐ©ºê¶¨Òå,¿ÉÒÔÖ§³ÖTIM1/TIM8ÈÎÒâÒ»¸ö¶¨Ê±Æ÷,ÈÎÒâÒ»¸öIO¿ÚÊ¹ÓÃÊä³ö±È½ÏÄ£Ê½,Êä³öPWM
+/* TIMX è¾“å‡ºæ¯”è¾ƒæ¨¡å¼ å®šä¹‰ 
+ * è¿™é‡Œé€šè¿‡TIM8çš„è¾“å‡ºæ¯”è¾ƒæ¨¡å¼,æŽ§åˆ¶PC6,PC7,PC8,PC9è¾“å‡º4è·¯PWM,å ç©ºæ¯”50%,å¹¶ä¸”æ¯ä¸€è·¯PWMä¹‹é—´çš„ç›¸ä½å·®ä¸º25%
+ * ä¿®æ”¹CCRxå¯ä»¥ä¿®æ”¹ç›¸ä½.
+ * é»˜è®¤æ˜¯é’ˆå¯¹TIM8
+ * æ³¨æ„: é€šè¿‡ä¿®æ”¹è¿™äº›å®å®šä¹‰,å¯ä»¥æ”¯æŒTIM1/TIM8ä»»æ„ä¸€ä¸ªå®šæ—¶å™¨,ä»»æ„ä¸€ä¸ªIOå£ä½¿ç”¨è¾“å‡ºæ¯”è¾ƒæ¨¡å¼,è¾“å‡ºPWM
  */
 #define ATIM_TIMX_COMP_CH1_GPIO_PORT            GPIOC
 #define ATIM_TIMX_COMP_CH1_GPIO_PIN             GPIO_PIN_6
-#define ATIM_TIMX_COMP_CH1_GPIO_CLK_ENABLE()    do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)   /* PC¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define ATIM_TIMX_COMP_CH1_GPIO_CLK_ENABLE()    do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)   /* PCå£æ—¶é’Ÿä½¿èƒ½ */
 
 #define ATIM_TIMX_COMP_CH2_GPIO_PORT            GPIOC
 #define ATIM_TIMX_COMP_CH2_GPIO_PIN             GPIO_PIN_7
-#define ATIM_TIMX_COMP_CH2_GPIO_CLK_ENABLE()    do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)   /* PC¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define ATIM_TIMX_COMP_CH2_GPIO_CLK_ENABLE()    do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)   /* PCå£æ—¶é’Ÿä½¿èƒ½ */
 
 #define ATIM_TIMX_COMP_CH3_GPIO_PORT            GPIOC
 #define ATIM_TIMX_COMP_CH3_GPIO_PIN             GPIO_PIN_8
-#define ATIM_TIMX_COMP_CH3_GPIO_CLK_ENABLE()    do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)   /* PC¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define ATIM_TIMX_COMP_CH3_GPIO_CLK_ENABLE()    do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)   /* PCå£æ—¶é’Ÿä½¿èƒ½ */
 
 #define ATIM_TIMX_COMP_CH4_GPIO_PORT            GPIOC
 #define ATIM_TIMX_COMP_CH4_GPIO_PIN             GPIO_PIN_9
-#define ATIM_TIMX_COMP_CH4_GPIO_CLK_ENABLE()    do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)   /* PC¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define ATIM_TIMX_COMP_CH4_GPIO_CLK_ENABLE()    do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)   /* PCå£æ—¶é’Ÿä½¿èƒ½ */
 
 #define ATIM_TIMX_COMP_GPIO_AF                  GPIO_AF3_TIM8
 
 #define ATIM_TIMX_COMP                          TIM8
-#define ATIM_TIMX_COMP_CH1_CCRX                 ATIM_TIMX_COMP->CCR1                          /* Í¨µÀ1µÄÊä³ö±È½Ï¼Ä´æÆ÷ */
-#define ATIM_TIMX_COMP_CH2_CCRX                 ATIM_TIMX_COMP->CCR2                          /* Í¨µÀ2µÄÊä³ö±È½Ï¼Ä´æÆ÷ */
-#define ATIM_TIMX_COMP_CH3_CCRX                 ATIM_TIMX_COMP->CCR3                          /* Í¨µÀ3µÄÊä³ö±È½Ï¼Ä´æÆ÷ */
-#define ATIM_TIMX_COMP_CH4_CCRX                 ATIM_TIMX_COMP->CCR4                          /* Í¨µÀ4µÄÊä³ö±È½Ï¼Ä´æÆ÷ */
-#define ATIM_TIMX_COMP_CLK_ENABLE()             do{ __HAL_RCC_TIM8_CLK_ENABLE(); }while(0)    /* TIM8 Ê±ÖÓÊ¹ÄÜ */
+#define ATIM_TIMX_COMP_CH1_CCRX                 ATIM_TIMX_COMP->CCR1                          /* é€šé“1çš„è¾“å‡ºæ¯”è¾ƒå¯„å­˜å™¨ */
+#define ATIM_TIMX_COMP_CH2_CCRX                 ATIM_TIMX_COMP->CCR2                          /* é€šé“2çš„è¾“å‡ºæ¯”è¾ƒå¯„å­˜å™¨ */
+#define ATIM_TIMX_COMP_CH3_CCRX                 ATIM_TIMX_COMP->CCR3                          /* é€šé“3çš„è¾“å‡ºæ¯”è¾ƒå¯„å­˜å™¨ */
+#define ATIM_TIMX_COMP_CH4_CCRX                 ATIM_TIMX_COMP->CCR4                          /* é€šé“4çš„è¾“å‡ºæ¯”è¾ƒå¯„å­˜å™¨ */
+#define ATIM_TIMX_COMP_CLK_ENABLE()             do{ __HAL_RCC_TIM8_CLK_ENABLE(); }while(0)    /* TIM8 æ—¶é’Ÿä½¿èƒ½ */
  
 
-/* TIMX »¥²¹Êä³öÄ£Ê½ ¶¨Òå 
- * ÕâÀïÉèÖÃ»¥²¹Êä³öÏà¹ØÓ²¼þÅäÖÃ, CHY¼´Õý³£Êä³ö, CHYN¼´»¥²¹Êä³ö
- * ÐÞ¸ÄCCRx¿ÉÒÔÐÞ¸ÄÕ¼¿Õ±È.
- * Ä¬ÈÏÊÇÕë¶ÔTIM1
- * ×¢Òâ: Í¨¹ýÐÞ¸ÄÕâÐ©ºê¶¨Òå,¿ÉÒÔÖ§³ÖTIM1/TIM8¶¨Ê±Æ÷, ÈÎÒâÒ»¸öIO¿ÚÊä³ö»¥²¹PWM(Ç°ÌáÊÇ±ØÐëÓÐ»¥²¹Êä³ö¹¦ÄÜ)
+/* TIMX äº’è¡¥è¾“å‡ºæ¨¡å¼ å®šä¹‰ 
+ * è¿™é‡Œè®¾ç½®äº’è¡¥è¾“å‡ºç›¸å…³ç¡¬ä»¶é…ç½®, CHYå³æ­£å¸¸è¾“å‡º, CHYNå³äº’è¡¥è¾“å‡º
+ * ä¿®æ”¹CCRxå¯ä»¥ä¿®æ”¹å ç©ºæ¯”.
+ * é»˜è®¤æ˜¯é’ˆå¯¹TIM1
+ * æ³¨æ„: é€šè¿‡ä¿®æ”¹è¿™äº›å®å®šä¹‰,å¯ä»¥æ”¯æŒTIM1/TIM8å®šæ—¶å™¨, ä»»æ„ä¸€ä¸ªIOå£è¾“å‡ºäº’è¡¥PWM(å‰ææ˜¯å¿…é¡»æœ‰äº’è¡¥è¾“å‡ºåŠŸèƒ½)
  */
 
-/* Êä³öÍ¨µÀÒý½Å */
+/* è¾“å‡ºé€šé“å¼•è„š */
 #define ATIM_TIMX_CPLM_CHY_GPIO_PORT            GPIOE
 #define ATIM_TIMX_CPLM_CHY_GPIO_PIN             GPIO_PIN_9
-#define ATIM_TIMX_CPLM_CHY_GPIO_CLK_ENABLE()    do{ __HAL_RCC_GPIOE_CLK_ENABLE(); }while(0)   /* PE¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define ATIM_TIMX_CPLM_CHY_GPIO_CLK_ENABLE()    do{ __HAL_RCC_GPIOE_CLK_ENABLE(); }while(0)   /* PEå£æ—¶é’Ÿä½¿èƒ½ */
 
-/* »¥²¹Êä³öÍ¨µÀÒý½Å */
+/* äº’è¡¥è¾“å‡ºé€šé“å¼•è„š */
 #define ATIM_TIMX_CPLM_CHYN_GPIO_PORT           GPIOE
 #define ATIM_TIMX_CPLM_CHYN_GPIO_PIN            GPIO_PIN_8
-#define ATIM_TIMX_CPLM_CHYN_GPIO_CLK_ENABLE()   do{ __HAL_RCC_GPIOE_CLK_ENABLE(); }while(0)   /* PE¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define ATIM_TIMX_CPLM_CHYN_GPIO_CLK_ENABLE()   do{ __HAL_RCC_GPIOE_CLK_ENABLE(); }while(0)   /* PEå£æ—¶é’Ÿä½¿èƒ½ */
 
-/* É²³µÊäÈëÒý½Å */
+/* åˆ¹è½¦è¾“å…¥å¼•è„š */
 #define ATIM_TIMX_CPLM_BKIN_GPIO_PORT           GPIOE
 #define ATIM_TIMX_CPLM_BKIN_GPIO_PIN            GPIO_PIN_15
-#define ATIM_TIMX_CPLM_BKIN_GPIO_CLK_ENABLE()   do{ __HAL_RCC_GPIOE_CLK_ENABLE(); }while(0)   /* PE¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define ATIM_TIMX_CPLM_BKIN_GPIO_CLK_ENABLE()   do{ __HAL_RCC_GPIOE_CLK_ENABLE(); }while(0)   /* PEå£æ—¶é’Ÿä½¿èƒ½ */
 
-/* TIMX REMAPÉèÖÃ
- * ÒòÎªPE8/PE9/PE15, Ä¬ÈÏ²¢²»ÊÇTIM1µÄ¸´ÓÃ¹¦ÄÜ½Å, ±ØÐë¿ªÆôÍêÈ«ÖØÓ³Éä, ²Å¿ÉÒÔ½«: TIM1_CH1->PE9; TIM1_CH1N->PE8; TIM1_BKIN->PE15;
- * ÕâÑù, PE8/PE9/PE15, ²ÅÄÜÓÃ×÷TIM1µÄCH1N/CH1/BKIN¹¦ÄÜ.
- * Òò´Ë, ±ØÐëÊµÏÖATIM_TIMX_CPLM_CHYN_GPIO_REMAP, Í¨¹ýsys_gpio_remap_setº¯ÊýÉèÖÃÖØÓ³Éä
- * Èç¹ûÎÒÃÇÊ¹ÓÃÄ¬ÈÏµÄ¸´ÓÃ¹¦ÄÜÊä³ö, Ôò²»ÓÃÉèÖÃÖØÓ³Éä, ÊÇ¿ÉÒÔ²»ÐèÒª¸Ãº¯ÊýµÄ! ¸ù¾Ý¾ßÌåÐèÒªÀ´ÊµÏÖ.
+/* TIMX REMAPè®¾ç½®
+ * å› ä¸ºPE8/PE9/PE15, é»˜è®¤å¹¶ä¸æ˜¯TIM1çš„å¤ç”¨åŠŸèƒ½è„š, å¿…é¡»å¼€å¯å®Œå…¨é‡æ˜ å°„, æ‰å¯ä»¥å°†: TIM1_CH1->PE9; TIM1_CH1N->PE8; TIM1_BKIN->PE15;
+ * è¿™æ ·, PE8/PE9/PE15, æ‰èƒ½ç”¨ä½œTIM1çš„CH1N/CH1/BKINåŠŸèƒ½.
+ * å› æ­¤, å¿…é¡»å®žçŽ°ATIM_TIMX_CPLM_CHYN_GPIO_REMAP, é€šè¿‡sys_gpio_remap_setå‡½æ•°è®¾ç½®é‡æ˜ å°„
+ * å¦‚æžœæˆ‘ä»¬ä½¿ç”¨é»˜è®¤çš„å¤ç”¨åŠŸèƒ½è¾“å‡º, åˆ™ä¸ç”¨è®¾ç½®é‡æ˜ å°„, æ˜¯å¯ä»¥ä¸éœ€è¦è¯¥å‡½æ•°çš„! æ ¹æ®å…·ä½“éœ€è¦æ¥å®žçŽ°.
  */
 #define ATIM_TIMX_CPLM_CHY_GPIO_AF             GPIO_AF1_TIM1
 
-/* »¥²¹Êä³öÊ¹ÓÃµÄ¶¨Ê±Æ÷ */
+/* äº’è¡¥è¾“å‡ºä½¿ç”¨çš„å®šæ—¶å™¨ */
 #define ATIM_TIMX_CPLM                          TIM1
 #define ATIM_TIMX_CPLM_CHY                      TIM_CHANNEL_1
 #define ATIM_TIMX_CPLM_CHY_CCRY                 ATIM_TIMX_CPLM->CCR1
-#define ATIM_TIMX_CPLM_CLK_ENABLE()             do{ __HAL_RCC_TIM1_CLK_ENABLE(); }while(0)    /* TIM1 Ê±ÖÓÊ¹ÄÜ */
+#define ATIM_TIMX_CPLM_CLK_ENABLE()             do{ __HAL_RCC_TIM1_CLK_ENABLE(); }while(0)    /* TIM1 æ—¶é’Ÿä½¿èƒ½ */
 
-/* TIMX PWMÊäÈëÄ£Ê½ ¶¨Òå 
- * ÕâÀïµÄÊäÈë²¶»ñÊ¹ÓÃ¶¨Ê±Æ÷TIM1_CH1,²¶»ñWK_UP°´¼üµÄÊäÈë
- * Ä¬ÈÏÊÇÕë¶ÔTIM1/TIM8µÈ¸ß¼¶¶¨Ê±Æ÷ 
- * ×¢Òâ: Í¨¹ýÐÞ¸ÄÕâ¼¸¸öºê¶¨Òå,¿ÉÒÔÖ§³ÖTIM1~TIM8ÈÎÒâÒ»¸ö¶¨Ê±Æ÷µÄÍ¨µÀ1/Í¨µÀ2
+/* TIMX PWMè¾“å…¥æ¨¡å¼ å®šä¹‰ 
+ * è¿™é‡Œçš„è¾“å…¥æ•èŽ·ä½¿ç”¨å®šæ—¶å™¨TIM1_CH1,æ•èŽ·WK_UPæŒ‰é”®çš„è¾“å…¥
+ * é»˜è®¤æ˜¯é’ˆå¯¹TIM1/TIM8ç­‰é«˜çº§å®šæ—¶å™¨ 
+ * æ³¨æ„: é€šè¿‡ä¿®æ”¹è¿™å‡ ä¸ªå®å®šä¹‰,å¯ä»¥æ”¯æŒTIM1~TIM8ä»»æ„ä¸€ä¸ªå®šæ—¶å™¨çš„é€šé“1/é€šé“2
  */
 #define ATIM_TIMX_PWMIN_CHY_GPIO_PORT           GPIOC
 #define ATIM_TIMX_PWMIN_CHY_GPIO_PIN            GPIO_PIN_6
 #define ATIM_TIMX_PWMIN_CHY_GPIO_AF             GPIO_AF3_TIM8
-#define ATIM_TIMX_PWMIN_CHY_GPIO_CLK_ENABLE()   do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)   /* PC¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define ATIM_TIMX_PWMIN_CHY_GPIO_CLK_ENABLE()   do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)   /* PCå£æ—¶é’Ÿä½¿èƒ½ */
 
 #define ATIM_TIMX_PWMIN                         TIM8
 #define ATIM_TIMX_PWMIN_IRQn                    TIM8_UP_TIM13_IRQn
 #define ATIM_TIMX_PWMIN_IRQHandler              TIM8_UP_TIM13_IRQHandler
-#define ATIM_TIMX_PWMIN_CHY                     TIM_CHANNEL_1                           /* Í¨µÀY,  1<= Y <=2*/ 
-#define ATIM_TIMX_PWMIN_CHY_CLK_ENABLE()        do{ __HAL_RCC_TIM8_CLK_ENABLE(); }while(0)  /* TIM8 Ê±ÖÓÊ¹ÄÜ */
+#define ATIM_TIMX_PWMIN_CHY                     TIM_CHANNEL_1                           /* é€šé“Y,  1<= Y <=2*/ 
+#define ATIM_TIMX_PWMIN_CHY_CLK_ENABLE()        do{ __HAL_RCC_TIM8_CLK_ENABLE(); }while(0)  /* TIM8 æ—¶é’Ÿä½¿èƒ½ */
 
- /* TIM1 / TIM8 ÓÐ¶ÀÁ¢µÄ²¶»ñÖÐ¶Ï·þÎñº¯Êý,ÐèÒªµ¥¶À¶¨Òå,¶ÔÓÚTIM2~5µÈ,Ôò²»ÐèÒªÒÔÏÂ¶¨Òå */
+ /* TIM1 / TIM8 æœ‰ç‹¬ç«‹çš„æ•èŽ·ä¸­æ–­æœåŠ¡å‡½æ•°,éœ€è¦å•ç‹¬å®šä¹‰,å¯¹äºŽTIM2~5ç­‰,åˆ™ä¸éœ€è¦ä»¥ä¸‹å®šä¹‰ */
 #define ATIM_TIMX_PWMIN_CC_IRQn                 TIM8_CC_IRQn
 #define ATIM_TIMX_PWMIN_CC_IRQHandler           TIM8_CC_IRQHandler
 
 /******************************************************************************************/
 
-void atim_timx_pwm_chy_init(uint16_t arr, uint16_t psc);    /* ¸ß¼¶¶¨Ê±Æ÷ PWM³õÊ¼»¯º¯Êý */
-void atim_timx_npwm_chy_init(uint16_t arr, uint16_t psc);   /* ¸ß¼¶¶¨Ê±Æ÷ Êä³öÖ¸¶¨¸öÊýPWM³õÊ¼»¯º¯Êý */
-void atim_timx_npwm_chy_set(uint32_t npwm);                 /* ¸ß¼¶¶¨Ê±Æ÷ ÉèÖÃÊä³öPWMµÄ¸öÊý */
-void atim_timx_comp_pwm_init(uint16_t arr, uint16_t psc);   /* ¸ß¼¶¶¨Ê±Æ÷ Êä³ö±È½ÏÄ£Ê½Êä³öPWM ³õÊ¼»¯º¯Êý */
-void atim_timx_cplm_pwm_init(uint16_t arr, uint16_t psc);   /* ¸ß¼¶¶¨Ê±Æ÷ »¥²¹Êä³ö ³õÊ¼»¯º¯Êý */
-void atim_timx_cplm_pwm_set(uint16_t ccr, uint8_t dtg);     /* ¸ß¼¶¶¨Ê±Æ÷ »¥²¹Êä³ö ÉèÖÃÊä³ö±È½ÏÖµ & ËÀÇøÊ±¼ä */
-void atim_timx_pwmin_chy_init(void);                        /* ¸ß¼¶¶¨Ê±Æ÷ PWMÊäÈëÄ£Ê½³õÊ¼»¯ */
-void atim_timx_pwmin_chy_restart(void);                     /* ¸ß¼¶¶¨Ê±Æ÷ ÖØÆôPWMÊäÈëÄ£Ê½¼ì²â */
+void atim_timx_pwm_chy_init(uint16_t arr, uint16_t psc);    /* é«˜çº§å®šæ—¶å™¨ PWMåˆå§‹åŒ–å‡½æ•° */
+void atim_timx_npwm_chy_init(uint16_t arr, uint16_t psc);   /* é«˜çº§å®šæ—¶å™¨ è¾“å‡ºæŒ‡å®šä¸ªæ•°PWMåˆå§‹åŒ–å‡½æ•° */
+void atim_timx_npwm_chy_set(uint32_t npwm);                 /* é«˜çº§å®šæ—¶å™¨ è®¾ç½®è¾“å‡ºPWMçš„ä¸ªæ•° */
+void atim_timx_comp_pwm_init(uint16_t arr, uint16_t psc);   /* é«˜çº§å®šæ—¶å™¨ è¾“å‡ºæ¯”è¾ƒæ¨¡å¼è¾“å‡ºPWM åˆå§‹åŒ–å‡½æ•° */
+void atim_timx_cplm_pwm_init(uint16_t arr, uint16_t psc);   /* é«˜çº§å®šæ—¶å™¨ äº’è¡¥è¾“å‡º åˆå§‹åŒ–å‡½æ•° */
+void atim_timx_cplm_pwm_set(uint16_t ccr, uint8_t dtg);     /* é«˜çº§å®šæ—¶å™¨ äº’è¡¥è¾“å‡º è®¾ç½®è¾“å‡ºæ¯”è¾ƒå€¼ & æ­»åŒºæ—¶é—´ */
+void atim_timx_pwmin_chy_init(void);                        /* é«˜çº§å®šæ—¶å™¨ PWMè¾“å…¥æ¨¡å¼åˆå§‹åŒ– */
+void atim_timx_pwmin_chy_restart(void);                     /* é«˜çº§å®šæ—¶å™¨ é‡å¯PWMè¾“å…¥æ¨¡å¼æ£€æµ‹ */
 
 #endif
 

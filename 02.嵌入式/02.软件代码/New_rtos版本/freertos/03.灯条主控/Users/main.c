@@ -1,4 +1,5 @@
 #include "sys.h"
+#include "frame13.h"
 #include "uart1.h"
 #include "delay.h"
 #include "LED.h"
@@ -10,7 +11,7 @@
 #include "oled.h"
 extern uint8_t key_count;
 char buf[20];
-uint8_t Receive[32]={0};
+uint8_t Receive[FRAME13_LEN]={0};
 
 #define ARMOR_COUNT        4u
 #define FLASH_INTERVAL_MS  100u
@@ -103,7 +104,7 @@ int main(void)
 	}
 }
 /*		
-1.ws2812²âÊÔ	
+1.ws2812æµ‹è¯•	
 	
 		WS2812_SetALL(255,0,0);
 		WS2812_Updata();
@@ -114,11 +115,11 @@ int main(void)
 		WS2812_SetALL(0,0,255);
 		WS2812_Updata();
 		delay_ms(1000);	
-2.µôÑª²âÊÔ
+2.æ‰è¡€æµ‹è¯•
 		
 		if(key_edge_detect() == true){
 
-		key_num++; // Ã¿¼ì²âµ½Ò»´ÎÏÂ½µÑØ£¬count¼Ó1
+		key_num++; // æ¯æ£€æµ‹åˆ°ä¸€æ¬¡ä¸‹é™æ²¿ï¼ŒcountåŠ 1
 		
 		if(key_num<10){
 			WS2812_SetALL(0,0,255);
@@ -137,32 +138,32 @@ int main(void)
 			WS2812_Updata();
 			delay_ms(10);
 	}
-3.NRF24L01ÎŞÏßÍ¨Ñ¶
-³õÊ¼»¯
+3.NRF24L01æ— çº¿é€šè®¯
+åˆå§‹åŒ–
 	 while(NRF24L01_Check()){
-			printf("Ó²¼ş²éÑ°²»µ½NRF24L01ÎŞÏßÄ£¿é\n"); 
+			printf("ç¡¬ä»¶æŸ¥å¯»ä¸åˆ°NRF24L01æ— çº¿æ¨¡å—\n"); 
 			delay_ms(1000);
 		}
-			printf("NRF24L01ÎŞÏßÄ£¿éÓ²¼şÁ¬½ÓÕı³£\r\n");
+			printf("NRF24L01æ— çº¿æ¨¡å—ç¡¬ä»¶è¿æ¥æ­£å¸¸\r\n");
 
 	
-		NRF24L01_TX_Mode();//ÉèÖÃÎª·¢ËÍÄ£Ê½
-		printf("½øÈëÊı¾İ·¢ËÍÄ£Ê½£¬Ã¿1s·¢ËÍÒ»´ÎÊı¾İ\r\n");
+		NRF24L01_TX_Mode();//è®¾ç½®ä¸ºå‘é€æ¨¡å¼
+		printf("è¿›å…¥æ•°æ®å‘é€æ¨¡å¼ï¼Œæ¯1så‘é€ä¸€æ¬¡æ•°æ®\r\n");
 		
 		NRF24L01_RX_Mode();
-		printf("½øÈëÊı¾İ½ÓÊÕÄ£Ê½\n");	
-Ñ­»·
-			//·¢ËÍ¶Ë   
+		printf("è¿›å…¥æ•°æ®æ¥æ”¶æ¨¡å¼\n");	
+å¾ªç¯
+			//å‘é€ç«¯   
 		 if(NRF24L01_TxPacket(Send_Out)==TX_OK){
-				printf("NRF24L01ÎŞÏßÄ£¿éÊı¾İ·¢ËÍ³É¹¦£º%s\r\n",Send_Out);
+				printf("NRF24L01æ— çº¿æ¨¡å—æ•°æ®å‘é€æˆåŠŸï¼š%s\r\n",Send_Out);
 			}else{
-				printf("NRF24L01ÎŞÏßÄ£¿éÊı¾İ·¢ËÍÊ§°Ü\r\n");
+				printf("NRF24L01æ— çº¿æ¨¡å—æ•°æ®å‘é€å¤±è´¥\r\n");
 			} 
 
-			//½ÓÊÕ¶Ë
+			//æ¥æ”¶ç«¯
       if(NRF24L01_RxPacket(Receive)==0){
-      Receive[32]=0;//¼ÓÈë×Ö·û´®½áÊø·û      
-      printf("NRF24L01ÎŞÏßÄ£¿éÊı¾İ½ÓÊÕ³É¹¦£º%s\r\n",Receive);
+      Receive[32]=0;//åŠ å…¥å­—ç¬¦ä¸²ç»“æŸç¬¦      
+      printf("NRF24L01æ— çº¿æ¨¡å—æ•°æ®æ¥æ”¶æˆåŠŸï¼š%s\r\n",Receive);
     }	
 	
 	*/

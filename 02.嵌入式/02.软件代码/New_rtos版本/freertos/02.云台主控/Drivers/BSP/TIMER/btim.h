@@ -5,21 +5,21 @@
 #include "./SYSTEM/sys/sys.h"
 
 /******************************************************************************************/
-/* »ù±¾¶¨Ê±Æ÷ ¶¨Òå */
+/* åŸºæœ¬å®šæ—¶å™¨ å®šä¹‰ */
 
-/* TIMX ÖÐ¶Ï¶¨Òå 
- * Ä¬ÈÏÊÇÕë¶ÔTIM6/TIM7
- * ×¢Òâ: Í¨¹ýÐÞ¸ÄÕâ4¸öºê¶¨Òå,¿ÉÒÔÖ§³ÖTIM1~TIM8ÈÎÒâÒ»¸ö¶¨Ê±Æ÷.
+/* TIMX ä¸­æ–­å®šä¹‰ 
+ * é»˜è®¤æ˜¯é’ˆå¯¹TIM6/TIM7
+ * æ³¨æ„: é€šè¿‡ä¿®æ”¹è¿™4ä¸ªå®å®šä¹‰,å¯ä»¥æ”¯æŒTIM1~TIM8ä»»æ„ä¸€ä¸ªå®šæ—¶å™¨.
  */
  
 #define BTIM_TIMX_INT                       TIM3
 #define BTIM_TIMX_INT_IRQn                  TIM3_IRQn
 #define BTIM_TIMX_INT_IRQHandler            TIM3_IRQHandler
-#define BTIM_TIMX_INT_CLK_ENABLE()          do{ __HAL_RCC_TIM3_CLK_ENABLE(); }while(0)   /* TIM3 Ê±ÖÓÊ¹ÄÜ */
+#define BTIM_TIMX_INT_CLK_ENABLE()          do{ __HAL_RCC_TIM3_CLK_ENABLE(); }while(0)   /* TIM3 æ—¶é’Ÿä½¿èƒ½ */
 
 /******************************************************************************************/
 
-void btim_timx_int_init(uint16_t arr, uint16_t psc);    /* »ù±¾¶¨Ê±Æ÷ ¶¨Ê±ÖÐ¶Ï³õÊ¼»¯º¯Êý */
+void btim_timx_int_init(uint16_t arr, uint16_t psc);    /* åŸºæœ¬å®šæ—¶å™¨ å®šæ—¶ä¸­æ–­åˆå§‹åŒ–å‡½æ•° */
 
 #endif
 

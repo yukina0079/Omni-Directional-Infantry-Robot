@@ -3,7 +3,7 @@
 #include "delay.h"
 #include "iic.h"
 
-#define MAG_SEN 0.3f //×ª»»³É uT
+#define MAG_SEN 0.3f //è½¬æ¢æˆ uT
 
 float ac_x,ac_y,ac_z,ac_tmp;
 

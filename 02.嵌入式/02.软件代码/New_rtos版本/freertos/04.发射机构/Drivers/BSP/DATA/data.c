@@ -1,4 +1,5 @@
 #include "data.h"
+#include "frame13.h"
 #include "stdio.h"
 #include "motor.h"
 #include "nrf24L01.h"
@@ -10,7 +11,7 @@
 
 #define CONTROL_LINK_TIMEOUT_MS 200U
 
-uint8_t Receive[33];
+uint8_t Receive[FRAME13_LEN];
 
 int speed[2];
 
@@ -21,12 +22,12 @@ void laser_contral(void)
 {
 	if((control_link_active != 0U) && (Receive[0] == 0x55) && (Receive[12] == 0xff)){
 		if((Receive[1] & 0x02) != 0x02){
-			LASER(1);  /* °´ÏÂ KEY2 (0x02)£¬PB6 ÍÆÍìÊä³ö¸ßµçÆ½µãÁÁ¼¤¹â */
+			LASER(1);  /* æŒ‰ä¸‹ KEY2 (0x02)ï¼ŒPB6 æ¨æŒ½è¾“å‡ºé«˜ç”µå¹³ç‚¹äº®æ¿€å…‰ */
 		}else{
-			LASER(0);  /* PB6 Êä³öµÍµçÆ½¹Ø±Õ¼¤¹â */
+			LASER(0);  /* PB6 è¾“å‡ºä½ç”µå¹³å…³é—­æ¿€å…‰ */
 		}
 	}else{
-		LASER(0);      /* ÎŞÏß¶ÏÏß³¬Ê±ÇĞ¶Ï¼¤¹â */
+		LASER(0);      /* æ— çº¿æ–­çº¿è¶…æ—¶åˆ‡æ–­æ¿€å…‰ */
 	}
 }
 
@@ -78,45 +79,45 @@ void data_change(void)
 }
 void data_print(void)
 {
-//		printf("½øÈëÊı¾İ½ÓÊÕÄ£Ê½\n");
-		for(int i=0;i<20;i++){
+//		printf("è¿›å…¥æ•°æ®æ¥æ”¶æ¨¡å¼\n");
+		for(int i=0;i<FRAME13_LEN;i++){
 			printf("%2x ",Receive[i]);
 		}printf("\n");
 
 }
 /**
-  * @brief  ´ø·ûºÅ¸¡µãÊı×ªÁ½¸öuint8_t£¨·¶Î§-327.68~327.67£¬Á½Î»Ğ¡Êı£©
-  * @param  num: ÊäÈë¸¡µãÊı£¨·¶Î§-327.68~327.67£©
-  * @param  high_byte: ¸ßÎ»×Ö½ÚÊä³ö
-  * @param  low_byte: µÍÎ»×Ö½ÚÊä³ö
-  * @note   ¾«¶È0.01£¬ÓĞĞ§·¶Î§-327.68~327.67
+  * @brief  å¸¦ç¬¦å·æµ®ç‚¹æ•°è½¬ä¸¤ä¸ªuint8_tï¼ˆèŒƒå›´-327.68~327.67ï¼Œä¸¤ä½å°æ•°ï¼‰
+  * @param  num: è¾“å…¥æµ®ç‚¹æ•°ï¼ˆèŒƒå›´-327.68~327.67ï¼‰
+  * @param  high_byte: é«˜ä½å­—èŠ‚è¾“å‡º
+  * @param  low_byte: ä½ä½å­—èŠ‚è¾“å‡º
+  * @note   ç²¾åº¦0.01ï¼Œæœ‰æ•ˆèŒƒå›´-327.68~327.67
   */
 void float_to_two_uint8_signed(float num, uint8_t* high_byte, uint8_t* low_byte) 
 {
-    // ·¶Î§¼ì²é£¨¿ÉÑ¡£©
+    // èŒƒå›´æ£€æŸ¥ï¼ˆå¯é€‰ï¼‰
     if(num > 327.67f) num = 327.67f;
     if(num < -327.68f) num = -327.68f;
     
-    // ·Å´ó100±¶²¢ËÄÉáÎåÈë
+    // æ”¾å¤§100å€å¹¶å››èˆäº”å…¥
     int16_t scaled = (int16_t)(round(num * 100.0f));
     
-    // ½«int16_t²ğ·ÖÎªÁ½¸ö×Ö½Ú
+    // å°†int16_tæ‹†åˆ†ä¸ºä¸¤ä¸ªå­—èŠ‚
     *high_byte = (scaled >> 8) & 0xFF;
     *low_byte = scaled & 0xFF;
 }
 
 /**
-  * @brief  Á½¸öuint8_t»¹Ô­Îª´ø·ûºÅ¸¡µãÊı
-  * @param  high_byte: ¸ßÎ»×Ö½Ú
-  * @param  low_byte: µÍÎ»×Ö½Ú
-  * @retval »¹Ô­µÄ¸¡µãÊı£¨·¶Î§-327.68~327.67£©
+  * @brief  ä¸¤ä¸ªuint8_tè¿˜åŸä¸ºå¸¦ç¬¦å·æµ®ç‚¹æ•°
+  * @param  high_byte: é«˜ä½å­—èŠ‚
+  * @param  low_byte: ä½ä½å­—èŠ‚
+  * @retval è¿˜åŸçš„æµ®ç‚¹æ•°ï¼ˆèŒƒå›´-327.68~327.67ï¼‰
   */
 float two_uint8_to_float_signed(uint8_t high_byte, uint8_t low_byte) 
 {
-    // ×éºÏÎªint16_t£¨×¢Òâ£º¸ßÎ»ĞèÒª·ûºÅÀ©Õ¹£©
+    // ç»„åˆä¸ºint16_tï¼ˆæ³¨æ„ï¼šé«˜ä½éœ€è¦ç¬¦å·æ‰©å±•ï¼‰
     int16_t scaled = (int16_t)((high_byte << 8) | low_byte);
     
-    // ËõĞ¡100±¶
+    // ç¼©å°100å€
     return (float)scaled / 100.0f;
 }
 

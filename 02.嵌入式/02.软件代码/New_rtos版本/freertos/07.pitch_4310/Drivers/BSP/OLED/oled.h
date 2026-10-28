@@ -3,11 +3,11 @@
 #include "sys.h"
 #include "delay.h"
 
-#define OLED_I2C_SCL_CLK()  __HAL_RCC_GPIOB_CLK_ENABLE()		//¿ªÆôGPIOB×éÒý½Å
+#define OLED_I2C_SCL_CLK()  __HAL_RCC_GPIOB_CLK_ENABLE()		//å¼€å¯GPIOBç»„å¼•è„š
 #define OLED_I2C_SCL_PORT		GPIOB
 #define OLED_I2C_SCL_PIN    GPIO_PIN_10
 
-#define OLED_I2C_SDA_CLK()  __HAL_RCC_GPIOB_CLK_ENABLE()		//¿ªÆôGPIOB×éÒý½Å
+#define OLED_I2C_SDA_CLK()  __HAL_RCC_GPIOB_CLK_ENABLE()		//å¼€å¯GPIOBç»„å¼•è„š
 #define OLED_I2C_SDA_PORT		GPIOB
 #define OLED_I2C_SDA_PIN    GPIO_PIN_11
 

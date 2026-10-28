@@ -1,7 +1,7 @@
 #include "LED.h"
 #include "sys.h"
 
-//³õÊ¼»¯GPIO¿Ú
+//åˆå§‹åŒ–GPIOå£
 void lde_init(void)
 {
 	

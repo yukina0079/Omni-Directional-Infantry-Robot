@@ -43,7 +43,7 @@ void WS2812_Updata(void)
 	}
 	data[LED_COUNT * 24] = codeReset;
 
-    // ∑¢ÀÕ DMA
+    // ÂèëÈÄÅ DMA
     HAL_TIM_PWM_Stop_DMA(&htim3, TIM_CHANNEL_4);
     __HAL_TIM_SET_COUNTER(&htim3, 0);
     HAL_TIM_PWM_Start_DMA(&htim3, TIM_CHANNEL_4,(uint32_t*) data,sizeof(data)/sizeof(uint16_t));

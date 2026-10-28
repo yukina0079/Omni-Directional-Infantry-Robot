@@ -3,23 +3,23 @@
 CAN_HandleTypeDef can_handle = {0};
 void can_init(void)
 {
-		can_handle.Instance = CAN1;				//canÍ¨µÀ
-//		can_handle.Init.Mode = CAN_MODE_LOOPBACK;					//¹¤×÷Ä£Ê½  »·»ØÄ£Ê½
-		can_handle.Init.Mode = CAN_MODE_NORMAL;					//¹¤×÷Ä£Ê½		Õı³£Ä£Ê½
-		can_handle.Init.Prescaler = 4;			//Ô¤·ÖÆµÆ÷ 
+		can_handle.Instance = CAN1;				//cané€šé“
+//		can_handle.Init.Mode = CAN_MODE_LOOPBACK;					//å·¥ä½œæ¨¡å¼  ç¯å›æ¨¡å¼
+		can_handle.Init.Mode = CAN_MODE_NORMAL;					//å·¥ä½œæ¨¡å¼		æ­£å¸¸æ¨¡å¼
+		can_handle.Init.Prescaler = 4;			//é¢„åˆ†é¢‘å™¨ 
 		can_handle.Init.TimeSeg1 = CAN_BS1_9TQ;
 		can_handle.Init.TimeSeg2 = CAN_BS2_8TQ;
 		can_handle.Init.SyncJumpWidth = CAN_SJW_1TQ;
 	
-		can_handle.Init.AutoBusOff						= DISABLE;	//½ûÖ¹×Ô¶¯ÀëÏß¹ÜÀí
-		can_handle.Init.AutoRetransmission		= DISABLE;	//½ûÖ¹×Ô¶¯ÖØ·¢
-		can_handle.Init.AutoWakeUp						= DISABLE;	//½ûÖ¹×Ô¶¯»½ĞÑ
-		can_handle.Init.ReceiveFifoLocked			= DISABLE;	//½ûÖ¹½ÓÊÕFIFOËø¶¨
-		can_handle.Init.TimeTriggeredMode			= DISABLE;	//½ûÖ¹Ê±¼ä´¥·¢Í¨ĞÅÄ£Ê½
-		can_handle.Init.TransmitFifoPriority	= DISABLE;	//½ûÖ¹·¢ËÍFIFOÓÅÏÈ¼¶
+		can_handle.Init.AutoBusOff						= DISABLE;	//ç¦æ­¢è‡ªåŠ¨ç¦»çº¿ç®¡ç†
+		can_handle.Init.AutoRetransmission		= DISABLE;	//ç¦æ­¢è‡ªåŠ¨é‡å‘
+		can_handle.Init.AutoWakeUp						= DISABLE;	//ç¦æ­¢è‡ªåŠ¨å”¤é†’
+		can_handle.Init.ReceiveFifoLocked			= DISABLE;	//ç¦æ­¢æ¥æ”¶FIFOé”å®š
+		can_handle.Init.TimeTriggeredMode			= DISABLE;	//ç¦æ­¢æ—¶é—´è§¦å‘é€šä¿¡æ¨¡å¼
+		can_handle.Init.TransmitFifoPriority	= DISABLE;	//ç¦æ­¢å‘é€FIFOä¼˜å…ˆçº§
 		HAL_CAN_Init(&can_handle);
 	
-		CAN_FilterTypeDef can_filterconfig = {0};					//¹ıÂËÆ÷ÉèÖÃ
+		CAN_FilterTypeDef can_filterconfig = {0};					//è¿‡æ»¤å™¨è®¾ç½®
 		can_filterconfig.FilterMode = CAN_FILTERMODE_IDMASK;
 		can_filterconfig.FilterScale = CAN_FILTERSCALE_32BIT;
 		can_filterconfig.FilterMaskIdHigh = 0;
@@ -41,16 +41,16 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef *hcan)
 		__HAL_RCC_CAN1_CLK_ENABLE();
 		__HAL_RCC_GPIOB_CLK_ENABLE();
 	
-		GPIO_InitTypeDef gpio_initstruct;//¶¨Òå½á¹¹Ìå²ÎÊı
+		GPIO_InitTypeDef gpio_initstruct;//å®šä¹‰ç»“æ„ä½“å‚æ•°
 	
 		gpio_initstruct.Pin = GPIO_PIN_9;
-		gpio_initstruct.Mode = GPIO_MODE_AF_PP;//ÅäÖÃ¹¤×÷Ä£Ê½ ¸´ÓÃÊä³ö
-		gpio_initstruct.Pull = GPIO_PULLUP;//ÅäÖÃÉÏÀ­ÏÂÀ­
-		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//ÅäÖÃÊä³öËÙ¶È
+		gpio_initstruct.Mode = GPIO_MODE_AF_PP;//é…ç½®å·¥ä½œæ¨¡å¼ å¤ç”¨è¾“å‡º
+		gpio_initstruct.Pull = GPIO_PULLUP;//é…ç½®ä¸Šæ‹‰ä¸‹æ‹‰
+		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//é…ç½®è¾“å‡ºé€Ÿåº¦
 	
 		HAL_GPIO_Init(GPIOB,&gpio_initstruct);
 		gpio_initstruct.Pin = GPIO_PIN_8;
-		gpio_initstruct.Mode = GPIO_MODE_AF_INPUT;//ÅäÖÃ¹¤×÷Ä£Ê½ ¸´ÓÃÊäÈë
+		gpio_initstruct.Mode = GPIO_MODE_AF_INPUT;//é…ç½®å·¥ä½œæ¨¡å¼ å¤ç”¨è¾“å…¥
 		HAL_GPIO_Init(GPIOB,&gpio_initstruct);
 }
 
@@ -62,13 +62,13 @@ void can_send_data(uint32_t id,uint8_t *buf,uint8_t len)
 	tx_header.ExtId = id;
 	tx_header.DLC = len;
 	tx_header.IDE = CAN_ID_EXT;
-	tx_header.RTR = CAN_RTR_DATA;	//Ö¡¸ñÊ½
+	tx_header.RTR = CAN_RTR_DATA;	//å¸§æ ¼å¼
 	HAL_CAN_AddTxMessage(&can_handle,&tx_header,buf,&tx_mail);
 
 	while(HAL_CAN_GetTxMailboxesFreeLevel(&can_handle) != 3);
 	
 	uint8_t i = 0;
-	printf("·¢ËÍÊı¾İ:\r\n");
+	printf("å‘é€æ•°æ®:\r\n");
 	for(i=0;i<len;i++)
 			printf("%X",buf[i]);
 	printf("\r\n");
@@ -84,7 +84,7 @@ uint8_t can_receive_data(uint8_t *buf)
 		HAL_CAN_GetRxMessage(&can_handle,CAN_RX_FIFO0,&rx_header,buf);
 		
 			uint8_t i = 0;
-			printf("½ÓÊÕÊı¾İ:\r\n");
+			printf("æ¥æ”¶æ•°æ®:\r\n");
 			
 			for(i=0;i<rx_header.DLC;i++)
 					printf("%X",buf[i]);

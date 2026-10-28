@@ -9,49 +9,49 @@
 #define NULL 0
 #endif
 
-/* ¶¨ÒåÈı¸öÄÚ´æ³Ø */
-#define     SRAMIN                  0                               /* ÄÚ²¿ÄÚ´æ³Ø */
-#define     SRAMCCM                 1                               /* CCMÄÚ´æ³Ø(´Ë²¿·ÖSRAM½ö½öCPU¿ÉÒÔ·ÃÎÊ!!!) */
-#define     SRAMEX                  2                               /* Íâ²¿ÄÚ´æ³Ø */
-#define     SRAMBANK                3                               /* ¶¨ÒåÖ§³ÖµÄSRAM¿éÊı */
+/* å®šä¹‰ä¸‰ä¸ªå†…å­˜æ±  */
+#define     SRAMIN                  0                               /* å†…éƒ¨å†…å­˜æ±  */
+#define     SRAMCCM                 1                               /* CCMå†…å­˜æ± (æ­¤éƒ¨åˆ†SRAMä»…ä»…CPUå¯ä»¥è®¿é—®!!!) */
+#define     SRAMEX                  2                               /* å¤–éƒ¨å†…å­˜æ±  */
+#define     SRAMBANK                3                               /* å®šä¹‰æ”¯æŒçš„SRAMå—æ•° */
 
-/* mem1ÄÚ´æ²ÎÊıÉè¶¨.mem1ÍêÈ«´¦ÓÚÄÚ²¿SRAMÀïÃæ */
-#define     MEM1_BLOCK_SIZE         32                              /* ÄÚ´æ¿é´óĞ¡Îª32×Ö½Ú */
-#define     MEM1_MAX_SIZE           60*1024                        /* ×î´ó¹ÜÀíÄÚ´æ 100K */
-#define     MEM1_ALLOC_TABLE_SIZE   MEM1_MAX_SIZE/MEM1_BLOCK_SIZE   /* ÄÚ´æ±í´óĞ¡ */
+/* mem1å†…å­˜å‚æ•°è®¾å®š.mem1å®Œå…¨å¤„äºå†…éƒ¨SRAMé‡Œé¢ */
+#define     MEM1_BLOCK_SIZE         32                              /* å†…å­˜å—å¤§å°ä¸º32å­—èŠ‚ */
+#define     MEM1_MAX_SIZE           60*1024                        /* æœ€å¤§ç®¡ç†å†…å­˜ 100K */
+#define     MEM1_ALLOC_TABLE_SIZE   MEM1_MAX_SIZE/MEM1_BLOCK_SIZE   /* å†…å­˜è¡¨å¤§å° */
 
-/* mem2ÄÚ´æ²ÎÊıÉè¶¨.mem2´¦ÓÚCCM,ÓÃÓÚ¹ÜÀíCCM(ÌØ±ğ×¢Òâ,Õâ²¿·ÖSRAM,½öCPU¿ÉÒÔ·ÃÎÊ!!) */
-#define     MEM2_BLOCK_SIZE         32                              /* ÄÚ´æ¿é´óĞ¡Îª32×Ö½Ú */
-#define     MEM2_MAX_SIZE           60 *1024                        /* ×î´ó¹ÜÀíÄÚ´æ60K */
-#define     MEM2_ALLOC_TABLE_SIZE   MEM2_MAX_SIZE/MEM2_BLOCK_SIZE   /* ÄÚ´æ±í´óĞ¡ */
+/* mem2å†…å­˜å‚æ•°è®¾å®š.mem2å¤„äºCCM,ç”¨äºç®¡ç†CCM(ç‰¹åˆ«æ³¨æ„,è¿™éƒ¨åˆ†SRAM,ä»…CPUå¯ä»¥è®¿é—®!!) */
+#define     MEM2_BLOCK_SIZE         32                              /* å†…å­˜å—å¤§å°ä¸º32å­—èŠ‚ */
+#define     MEM2_MAX_SIZE           60 *1024                        /* æœ€å¤§ç®¡ç†å†…å­˜60K */
+#define     MEM2_ALLOC_TABLE_SIZE   MEM2_MAX_SIZE/MEM2_BLOCK_SIZE   /* å†…å­˜è¡¨å¤§å° */
 
-/* mem3ÄÚ´æ²ÎÊıÉè¶¨.mem3ÊÇF407ÍâÀ©SRAM */
-#define MEM3_BLOCK_SIZE             32                              /* ÄÚ´æ¿é´óĞ¡Îª32×Ö½Ú */
-#define MEM3_MAX_SIZE               16 *1024                       /* ×î´ó¹ÜÀíÄÚ´æ963K, F407ÍâÀ©SRAM´óĞ¡1024KB */
-#define MEM3_ALLOC_TABLE_SIZE       MEM3_MAX_SIZE/MEM3_BLOCK_SIZE   /* ÄÚ´æ±í´óĞ¡ */
+/* mem3å†…å­˜å‚æ•°è®¾å®š.mem3æ˜¯F407å¤–æ‰©SRAM */
+#define MEM3_BLOCK_SIZE             32                              /* å†…å­˜å—å¤§å°ä¸º32å­—èŠ‚ */
+#define MEM3_MAX_SIZE               16 *1024                       /* æœ€å¤§ç®¡ç†å†…å­˜963K, F407å¤–æ‰©SRAMå¤§å°1024KB */
+#define MEM3_ALLOC_TABLE_SIZE       MEM3_MAX_SIZE/MEM3_BLOCK_SIZE   /* å†…å­˜è¡¨å¤§å° */
 
 
-/* ÄÚ´æ¹ÜÀí¿ØÖÆÆ÷ */
+/* å†…å­˜ç®¡ç†æ§åˆ¶å™¨ */
 struct _m_mallco_dev
 {
-    void (*init)(uint8_t );             /* ³õÊ¼»¯ */
-    uint16_t (*perused)(uint8_t );       /* ÄÚ´æÊ¹ÓÃÂÊ */
-    uint8_t *membase[SRAMBANK];         /* ÄÚ´æ³Ø ¹ÜÀíSRAMBANK¸öÇøÓòµÄÄÚ´æ */
-    uint16_t *memmap[SRAMBANK];         /* ÄÚ´æ¹ÜÀí×´Ì¬±í */
-    uint8_t memrdy[SRAMBANK];           /* ÄÚ´æ¹ÜÀíÊÇ·ñ¾ÍĞ÷ */
+    void (*init)(uint8_t );             /* åˆå§‹åŒ– */
+    uint16_t (*perused)(uint8_t );       /* å†…å­˜ä½¿ç”¨ç‡ */
+    uint8_t *membase[SRAMBANK];         /* å†…å­˜æ±  ç®¡ç†SRAMBANKä¸ªåŒºåŸŸçš„å†…å­˜ */
+    uint16_t *memmap[SRAMBANK];         /* å†…å­˜ç®¡ç†çŠ¶æ€è¡¨ */
+    uint8_t memrdy[SRAMBANK];           /* å†…å­˜ç®¡ç†æ˜¯å¦å°±ç»ª */
 };
 
-extern struct _m_mallco_dev mallco_dev; /* ÔÚmallco.cÀïÃæ¶¨Òå */
+extern struct _m_mallco_dev mallco_dev; /* åœ¨mallco.cé‡Œé¢å®šä¹‰ */
 
-void mymemset(void * s, uint8_t c, uint32_t count);         /* ÉèÖÃÄÚ´æ */
-void mymemcpy(void * des, void * src, uint32_t n);          /* ¸´ÖÆÄÚ´æ */
-void my_mem_init(uint8_t memx);                             /* ÄÚ´æ¹ÜÀí³õÊ¼»¯º¯Êı(Íâ/ÄÚ²¿µ÷ÓÃ) */
-uint32_t my_mem_malloc(uint8_t memx, uint32_t size);        /* ÄÚ´æ·ÖÅä(ÄÚ²¿µ÷ÓÃ) */
-uint8_t my_mem_free(uint8_t memx, uint32_t offset);         /* ÄÚ´æÊÍ·Å(ÄÚ²¿µ÷ÓÃ) */
-uint16_t my_mem_perused(uint8_t memx);                      /* »ñµÃÄÚ´æÊ¹ÓÃÂÊ(Íâ/ÄÚ²¿µ÷ÓÃ) */
+void mymemset(void * s, uint8_t c, uint32_t count);         /* è®¾ç½®å†…å­˜ */
+void mymemcpy(void * des, void * src, uint32_t n);          /* å¤åˆ¶å†…å­˜ */
+void my_mem_init(uint8_t memx);                             /* å†…å­˜ç®¡ç†åˆå§‹åŒ–å‡½æ•°(å¤–/å†…éƒ¨è°ƒç”¨) */
+uint32_t my_mem_malloc(uint8_t memx, uint32_t size);        /* å†…å­˜åˆ†é…(å†…éƒ¨è°ƒç”¨) */
+uint8_t my_mem_free(uint8_t memx, uint32_t offset);         /* å†…å­˜é‡Šæ”¾(å†…éƒ¨è°ƒç”¨) */
+uint16_t my_mem_perused(uint8_t memx);                      /* è·å¾—å†…å­˜ä½¿ç”¨ç‡(å¤–/å†…éƒ¨è°ƒç”¨) */
 
-/* ÓÃ»§µ÷ÓÃº¯Êı */
-void myfree(uint8_t memx, void * ptr);                      /* ÄÚ´æÊÍ·Å(Íâ²¿µ÷ÓÃ) */
-void *mymalloc(uint8_t memx, uint32_t size);                /* ÄÚ´æ·ÖÅä(Íâ²¿µ÷ÓÃ) */
-void *myrealloc(uint8_t memx, void * ptr, uint32_t size);   /* ÖØĞÂ·ÖÅäÄÚ´æ(Íâ²¿µ÷ÓÃ) */
+/* ç”¨æˆ·è°ƒç”¨å‡½æ•° */
+void myfree(uint8_t memx, void * ptr);                      /* å†…å­˜é‡Šæ”¾(å¤–éƒ¨è°ƒç”¨) */
+void *mymalloc(uint8_t memx, uint32_t size);                /* å†…å­˜åˆ†é…(å¤–éƒ¨è°ƒç”¨) */
+void *myrealloc(uint8_t memx, void * ptr, uint32_t size);   /* é‡æ–°åˆ†é…å†…å­˜(å¤–éƒ¨è°ƒç”¨) */
 #endif

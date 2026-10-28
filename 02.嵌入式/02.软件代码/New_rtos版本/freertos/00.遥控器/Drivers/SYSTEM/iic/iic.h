@@ -1,19 +1,19 @@
 #ifndef __IIC_H__
 #define __IIC_H__
 
-#include "stm32f1xx_hal.h"  // 根据你的MCU型号调整（如f4xx/f7xx等）
+#include "stm32f1xx_hal.h"  // 鏍规嵁浣犵殑MCU鍨嬪彿璋冩暣锛堝f4xx/f7xx绛夛級
 
-/* 硬件I2C句柄声明 */
+/* 纭欢I2C鍙ユ焺澹版槑 */
 extern I2C_HandleTypeDef hi2c2;
 
-/* 函数声明（保持原有接口完全兼容） */
+/* 鍑芥暟澹版槑锛堜繚鎸佸師鏈夋帴鍙ｅ畬鍏ㄥ吋瀹癸級 */
 void i2c_init(void);
 void i2c_write_register(uint8_t i2c_address, uint8_t address, uint8_t data);
 uint8_t i2c_read_register(uint8_t i2c_address, uint8_t address);
 void i2c_write_len(uint8_t i2c_address, uint8_t reg_addr, uint8_t len, uint8_t *data);
 void i2c_read_len(uint8_t i2c_address, uint8_t reg_addr, uint8_t len, uint8_t *data);
 
-/* 可选：调试用错误码定义 */
+/* 鍙�夛細璋冭瘯鐢ㄩ敊璇爜瀹氫箟 */
 #define I2C_OK       0
 #define I2C_ERROR    1
 

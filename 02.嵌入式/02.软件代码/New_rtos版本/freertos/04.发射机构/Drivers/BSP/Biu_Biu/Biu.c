@@ -8,29 +8,29 @@ void Biu_pwm_init(uint16_t arr,uint16_t psc)
 		TIM_OC_InitTypeDef pwm_config = {0};
 		TIM_OC_InitTypeDef pwm2_config = {0};
 		
-		biu_pwm_handle.Instance = TIM2;					//¶¨Ê±Æ÷Í¨µÀ
+		biu_pwm_handle.Instance = TIM2;					//å®šæ—¶å™¨é€šé“
 		biu_pwm_handle.Init.Prescaler = psc;
 		biu_pwm_handle.Init.Period = arr;
-		biu_pwm_handle.Init.CounterMode = TIM_COUNTERMODE_UP;//ÏòÉÏ¼ÆÊı
+		biu_pwm_handle.Init.CounterMode = TIM_COUNTERMODE_UP;//å‘ä¸Šè®¡æ•°
 		
 		HAL_TIM_PWM_Init(&biu_pwm_handle);
 		
-		pwm_config.OCMode = TIM_OCMODE_PWM1; //Í¨ÓÃ¶¨Ê±Æ÷
+		pwm_config.OCMode = TIM_OCMODE_PWM1; //é€šç”¨å®šæ—¶å™¨
 		pwm_config.Pulse  = 0;
-		pwm_config.OCPolarity = TIM_OCPOLARITY_HIGH;//¼ÆÊı·½Ê½
+		pwm_config.OCPolarity = TIM_OCPOLARITY_HIGH;//è®¡æ•°æ–¹å¼
 		
 
 	
-		biu2_pwm_handle.Instance = TIM3;					//¶¨Ê±Æ÷Í¨µÀ
+		biu2_pwm_handle.Instance = TIM3;					//å®šæ—¶å™¨é€šé“
 		biu2_pwm_handle.Init.Prescaler = psc;
 		biu2_pwm_handle.Init.Period = arr;
-		biu2_pwm_handle.Init.CounterMode = TIM_COUNTERMODE_UP;//ÏòÉÏ¼ÆÊı
+		biu2_pwm_handle.Init.CounterMode = TIM_COUNTERMODE_UP;//å‘ä¸Šè®¡æ•°
 		
 		HAL_TIM_PWM_Init(&biu2_pwm_handle);
 		
-		pwm2_config.OCMode = TIM_OCMODE_PWM1; //Í¨ÓÃ¶¨Ê±Æ÷
+		pwm2_config.OCMode = TIM_OCMODE_PWM1; //é€šç”¨å®šæ—¶å™¨
 		pwm2_config.Pulse  = 0;
-		pwm2_config.OCPolarity = TIM_OCPOLARITY_HIGH;//¼ÆÊı·½Ê½
+		pwm2_config.OCPolarity = TIM_OCPOLARITY_HIGH;//è®¡æ•°æ–¹å¼
 
 		
 		HAL_TIM_PWM_ConfigChannel(&biu_pwm_handle,&pwm_config,TIM_CHANNEL_3);

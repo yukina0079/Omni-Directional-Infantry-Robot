@@ -9,185 +9,185 @@
  * whenever the NRF module was unplugged or still powering up. */
 #define NRF_CHECK_MAX_TRIES       100u
 #define NRF_CHECK_RETRY_DELAY_MS  10u
-#define ADDR_AB_LEN    5   // 与库函数TX_ADR_WIDTH=5��
-#define ADDR_BC_LEN    5   // 与库函数TX_ADR_WIDTH=5��
-#define DATA_WIDTH     13  // 与库函数TX_PLOAD_WIDTH=32��
+#define ADDR_AB_LEN    5   // 涓庡簱鍑芥暟TX_ADR_WIDTH=5涓鑷
+#define ADDR_BC_LEN    5   // 涓庡簱鍑芥暟TX_ADR_WIDTH=5涓鑷
+#define DATA_WIDTH     13  // 涓庡簱鍑芥暟TX_PLOAD_WIDTH=13涓鑷
 
-// A→B 通信参数（A、B模块共用�
+// A鈫払 閫氫俊鍙傛暟锛圓銆丅妯″潡鍏辩敤锛
 uint8_t ADDR_AB[ADDR_AB_LEN] = {0x11, 0x22, 0x33, 0x44, 0x55};
-#define CH_AB          30  // A-B通信频道
+#define CH_AB          30  // A-B閫氫俊棰戦亾
 
-// B→C 通信参数（B、C模块共用�
+// B鈫扖 閫氫俊鍙傛暟锛圔銆丆妯″潡鍏辩敤锛
 uint8_t ADDR_BC[ADDR_BC_LEN] = {0xAA, 0xBB, 0xCC, 0xDD, 0xEE};
-#define CH_BC          40  // B-C通信频道
+#define CH_BC          40  // B-C閫氫俊棰戦亾
  
-extern SPI_HandleTypeDef g_spi2_handler;                /* SPI1句柄 */
-const uint8_t TX_ADDRESS[TX_ADR_WIDTH] = {0x34, 0x43, 0x10, 0x10, 0x01};    /* 接收地址 */
-const uint8_t RX_ADDRESS[RX_ADR_WIDTH] = {0x34, 0x43, 0x10, 0x10, 0x01};    /* 发�地� */
+extern SPI_HandleTypeDef g_spi2_handler;                /* SPI1鍙ユ焺 */
+const uint8_t TX_ADDRESS[TX_ADR_WIDTH] = {0x34, 0x43, 0x10, 0x10, 0x01};    /* 鎺ユ敹鍦板潃 */
+const uint8_t RX_ADDRESS[RX_ADR_WIDTH] = {0x34, 0x43, 0x10, 0x10, 0x01};    /* 鍙戦佸湴鍧 */
 
 /**
- * @brief       针对NRF24L01修改SPI1驱动
- * @param       �
- * @retval      �
+ * @brief       閽堝NRF24L01淇敼SPI1椹卞姩
+ * @param       鏃
+ * @retval      鏃
  */
 void nrf24l01_spi_init(void)
 {
-    __HAL_SPI_DISABLE(&g_spi2_handler);                 /* 先关闭SPI1 */
-    g_spi2_handler.Init.CLKPolarity = SPI_POLARITY_LOW; /* 串行同步时钟的空闲状态为低电� */
-    g_spi2_handler.Init.CLKPhase = SPI_PHASE_1EDGE;     /* 串行同步时钟的第1个跳变沿（上升或下降）数据被采样 */
+    __HAL_SPI_DISABLE(&g_spi2_handler);                 /* 鍏堝叧闂璖PI1 */
+    g_spi2_handler.Init.CLKPolarity = SPI_POLARITY_LOW; /* 涓茶鍚屾鏃堕挓鐨勭┖闂茬姸鎬佷负浣庣數骞 */
+    g_spi2_handler.Init.CLKPhase = SPI_PHASE_1EDGE;     /* 涓茶鍚屾鏃堕挓鐨勭1涓烦鍙樻部锛堜笂鍗囨垨涓嬮檷锛夋暟鎹閲囨牱 */
     HAL_SPI_Init(&g_spi2_handler);
-    __HAL_SPI_ENABLE(&g_spi2_handler);                  /* 使能SPI1 */
+    __HAL_SPI_ENABLE(&g_spi2_handler);                  /* 浣胯兘SPI1 */
 }
 
 /**
- * @brief       初始�24L01的IO�
- *   @note      将SPI1模式改成SCK空闲低电�,及SPI 模式0
- * @param       �
- * @retval      �
+ * @brief       鍒濆鍖24L01鐨処O鍙
+ *   @note      灏哠PI1妯″紡鏀规垚SCK绌洪棽浣庣數骞,鍙奡PI 妯″紡0
+ * @param       鏃
+ * @retval      鏃
  */
 void nrf24l01_init(void)
 {
     GPIO_InitTypeDef gpio_init_struct;
 
-    NRF24L01_CE_GPIO_CLK_ENABLE();  /* CE脚时钟使� */
-    NRF24L01_CSN_GPIO_CLK_ENABLE(); /* CSN脚时钟使� */
-    NRF24L01_IRQ_GPIO_CLK_ENABLE(); /* IRQ脚时钟使� */
+    NRF24L01_CE_GPIO_CLK_ENABLE();  /* CE鑴氭椂閽熶娇鑳 */
+    NRF24L01_CSN_GPIO_CLK_ENABLE(); /* CSN鑴氭椂閽熶娇鑳 */
+    NRF24L01_IRQ_GPIO_CLK_ENABLE(); /* IRQ鑴氭椂閽熶娇鑳 */
 
     gpio_init_struct.Pin = NRF24L01_CE_GPIO_PIN;
-    gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP;             /* 推挽输出 */
-    gpio_init_struct.Pull = GPIO_PULLUP;                     /* 上拉 */
-    gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;           /* 高� */
-    HAL_GPIO_Init(NRF24L01_CE_GPIO_PORT, &gpio_init_struct); /* 初始化CE引脚 */
+    gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP;             /* 鎺ㄦ尳杈撳嚭 */
+    gpio_init_struct.Pull = GPIO_PULLUP;                     /* 涓婃媺 */
+    gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;           /* 楂橀 */
+    HAL_GPIO_Init(NRF24L01_CE_GPIO_PORT, &gpio_init_struct); /* 鍒濆鍖朇E寮曡剼 */
 
     gpio_init_struct.Pin = NRF24L01_CSN_GPIO_PIN;
-    HAL_GPIO_Init(NRF24L01_CSN_GPIO_PORT, &gpio_init_struct);/* 初始化CSN引脚 */
+    HAL_GPIO_Init(NRF24L01_CSN_GPIO_PORT, &gpio_init_struct);/* 鍒濆鍖朇SN寮曡剼 */
 
     gpio_init_struct.Pin = NRF24L01_IRQ_GPIO_PIN;
-    gpio_init_struct.Mode = GPIO_MODE_INPUT;                 /* 输入 */
-    gpio_init_struct.Pull = GPIO_PULLUP;                     /* 上拉 */
-    gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;           /* 高� */
-    HAL_GPIO_Init(NRF24L01_IRQ_GPIO_PORT, &gpio_init_struct);/* 初始化CE引脚 */
+    gpio_init_struct.Mode = GPIO_MODE_INPUT;                 /* 杈撳叆 */
+    gpio_init_struct.Pull = GPIO_PULLUP;                     /* 涓婃媺 */
+    gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;           /* 楂橀 */
+    HAL_GPIO_Init(NRF24L01_IRQ_GPIO_PORT, &gpio_init_struct);/* 鍒濆鍖朇E寮曡剼 */
 
-    spi2_init();                /* 初始化SPI1 */
-    nrf24l01_spi_init();        /* 针对NRF的特点修改SPI的设� */
-    NRF24L01_CE(0);             /* 使能24L01 */
-    NRF24L01_CSN(1);            /* SPI片�取� */
+    spi2_init();                /* 鍒濆鍖朣PI1 */
+    nrf24l01_spi_init();        /* 閽堝NRF鐨勭壒鐐逛慨鏀筍PI鐨勮缃 */
+    NRF24L01_CE(0);             /* 浣胯兘24L01 */
+    NRF24L01_CSN(1);            /* SPI鐗囬夊彇娑 */
 }
 
 /**
- * @brief       ��24L01是否存在
- * @param       �
- * @retval      0, 成功; 1, 失败;
+ * @brief       妫娴24L01鏄惁瀛樺湪
+ * @param       鏃
+ * @retval      0, 鎴愬姛; 1, 澶辫触;
  */
 uint8_t nrf24l01_check(void)
 {
     uint8_t buf[5] = {0XA5, 0XA5, 0XA5, 0XA5, 0XA5};
     uint8_t i;
     
-    spi2_set_speed(SPI_SPEED_32);                         /* spi速度�7.5Mhz�24L01的最大SPI时钟�10Mhz� */
-    nrf24l01_write_buf(NRF_WRITE_REG + TX_ADDR, buf, 5);  /* 写入5个字节的地址. */
-    nrf24l01_read_buf(TX_ADDR, buf, 5);                   /* 读出写入的地� */
+    spi2_set_speed(SPI_SPEED_32);                         /* spi閫熷害涓7.5Mhz锛24L01鐨勬渶澶PI鏃堕挓涓10Mhz锛 */
+    nrf24l01_write_buf(NRF_WRITE_REG + TX_ADDR, buf, 5);  /* 鍐欏叆5涓瓧鑺傜殑鍦板潃. */
+    nrf24l01_read_buf(TX_ADDR, buf, 5);                   /* 璇诲嚭鍐欏叆鐨勫湴鍧 */
 
     for (i = 0; i < 5; i++)
     {
         if (buf[i] != 0XA5) break;
     }
     
-    if (i != 5) return 1;   /* ��24L01错误 */
+    if (i != 5) return 1;   /* 妫娴24L01閿欒 */
 
-    return 0;               /* �测到24L01 */
+    return 0;               /* 妫娴嬪埌24L01 */
 }
 
 /**
- * @brief       NRF24L01写寄存器
- * @param       reg   : 寄存器地�
- * @param       value : 写入寄存器的�
- * @retval      状�寄存器�
+ * @brief       NRF24L01鍐欏瘎瀛樺櫒
+ * @param       reg   : 瀵勫瓨鍣ㄥ湴鍧
+ * @param       value : 鍐欏叆瀵勫瓨鍣ㄧ殑鍊
+ * @retval      鐘舵佸瘎瀛樺櫒鍊
  */
 static uint8_t nrf24l01_write_reg(uint8_t reg, uint8_t value)
 {
     uint8_t status;
     
-    NRF24L01_CSN(0);                    /* 使能SPI传输 */
-    status = spi2_read_write_byte(reg); /* 发�寄存器� */
-    spi2_read_write_byte(value);        /* 写入寄存器的� */
-    NRF24L01_CSN(1);                    /* 禁止SPI传输 */
+    NRF24L01_CSN(0);                    /* 浣胯兘SPI浼犺緭 */
+    status = spi2_read_write_byte(reg); /* 鍙戦佸瘎瀛樺櫒鍙 */
+    spi2_read_write_byte(value);        /* 鍐欏叆瀵勫瓨鍣ㄧ殑鍊 */
+    NRF24L01_CSN(1);                    /* 绂佹SPI浼犺緭 */
     
-    return status;                      /* 返回状�� */
+    return status;                      /* 杩斿洖鐘舵佸 */
 }
 
 /**
- * @brief       NRF24L01读寄存器
- * @param       reg   : 寄存器地�
- * @retval      读取到的寄存器�;
+ * @brief       NRF24L01璇诲瘎瀛樺櫒
+ * @param       reg   : 瀵勫瓨鍣ㄥ湴鍧
+ * @retval      璇诲彇鍒扮殑瀵勫瓨鍣ㄥ;
  */
 static uint8_t nrf24l01_read_reg(uint8_t reg)
 {
     uint8_t reg_val;
     
-    NRF24L01_CSN(0);            /* 使能SPI传输 */
-    spi2_read_write_byte(reg);  /* 发�寄存器� */
-    reg_val = spi2_read_write_byte(0XFF);   /* 读取寄存器内� */
-    NRF24L01_CSN(1);            /* 禁止SPI传输 */
+    NRF24L01_CSN(0);            /* 浣胯兘SPI浼犺緭 */
+    spi2_read_write_byte(reg);  /* 鍙戦佸瘎瀛樺櫒鍙 */
+    reg_val = spi2_read_write_byte(0XFF);   /* 璇诲彇瀵勫瓨鍣ㄥ唴瀹 */
+    NRF24L01_CSN(1);            /* 绂佹SPI浼犺緭 */
     
-    return reg_val;             /* 返回状�� */
+    return reg_val;             /* 杩斿洖鐘舵佸 */
 }
 
 /**
- * @brief       在指定位置读出指定长度的数据
- * @param       reg   : 寄存器地�
- * @param       pbuf  : 数据指针
- * @param       len   : 数据长度
- * @retval      状�寄存器�
+ * @brief       鍦ㄦ寚瀹氫綅缃鍑烘寚瀹氶暱搴︾殑鏁版嵁
+ * @param       reg   : 瀵勫瓨鍣ㄥ湴鍧
+ * @param       pbuf  : 鏁版嵁鎸囬拡
+ * @param       len   : 鏁版嵁闀垮害
+ * @retval      鐘舵佸瘎瀛樺櫒鍊
  */
 static uint8_t nrf24l01_read_buf(uint8_t reg, uint8_t *pbuf, uint8_t len)
 {
     uint8_t status, i;
     
-    NRF24L01_CSN(0);                            /* 使能SPI传输 */
-    status = spi2_read_write_byte(reg);         /* 发�寄存器�(位置),并读取状态� */
+    NRF24L01_CSN(0);                            /* 浣胯兘SPI浼犺緭 */
+    status = spi2_read_write_byte(reg);         /* 鍙戦佸瘎瀛樺櫒鍊(浣嶇疆),骞惰鍙栫姸鎬佸 */
 
     for (i = 0; i < len; i++)
     {
-        pbuf[i] = spi2_read_write_byte(0XFF);   /* 读出数据 */
+        pbuf[i] = spi2_read_write_byte(0XFF);   /* 璇诲嚭鏁版嵁 */
     }
     
-    NRF24L01_CSN(1);    /* 关闭SPI传输 */
+    NRF24L01_CSN(1);    /* 鍏抽棴SPI浼犺緭 */
     
-    return status;      /* 返回读到的状态� */
+    return status;      /* 杩斿洖璇诲埌鐨勭姸鎬佸 */
 }
 
 /**
- * @brief       在指定位置写指定长度的数�
- * @param       reg   : 寄存器地�
- * @param       pbuf  : 数据指针
- * @param       len   : 数据长度
- * @retval      状�寄存器�
+ * @brief       鍦ㄦ寚瀹氫綅缃啓鎸囧畾闀垮害鐨勬暟鎹
+ * @param       reg   : 瀵勫瓨鍣ㄥ湴鍧
+ * @param       pbuf  : 鏁版嵁鎸囬拡
+ * @param       len   : 鏁版嵁闀垮害
+ * @retval      鐘舵佸瘎瀛樺櫒鍊
  */
 static uint8_t nrf24l01_write_buf(uint8_t reg, uint8_t *pbuf, uint8_t len)
 {
     uint8_t status, i;
     
-    NRF24L01_CSN(0);    /* 使能SPI传输 */
-    status = spi2_read_write_byte(reg);/* 发�寄存器�(位置),并读取状态� */
+    NRF24L01_CSN(0);    /* 浣胯兘SPI浼犺緭 */
+    status = spi2_read_write_byte(reg);/* 鍙戦佸瘎瀛樺櫒鍊(浣嶇疆),骞惰鍙栫姸鎬佸 */
 
     for (i = 0; i < len; i++)
     {
-        spi2_read_write_byte(*pbuf++); /* 写入数据 */
+        spi2_read_write_byte(*pbuf++); /* 鍐欏叆鏁版嵁 */
     }
     
-    NRF24L01_CSN(1);    /* 关闭SPI传输 */
+    NRF24L01_CSN(1);    /* 鍏抽棴SPI浼犺緭 */
     
-    return status;      /* 返回读到的状态� */
+    return status;      /* 杩斿洖璇诲埌鐨勭姸鎬佸 */
 }
 
 /**
- * @brief       启动NRF24L01发�一次数�(数据长度 = TX_PLOAD_WIDTH)
- * @param       ptxbuf : 待发送数据首地址
- * @retval      发�完成状�
- *   @arg       0    : 发�成�
- *   @arg       1    : 达到�大发送次�,失败
- *   @arg       0XFF : 其他错误
+ * @brief       鍚姩NRF24L01鍙戦佷竴娆℃暟鎹(鏁版嵁闀垮害 = TX_PLOAD_WIDTH)
+ * @param       ptxbuf : 寰呭彂閫佹暟鎹鍦板潃
+ * @retval      鍙戦佸畬鎴愮姸鎬
+ *   @arg       0    : 鍙戦佹垚鍔
+ *   @arg       1    : 杈惧埌鏈澶у彂閫佹鏁,澶辫触
+ *   @arg       0XFF : 鍏朵粬閿欒
  */
 uint8_t nrf24l01_tx_packet(uint8_t *ptxbuf)
 {
@@ -195,143 +195,143 @@ uint8_t nrf24l01_tx_packet(uint8_t *ptxbuf)
     uint8_t rval = 0XFF;
     
     NRF24L01_CE(0);
-    nrf24l01_write_buf(WR_TX_PLOAD, ptxbuf, TX_PLOAD_WIDTH);    /* 写数据到TX BUF  TX_PLOAD_WIDTH个字� */
-    NRF24L01_CE(1);                     /* 启动发� */
+    nrf24l01_write_buf(WR_TX_PLOAD, ptxbuf, TX_PLOAD_WIDTH);    /* 鍐欐暟鎹埌TX BUF  TX_PLOAD_WIDTH涓瓧鑺 */
+    NRF24L01_CE(1);                     /* 鍚姩鍙戦 */
 
-    while (NRF24L01_IRQ != 0);          /* 等待发�完� */
+    while (NRF24L01_IRQ != 0);          /* 绛夊緟鍙戦佸畬鎴 */
 
-    sta = nrf24l01_read_reg(STATUS);    /* 读取状�寄存器的� */
-    nrf24l01_write_reg(NRF_WRITE_REG + STATUS, sta);    /* 清除TX_DS或MAX_RT中断标志 */
+    sta = nrf24l01_read_reg(STATUS);    /* 璇诲彇鐘舵佸瘎瀛樺櫒鐨勫 */
+    nrf24l01_write_reg(NRF_WRITE_REG + STATUS, sta);    /* 娓呴櫎TX_DS鎴朚AX_RT涓柇鏍囧織 */
 
-    if (sta & MAX_TX)   /* 达到�大重发次� */
+    if (sta & MAX_TX)   /* 杈惧埌鏈澶ч噸鍙戞鏁 */
     {
-        nrf24l01_write_reg(FLUSH_TX, 0xff);             /* 清除TX FIFO寄存� */
+        nrf24l01_write_reg(FLUSH_TX, 0xff);             /* 娓呴櫎TX FIFO瀵勫瓨鍣 */
         rval = 1;
     }
 
-    if (sta & TX_OK)    /* 发�完� */
+    if (sta & TX_OK)    /* 鍙戦佸畬鎴 */
     {
-        rval = 0;       /* 标记发�成� */
+        rval = 0;       /* 鏍囪鍙戦佹垚鍔 */
     }
 
-    return rval;        /* 返回结果 */
+    return rval;        /* 杩斿洖缁撴灉 */
 }
 
 /**
- * @brief       启动NRF24L01接收�次数�(数据长度 = RX_PLOAD_WIDTH)
- * @param       prxbuf : 接收数据缓冲区首地址
- * @retval      接收完成状�
- *   @arg       0 : 接收成功
- *   @arg       1 : 失败
+ * @brief       鍚姩NRF24L01鎺ユ敹涓娆℃暟鎹(鏁版嵁闀垮害 = RX_PLOAD_WIDTH)
+ * @param       prxbuf : 鎺ユ敹鏁版嵁缂撳啿鍖洪鍦板潃
+ * @retval      鎺ユ敹瀹屾垚鐘舵
+ *   @arg       0 : 鎺ユ敹鎴愬姛
+ *   @arg       1 : 澶辫触
  */
 uint8_t nrf24l01_rx_packet(uint8_t *prxbuf)
 {
     uint8_t sta;
     uint8_t rval = 1;
     
-    sta = nrf24l01_read_reg(STATUS);                            /* 读取状�寄存器的� */
-    nrf24l01_write_reg(NRF_WRITE_REG + STATUS, sta);            /* 清除TX_DS或MAX_RT中断标志 */
+    sta = nrf24l01_read_reg(STATUS);                            /* 璇诲彇鐘舵佸瘎瀛樺櫒鐨勫 */
+    nrf24l01_write_reg(NRF_WRITE_REG + STATUS, sta);            /* 娓呴櫎TX_DS鎴朚AX_RT涓柇鏍囧織 */
 
-    if (sta & RX_OK)    /* 接收到数� */
+    if (sta & RX_OK)    /* 鎺ユ敹鍒版暟鎹 */
     {
-        nrf24l01_read_buf(RD_RX_PLOAD, prxbuf, RX_PLOAD_WIDTH); /* 读取数据 */
-        nrf24l01_write_reg(FLUSH_RX, 0xff);                     /* 清除RX FIFO寄存� */
-        rval = 0;       /* 标记接收完成 */
+        nrf24l01_read_buf(RD_RX_PLOAD, prxbuf, RX_PLOAD_WIDTH); /* 璇诲彇鏁版嵁 */
+        nrf24l01_write_reg(FLUSH_RX, 0xff);                     /* 娓呴櫎RX FIFO瀵勫瓨鍣 */
+        rval = 0;       /* 鏍囪鎺ユ敹瀹屾垚 */
     }
 
-    return rval;        /* 返回结果 */
+    return rval;        /* 杩斿洖缁撴灉 */
 }
 
 /**
- * @brief       NRF24L01进入接收模式
- *   @note      设置RX地址,写RX数据宽度,选择RF频道,波特率和LNA HCURR
- *              当CE变高�,即进入RX模式,并可以接收数据了
- * @param       �
- * @retval      �
+ * @brief       NRF24L01杩涘叆鎺ユ敹妯″紡
+ *   @note      璁剧疆RX鍦板潃,鍐橰X鏁版嵁瀹藉害,閫夋嫨RF棰戦亾,娉㈢壒鐜囧拰LNA HCURR
+ *              褰揅E鍙橀珮鍚,鍗宠繘鍏X妯″紡,骞跺彲浠ユ帴鏀舵暟鎹簡
+ * @param       鏃
+ * @retval      鏃
  */
 void nrf24l01_rx_mode(void)
 {
     NRF24L01_CE(0);
-    nrf24l01_write_buf(NRF_WRITE_REG + RX_ADDR_P0, (uint8_t *)RX_ADDRESS, RX_ADR_WIDTH);    /* 写RX节点地址 */
+    nrf24l01_write_buf(NRF_WRITE_REG + RX_ADDR_P0, (uint8_t *)RX_ADDRESS, RX_ADR_WIDTH);    /* 鍐橰X鑺傜偣鍦板潃 */
 
-    nrf24l01_write_reg(NRF_WRITE_REG + EN_AA, 0x01);        /* 使能通道0的自动应� */
-    nrf24l01_write_reg(NRF_WRITE_REG + EN_RXADDR, 0x01);    /* 使能通道0的接收地� */
-    nrf24l01_write_reg(NRF_WRITE_REG + RF_CH, 40);          /* 设置RF通信频率 */
-    nrf24l01_write_reg(NRF_WRITE_REG + RX_PW_P0, RX_PLOAD_WIDTH);   /* 选择通道0的有效数据宽� */
-    nrf24l01_write_reg(NRF_WRITE_REG + RF_SETUP, 0x0f);     /* 设置TX发射参数,0db增益,2Mbps,低噪声增益开� */
-    nrf24l01_write_reg(NRF_WRITE_REG + CONFIG, 0x0f);       /* 配置基本工作模式的参�;PWR_UP,EN_CRC,16BIT_CRC,接收模式 */
-    NRF24L01_CE(1); /* CE为高,进入接收模式 */
+    nrf24l01_write_reg(NRF_WRITE_REG + EN_AA, 0x01);        /* 浣胯兘閫氶亾0鐨勮嚜鍔ㄥ簲绛 */
+    nrf24l01_write_reg(NRF_WRITE_REG + EN_RXADDR, 0x01);    /* 浣胯兘閫氶亾0鐨勬帴鏀跺湴鍧 */
+    nrf24l01_write_reg(NRF_WRITE_REG + RF_CH, 40);          /* 璁剧疆RF閫氫俊棰戠巼 */
+    nrf24l01_write_reg(NRF_WRITE_REG + RX_PW_P0, RX_PLOAD_WIDTH);   /* 閫夋嫨閫氶亾0鐨勬湁鏁堟暟鎹搴 */
+    nrf24l01_write_reg(NRF_WRITE_REG + RF_SETUP, 0x0f);     /* 璁剧疆TX鍙戝皠鍙傛暟,0db澧炵泭,2Mbps,浣庡櫔澹板鐩婂紑鍚 */
+    nrf24l01_write_reg(NRF_WRITE_REG + CONFIG, 0x0f);       /* 閰嶇疆鍩烘湰宸ヤ綔妯″紡鐨勫弬鏁;PWR_UP,EN_CRC,16BIT_CRC,鎺ユ敹妯″紡 */
+    NRF24L01_CE(1); /* CE涓洪珮,杩涘叆鎺ユ敹妯″紡 */
 }
 
 /**
- * @brief       NRF24L01进入发�模�
- *   @note      设置TX地址,写TX数据宽度,设置RX自动应答的地�,填充TX发�数�,选择RF频道,波特率和
- *              LNA HCURR,PWR_UP,CRC使能
- *              当CE变高�,即进入TX模式,并可以发送数据了, CE为高大于10us,则启动发�.
- * @param       �
- * @retval      �
+ * @brief       NRF24L01杩涘叆鍙戦佹ā寮
+ *   @note      璁剧疆TX鍦板潃,鍐橳X鏁版嵁瀹藉害,璁剧疆RX鑷姩搴旂瓟鐨勫湴鍧,濉厖TX鍙戦佹暟鎹,閫夋嫨RF棰戦亾,娉㈢壒鐜囧拰
+ *              LNA HCURR,PWR_UP,CRC浣胯兘
+ *              褰揅E鍙橀珮鍚,鍗宠繘鍏X妯″紡,骞跺彲浠ュ彂閫佹暟鎹簡, CE涓洪珮澶т簬10us,鍒欏惎鍔ㄥ彂閫.
+ * @param       鏃
+ * @retval      鏃
  */
 void nrf24l01_tx_mode(void)
 {
     NRF24L01_CE(0);
-    nrf24l01_write_buf(NRF_WRITE_REG + TX_ADDR, (uint8_t *)TX_ADDRESS, TX_ADR_WIDTH);       /* 写TX节点地址 */
-    nrf24l01_write_buf(NRF_WRITE_REG + RX_ADDR_P0, (uint8_t *)RX_ADDRESS, RX_ADR_WIDTH);    /* 设置RX节点地址,主要为了使能ACK */
+    nrf24l01_write_buf(NRF_WRITE_REG + TX_ADDR, (uint8_t *)TX_ADDRESS, TX_ADR_WIDTH);       /* 鍐橳X鑺傜偣鍦板潃 */
+    nrf24l01_write_buf(NRF_WRITE_REG + RX_ADDR_P0, (uint8_t *)RX_ADDRESS, RX_ADR_WIDTH);    /* 璁剧疆RX鑺傜偣鍦板潃,涓昏涓轰簡浣胯兘ACK */
 
-    nrf24l01_write_reg(NRF_WRITE_REG + EN_AA, 0x01);        /* 使能通道0的自动应� */
-    nrf24l01_write_reg(NRF_WRITE_REG + EN_RXADDR, 0x01);    /* 使能通道0的接收地� */
-    nrf24l01_write_reg(NRF_WRITE_REG + SETUP_RETR, 0x1a);   /* 设置自动重发间隔时间:500us + 86us;�大自动重发次�:10� */
-    nrf24l01_write_reg(NRF_WRITE_REG + RF_CH, 40);          /* 设置RF通道�40 */
-    nrf24l01_write_reg(NRF_WRITE_REG + RF_SETUP, 0x0f);     /* 设置TX发射参数,0db增益,2Mbps,低噪声增益开� */
-    nrf24l01_write_reg(NRF_WRITE_REG + CONFIG, 0x0e);       /* 配置基本工作模式的参�;PWR_UP,EN_CRC,16BIT_CRC,接收模式,�启所有中� */
-    NRF24L01_CE(1); /* CE为高,10us后启动发� */
+    nrf24l01_write_reg(NRF_WRITE_REG + EN_AA, 0x01);        /* 浣胯兘閫氶亾0鐨勮嚜鍔ㄥ簲绛 */
+    nrf24l01_write_reg(NRF_WRITE_REG + EN_RXADDR, 0x01);    /* 浣胯兘閫氶亾0鐨勬帴鏀跺湴鍧 */
+    nrf24l01_write_reg(NRF_WRITE_REG + SETUP_RETR, 0x1a);   /* 璁剧疆鑷姩閲嶅彂闂撮殧鏃堕棿:500us + 86us;鏈澶ц嚜鍔ㄩ噸鍙戞鏁:10娆 */
+    nrf24l01_write_reg(NRF_WRITE_REG + RF_CH, 40);          /* 璁剧疆RF閫氶亾涓40 */
+    nrf24l01_write_reg(NRF_WRITE_REG + RF_SETUP, 0x0f);     /* 璁剧疆TX鍙戝皠鍙傛暟,0db澧炵泭,2Mbps,浣庡櫔澹板鐩婂紑鍚 */
+    nrf24l01_write_reg(NRF_WRITE_REG + CONFIG, 0x0e);       /* 閰嶇疆鍩烘湰宸ヤ綔妯″紡鐨勫弬鏁;PWR_UP,EN_CRC,16BIT_CRC,鎺ユ敹妯″紡,寮鍚墍鏈変腑鏂 */
+    NRF24L01_CE(1); /* CE涓洪珮,10us鍚庡惎鍔ㄥ彂閫 */
 }
 
 
 /**
- * @brief  B模块配置1：切换为「接收A数据」的模式（A-B参数�
- * @note   基于库函数nrf24l01_rx_mode()修改，�配ADDR_AB、CH_AB
+ * @brief  B妯″潡閰嶇疆1锛氬垏鎹负銆屾帴鏀禔鏁版嵁銆嶇殑妯″紡锛圓-B鍙傛暟锛
+ * @note   鍩轰簬搴撳嚱鏁皀rf24l01_rx_mode()淇敼锛岄傞厤ADDR_AB銆丆H_AB
  */
 void B_nrf24l01_switch_rx_from_A(void)
 {
-    NRF24L01_CE(0);  // 拉低CE，进入配置模式（停止当前模式�
+    NRF24L01_CE(0);  // 鎷変綆CE锛岃繘鍏ラ厤缃ā寮忥紙鍋滄褰撳墠妯″紡锛
     
-    // 1. 写RX_ADDR_P0（A→B的地� ADDR_AB�
+    // 1. 鍐橰X_ADDR_P0锛圓鈫払鐨勫湴鍧 ADDR_AB锛
     nrf24l01_write_buf(NRF_WRITE_REG + RX_ADDR_P0, ADDR_AB, ADDR_AB_LEN);
     
-    // 2. 库函数默认配置（保持不变，仅修改频道和地��
-    nrf24l01_write_reg(NRF_WRITE_REG + EN_AA, 0x01);        // 使能通道0自动应答（向A回传ACK�
-    nrf24l01_write_reg(NRF_WRITE_REG + EN_RXADDR, 0x01);    // 使能通道0接收地址
-    nrf24l01_write_reg(NRF_WRITE_REG + RF_CH, CH_AB);       // 切换到A-B频道 30
-    nrf24l01_write_reg(NRF_WRITE_REG + RX_PW_P0, DATA_WIDTH); // 数据长度32字节
-    nrf24l01_write_reg(NRF_WRITE_REG + RF_SETUP, 0x0f);     // 0db增益�2Mbps，低噪声增益��
-    nrf24l01_write_reg(NRF_WRITE_REG + CONFIG, 0x0f);       // 接收模式，PWR_UP，EN_CRC
+    // 2. 搴撳嚱鏁伴粯璁ら厤缃紙淇濇寔涓嶅彉锛屼粎淇敼棰戦亾鍜屽湴鍧锛
+    nrf24l01_write_reg(NRF_WRITE_REG + EN_AA, 0x01);        // 浣胯兘閫氶亾0鑷姩搴旂瓟锛堝悜A鍥炰紶ACK锛
+    nrf24l01_write_reg(NRF_WRITE_REG + EN_RXADDR, 0x01);    // 浣胯兘閫氶亾0鎺ユ敹鍦板潃
+    nrf24l01_write_reg(NRF_WRITE_REG + RF_CH, CH_AB);       // 鍒囨崲鍒癆-B棰戦亾 30
+    nrf24l01_write_reg(NRF_WRITE_REG + RX_PW_P0, DATA_WIDTH); // 鏁版嵁闀垮害32瀛楄妭
+    nrf24l01_write_reg(NRF_WRITE_REG + RF_SETUP, 0x0f);     // 0db澧炵泭锛2Mbps锛屼綆鍣０澧炵泭寮鍚
+    nrf24l01_write_reg(NRF_WRITE_REG + CONFIG, 0x0f);       // 鎺ユ敹妯″紡锛孭WR_UP锛孍N_CRC
     
-    NRF24L01_CE(1);  // 拉高CE，进入接收状�
-//    HAL_Delay(10);   // 延时保证配置生效，避免模式冲�
+    NRF24L01_CE(1);  // 鎷夐珮CE锛岃繘鍏ユ帴鏀剁姸鎬
+//    HAL_Delay(10);   // 寤舵椂淇濊瘉閰嶇疆鐢熸晥锛岄伩鍏嶆ā寮忓啿绐
 }
 
 /**
- * @brief  B模块配置2：切换为「发送数据给C」的模式（B-C参数�
- * @note   基于库函数nrf24l01_tx_mode()修改，�配ADDR_BC、CH_BC
+ * @brief  B妯″潡閰嶇疆2锛氬垏鎹负銆屽彂閫佹暟鎹粰C銆嶇殑妯″紡锛圔-C鍙傛暟锛
+ * @note   鍩轰簬搴撳嚱鏁皀rf24l01_tx_mode()淇敼锛岄傞厤ADDR_BC銆丆H_BC
  */
 void B_nrf24l01_switch_tx_to_C(void)
 {
-    NRF24L01_CE(0);  // 拉低CE，进入配置模式（停止当前模式�
+    NRF24L01_CE(0);  // 鎷変綆CE锛岃繘鍏ラ厤缃ā寮忥紙鍋滄褰撳墠妯″紡锛
     
-    // 1. 写TX地址（B→C的地� ADDR_BC�
+    // 1. 鍐橳X鍦板潃锛圔鈫扖鐨勫湴鍧 ADDR_BC锛
     nrf24l01_write_buf(NRF_WRITE_REG + TX_ADDR, ADDR_BC, ADDR_BC_LEN);
-    // 2. 写RX_ADDR_P0（使能ACK，必须与C的TX地址�致，即ADDR_BC�
+    // 2. 鍐橰X_ADDR_P0锛堜娇鑳紸CK锛屽繀椤讳笌C鐨凾X鍦板潃涓鑷达紝鍗矨DDR_BC锛
     nrf24l01_write_buf(NRF_WRITE_REG + RX_ADDR_P0, ADDR_BC, ADDR_BC_LEN);
     
-    // 3. 库函数默认配置（保持不变，仅修改频道和地��
-    nrf24l01_write_reg(NRF_WRITE_REG + EN_AA, 0x01);        // 使能通道0自动应答
-    nrf24l01_write_reg(NRF_WRITE_REG + EN_RXADDR, 0x01);    // 使能通道0接收地址
-    nrf24l01_write_reg(NRF_WRITE_REG + SETUP_RETR, 0x1a);   // 自动重发�10次，间隔500us+86us
-    nrf24l01_write_reg(NRF_WRITE_REG + RF_CH, CH_BC);       // 切换到B-C频道 40
-    nrf24l01_write_reg(NRF_WRITE_REG + RF_SETUP, 0x0f);     // 0db增益�2Mbps，低噪声增益��
-    nrf24l01_write_reg(NRF_WRITE_REG + CONFIG, 0x0e);       // 发�模式，PWR_UP，EN_CRC
+    // 3. 搴撳嚱鏁伴粯璁ら厤缃紙淇濇寔涓嶅彉锛屼粎淇敼棰戦亾鍜屽湴鍧锛
+    nrf24l01_write_reg(NRF_WRITE_REG + EN_AA, 0x01);        // 浣胯兘閫氶亾0鑷姩搴旂瓟
+    nrf24l01_write_reg(NRF_WRITE_REG + EN_RXADDR, 0x01);    // 浣胯兘閫氶亾0鎺ユ敹鍦板潃
+    nrf24l01_write_reg(NRF_WRITE_REG + SETUP_RETR, 0x1a);   // 鑷姩閲嶅彂锛10娆★紝闂撮殧500us+86us
+    nrf24l01_write_reg(NRF_WRITE_REG + RF_CH, CH_BC);       // 鍒囨崲鍒癇-C棰戦亾 40
+    nrf24l01_write_reg(NRF_WRITE_REG + RF_SETUP, 0x0f);     // 0db澧炵泭锛2Mbps锛屼綆鍣０澧炵泭寮鍚
+    nrf24l01_write_reg(NRF_WRITE_REG + CONFIG, 0x0e);       // 鍙戦佹ā寮忥紝PWR_UP锛孍N_CRC
     
-//    HAL_Delay(10);   // 延时保证配置生效，无�立即拉高CE（发送时由nrf24l01_tx_packet触发�
+//    HAL_Delay(10);   // 寤舵椂淇濊瘉閰嶇疆鐢熸晥锛屾棤闇绔嬪嵆鎷夐珮CE锛堝彂閫佹椂鐢眓rf24l01_tx_packet瑙﹀彂锛
 }
 void NRF_check(void)
 {

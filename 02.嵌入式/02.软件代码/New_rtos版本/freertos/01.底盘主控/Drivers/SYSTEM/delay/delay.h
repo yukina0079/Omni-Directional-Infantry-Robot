@@ -5,12 +5,12 @@
 #include "./SYSTEM/sys/sys.h"
 
 
-void delay_init(uint16_t sysclk);           /* ³õÊ¼»¯ÑÓ³Ùº¯Êı */
-void delay_ms(uint16_t nms);                /* ÑÓÊ±nms */
-void delay_us(uint32_t nus);                /* ÑÓÊ±nus */
+void delay_init(uint16_t sysclk);           /* åˆå§‹åŒ–å»¶è¿Ÿå‡½æ•° */
+void delay_ms(uint16_t nms);                /* å»¶æ—¶nms */
+void delay_us(uint32_t nus);                /* å»¶æ—¶nus */
 
-#if (!SYS_SUPPORT_OS)                       /* Ã»ÓĞÊ¹ÓÃSystickÖĞ¶Ï */
-    void HAL_Delay(uint32_t Delay);         /* HAL¿âµÄÑÓÊ±º¯Êı£¬SDIOµÈĞèÒªÓÃµ½ */
+#if (!SYS_SUPPORT_OS)                       /* æ²¡æœ‰ä½¿ç”¨Systickä¸­æ–­ */
+    void HAL_Delay(uint32_t Delay);         /* HALåº“çš„å»¶æ—¶å‡½æ•°ï¼ŒSDIOç­‰éœ€è¦ç”¨åˆ° */
 #endif
 
 #endif

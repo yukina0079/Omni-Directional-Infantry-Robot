@@ -1,20 +1,20 @@
 #include "oled.h"
 #include "font.h"
-#include <stdio.h>  // ÓÃÓÚsprintfº¯Êı
-#include <string.h> // ÓÃÓÚstrlenº¯Êı
+#include <stdio.h>  // ç”¨äºsprintfå‡½æ•°
+#include <string.h> // ç”¨äºstrlenå‡½æ•°
 void oled_gpio_init(void)
 {
-		GPIO_InitTypeDef gpio_initstruct;//¶¨Òå½á¹¹Ìå²ÎÊı
+		GPIO_InitTypeDef gpio_initstruct;//å®šä¹‰ç»“æ„ä½“å‚æ•°
 		OLED_I2C_SCL_CLK();
 		OLED_I2C_SDA_CLK();
 	
-		gpio_initstruct.Pin = OLED_I2C_SCL_PIN;//ÅäÖÃÒı½ÅºÅ
-		gpio_initstruct.Mode = GPIO_MODE_OUTPUT_PP;//ÅäÖÃ¹¤×÷Ä£Ê½ ÍÆÍìÊä³ö
-		gpio_initstruct.Pull = GPIO_PULLUP;//ÅäÖÃÉÏÀ­ÏÂÀ­
-		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//ÅäÖÃÊä³öËÙ¶È
+		gpio_initstruct.Pin = OLED_I2C_SCL_PIN;//é…ç½®å¼•è„šå·
+		gpio_initstruct.Mode = GPIO_MODE_OUTPUT_PP;//é…ç½®å·¥ä½œæ¨¡å¼ æ¨æŒ½è¾“å‡º
+		gpio_initstruct.Pull = GPIO_PULLUP;//é…ç½®ä¸Šæ‹‰ä¸‹æ‹‰
+		gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;//é…ç½®è¾“å‡ºé€Ÿåº¦
 		HAL_GPIO_Init(OLED_I2C_SCL_PORT,&gpio_initstruct);
 	
-		gpio_initstruct.Pin = OLED_I2C_SDA_PIN;//ÅäÖÃÒı½ÅºÅ
+		gpio_initstruct.Pin = OLED_I2C_SDA_PIN;//é…ç½®å¼•è„šå·
 		HAL_GPIO_Init(OLED_I2C_SDA_PORT,&gpio_initstruct);
 }
 void oled_i2c_start(void)
@@ -85,43 +85,43 @@ void oled_init(void)
     
     delay_ms(100);
     
-    oled_write_cmd(0xAE);    //ÉèÖÃÏÔÊ¾¿ªÆô/¹Ø±Õ£¬0xAE¹Ø±Õ£¬0xAF¿ªÆô
+    oled_write_cmd(0xAE);    //è®¾ç½®æ˜¾ç¤ºå¼€å¯/å…³é—­ï¼Œ0xAEå…³é—­ï¼Œ0xAFå¼€å¯
 
-    oled_write_cmd(0xD5);    //ÉèÖÃÏÔÊ¾Ê±ÖÓ·ÖÆµ±È/Õñµ´Æ÷ÆµÂÊ
+    oled_write_cmd(0xD5);    //è®¾ç½®æ˜¾ç¤ºæ—¶é’Ÿåˆ†é¢‘æ¯”/æŒ¯è¡å™¨é¢‘ç‡
     oled_write_cmd(0x80);    //0x00~0xFF
 
-    oled_write_cmd(0xA8);    //ÉèÖÃ¶àÂ·¸´ÓÃÂÊ
+    oled_write_cmd(0xA8);    //è®¾ç½®å¤šè·¯å¤ç”¨ç‡
     oled_write_cmd(0x3F);    //0x0E~0x3F
 
-    oled_write_cmd(0xD3);    //ÉèÖÃÏÔÊ¾Æ«ÒÆ
+    oled_write_cmd(0xD3);    //è®¾ç½®æ˜¾ç¤ºåç§»
     oled_write_cmd(0x00);    //0x00~0x7F
 
-    oled_write_cmd(0x40);    //ÉèÖÃÏÔÊ¾¿ªÊ¼ĞĞ£¬0x40~0x7F
+    oled_write_cmd(0x40);    //è®¾ç½®æ˜¾ç¤ºå¼€å§‹è¡Œï¼Œ0x40~0x7F
 
-    oled_write_cmd(0xA1);    //ÉèÖÃ×óÓÒ·½Ïò£¬0xA1Õı³££¬0xA0×óÓÒ·´ÖÃ
+    oled_write_cmd(0xA1);    //è®¾ç½®å·¦å³æ–¹å‘ï¼Œ0xA1æ­£å¸¸ï¼Œ0xA0å·¦å³åç½®
 
-    oled_write_cmd(0xC8);    //ÉèÖÃÉÏÏÂ·½Ïò£¬0xC8Õı³££¬0xC0ÉÏÏÂ·´ÖÃ
+    oled_write_cmd(0xC8);    //è®¾ç½®ä¸Šä¸‹æ–¹å‘ï¼Œ0xC8æ­£å¸¸ï¼Œ0xC0ä¸Šä¸‹åç½®
 
-    oled_write_cmd(0xDA);    //ÉèÖÃCOMÒı½ÅÓ²¼şÅäÖÃ
+    oled_write_cmd(0xDA);    //è®¾ç½®COMå¼•è„šç¡¬ä»¶é…ç½®
     oled_write_cmd(0x12);
 
-    oled_write_cmd(0x81);    //ÉèÖÃ¶Ô±È¶È
+    oled_write_cmd(0x81);    //è®¾ç½®å¯¹æ¯”åº¦
     oled_write_cmd(0xCF);    //0x00~0xFF
 
-    oled_write_cmd(0xD9);    //ÉèÖÃÔ¤³äµçÖÜÆÚ
+    oled_write_cmd(0xD9);    //è®¾ç½®é¢„å……ç”µå‘¨æœŸ
     oled_write_cmd(0xF1);
 
-    oled_write_cmd(0xDB);    //ÉèÖÃVCOMHÈ¡ÏûÑ¡Ôñ¼¶±ğ
+    oled_write_cmd(0xDB);    //è®¾ç½®VCOMHå–æ¶ˆé€‰æ‹©çº§åˆ«
     oled_write_cmd(0x30);
 
-    oled_write_cmd(0xA4);    //ÉèÖÃÕû¸öÏÔÊ¾´ò¿ª/¹Ø±Õ
+    oled_write_cmd(0xA4);    //è®¾ç½®æ•´ä¸ªæ˜¾ç¤ºæ‰“å¼€/å…³é—­
 
-    oled_write_cmd(0xA6);    //ÉèÖÃÕı³£/·´É«ÏÔÊ¾£¬0xA6Õı³££¬0xA7·´É«
+    oled_write_cmd(0xA6);    //è®¾ç½®æ­£å¸¸/åè‰²æ˜¾ç¤ºï¼Œ0xA6æ­£å¸¸ï¼Œ0xA7åè‰²
 
-    oled_write_cmd(0x8D);    //ÉèÖÃ³äµç±Ã
+    oled_write_cmd(0x8D);    //è®¾ç½®å……ç”µæ³µ
     oled_write_cmd(0x14);
 
-    oled_write_cmd(0xAF);    //¿ªÆôÏÔÊ¾
+    oled_write_cmd(0xAF);    //å¼€å¯æ˜¾ç¤º
  
 }
 
@@ -202,47 +202,47 @@ void oled_show_image(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_
     }
 }
 /**
- * @brief  OLEDÏÔÊ¾Ğ¡Êı£¨ĞŞ¸´°æ£¬ÎŞ±àÒë¾¯¸æ£©
- * @param  x: ÆğÊ¼ºá×ø±ê (0~127)
- * @param  y: ÆğÊ¼×İ×ø±ê (0~7£¬¶ÔÓ¦OLEDµÄ8Ò³)
- * @param  num: ÒªÏÔÊ¾µÄĞ¡Êı£¨Ö§³ÖÕı¸º£©
- * @param  int_len: ÕûÊı²¿·ÖÏÔÊ¾Î»Êı£¨²»×ã²¹0£¬³¬¹ıÔòÏÔÊ¾È«²¿£©
- * @param  dec_len: Ğ¡Êı²¿·ÖÏÔÊ¾Î»Êı£¨²»×ã²¹0£¬³¬¹ıÔò½Ø¶Ï£©
- * @param  size: ×ÖÌå´óĞ¡ (12/16/24£¬ĞèÓëÏÖÓĞ×ÖÌåÊı×éÆ¥Åä)
- * @retval ÎŞ
+ * @brief  OLEDæ˜¾ç¤ºå°æ•°ï¼ˆä¿®å¤ç‰ˆï¼Œæ— ç¼–è¯‘è­¦å‘Šï¼‰
+ * @param  x: èµ·å§‹æ¨ªåæ ‡ (0~127)
+ * @param  y: èµ·å§‹çºµåæ ‡ (0~7ï¼Œå¯¹åº”OLEDçš„8é¡µ)
+ * @param  num: è¦æ˜¾ç¤ºçš„å°æ•°ï¼ˆæ”¯æŒæ­£è´Ÿï¼‰
+ * @param  int_len: æ•´æ•°éƒ¨åˆ†æ˜¾ç¤ºä½æ•°ï¼ˆä¸è¶³è¡¥0ï¼Œè¶…è¿‡åˆ™æ˜¾ç¤ºå…¨éƒ¨ï¼‰
+ * @param  dec_len: å°æ•°éƒ¨åˆ†æ˜¾ç¤ºä½æ•°ï¼ˆä¸è¶³è¡¥0ï¼Œè¶…è¿‡åˆ™æˆªæ–­ï¼‰
+ * @param  size: å­—ä½“å¤§å° (12/16/24ï¼Œéœ€ä¸ç°æœ‰å­—ä½“æ•°ç»„åŒ¹é…)
+ * @retval æ— 
  */
 void oled_show_float(uint8_t x, uint8_t y, float num, uint8_t int_len, uint8_t dec_len, uint8_t size)
 {
-    // ¶¨Òå»º³åÇø£¬×ã¹»ÈİÄÉÕı¸ººÅ+ÕûÊıÎ»+Ğ¡Êıµã+Ğ¡ÊıÎ»£¨×î´óÖ§³Ö16Î»£©
+    // å®šä¹‰ç¼“å†²åŒºï¼Œè¶³å¤Ÿå®¹çº³æ­£è´Ÿå·+æ•´æ•°ä½+å°æ•°ç‚¹+å°æ•°ä½ï¼ˆæœ€å¤§æ”¯æŒ16ä½ï¼‰
     char float_buf[16] = {0};
     
-    // ĞŞ¸´¸ñÊ½´®£º¸¡µãÊıÍ³Ò»ÓÃ %.*f£¬ÕûÊı²¿·Ö²¹0Í¨¹ı×Ö·û´®´¦Àí
-    // ¸ñÊ½´®ËµÃ÷£º%.*f ¡ú Ğ¡ÊıÎ»ÊıÓÉdec_lenÖ¸¶¨
+    // ä¿®å¤æ ¼å¼ä¸²ï¼šæµ®ç‚¹æ•°ç»Ÿä¸€ç”¨ %.*fï¼Œæ•´æ•°éƒ¨åˆ†è¡¥0é€šè¿‡å­—ç¬¦ä¸²å¤„ç†
+    // æ ¼å¼ä¸²è¯´æ˜ï¼š%.*f â†’ å°æ•°ä½æ•°ç”±dec_lenæŒ‡å®š
     sprintf(float_buf, "%.*f", dec_len, num);
     
-    // ´¦ÀíÕûÊı²¿·Ö²¹0£ºÈç¹ûÕûÊıÎ»³¤¶È²»×ã£¬ÔÚÇ°Ãæ²¹0
+    // å¤„ç†æ•´æ•°éƒ¨åˆ†è¡¥0ï¼šå¦‚æœæ•´æ•°ä½é•¿åº¦ä¸è¶³ï¼Œåœ¨å‰é¢è¡¥0
     char temp_buf[16] = {0};
-    char *dot_pos = strchr(float_buf, '.'); // ÕÒµ½Ğ¡ÊıµãÎ»ÖÃ
+    char *dot_pos = strchr(float_buf, '.'); // æ‰¾åˆ°å°æ•°ç‚¹ä½ç½®
     if(dot_pos != NULL)
     {
-        uint8_t current_int_len = dot_pos - float_buf; // µ±Ç°ÕûÊı²¿·Ö³¤¶È
-        // Èç¹ûµ±Ç°ÕûÊıÎ» < Ö¸¶¨³¤¶È£¬²¹0
+        uint8_t current_int_len = dot_pos - float_buf; // å½“å‰æ•´æ•°éƒ¨åˆ†é•¿åº¦
+        // å¦‚æœå½“å‰æ•´æ•°ä½ < æŒ‡å®šé•¿åº¦ï¼Œè¡¥0
         if(current_int_len < int_len)
         {
             uint8_t fill_zero = int_len - current_int_len;
-            // ÏÈ²¹0
+            // å…ˆè¡¥0
             for(uint8_t k=0; k<fill_zero; k++)
             {
                 temp_buf[k] = '0';
             }
-            // Æ´½ÓÔ­×Ö·û´®
+            // æ‹¼æ¥åŸå­—ç¬¦ä¸²
             strcat(temp_buf, float_buf);
-            // ¸²¸Ç»Øfloat_buf
+            // è¦†ç›–å›float_buf
             strcpy(float_buf, temp_buf);
         }
     }
     
-    // µ÷ÓÃÒÑÓĞµÄ×Ö·û´®ÏÔÊ¾º¯Êı
+    // è°ƒç”¨å·²æœ‰çš„å­—ç¬¦ä¸²æ˜¾ç¤ºå‡½æ•°
     oled_show_string(x, y, float_buf, size);
 }
 

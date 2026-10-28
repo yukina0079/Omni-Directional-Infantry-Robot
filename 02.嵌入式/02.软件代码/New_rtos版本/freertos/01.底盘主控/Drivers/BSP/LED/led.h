@@ -6,31 +6,31 @@
 
 
 /******************************************************************************************/
-/* “˝Ω≈ ∂®“Â */
+/* ÂºïËÑö ÂÆö‰πâ */
 
 #define LED0_GPIO_PORT                  GPIOD
 #define LED0_GPIO_PIN                   GPIO_PIN_2
-#define LED0_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOD_CLK_ENABLE(); }while(0)             /* PFø⁄ ±÷” πƒ‹ */
+#define LED0_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOD_CLK_ENABLE(); }while(0)             /* PFÂè£Êó∂Èíü‰ΩøËÉΩ */
 
 #define LED1_GPIO_PORT                  GPIOD
 #define LED1_GPIO_PIN                   GPIO_PIN_3
-#define LED1_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOD_CLK_ENABLE(); }while(0)             /* PFø⁄ ±÷” πƒ‹ */
+#define LED1_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOD_CLK_ENABLE(); }while(0)             /* PFÂè£Êó∂Èíü‰ΩøËÉΩ */
 
 #define LED2_GPIO_PORT                  GPIOD
 #define LED2_GPIO_PIN                   GPIO_PIN_4
-#define LED2_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOD_CLK_ENABLE(); }while(0)             /* PFø⁄ ±÷” πƒ‹ */
+#define LED2_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOD_CLK_ENABLE(); }while(0)             /* PFÂè£Êó∂Èíü‰ΩøËÉΩ */
 
 #define LED3_GPIO_PORT                  GPIOD
 #define LED3_GPIO_PIN                   GPIO_PIN_5
-#define LED3_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOD_CLK_ENABLE(); }while(0)             /* PFø⁄ ±÷” πƒ‹ */
+#define LED3_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOD_CLK_ENABLE(); }while(0)             /* PFÂè£Êó∂Èíü‰ΩøËÉΩ */
 
 //#define LED4_GPIO_PORT                  GPIOC
 //#define LED4_GPIO_PIN                   GPIO_PIN_4
-//#define LED4_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)             /* PFø⁄ ±÷” πƒ‹ */
+//#define LED4_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)             /* PFÂè£Êó∂Èíü‰ΩøËÉΩ */
 
 /******************************************************************************************/
 
-/* LED∂Àø⁄∂®“Â */
+/* LEDÁ´ØÂè£ÂÆö‰πâ */
 #define LED0(x)   do{ x ? \
                       HAL_GPIO_WritePin(LED0_GPIO_PORT, LED0_GPIO_PIN, GPIO_PIN_SET) : \
                       HAL_GPIO_WritePin(LED0_GPIO_PORT, LED0_GPIO_PIN, GPIO_PIN_RESET); \
@@ -54,7 +54,7 @@
 //                      HAL_GPIO_WritePin(LED4_GPIO_PORT, LED4_GPIO_PIN, GPIO_PIN_RESET); \
 //                  }while(0)       /* LED1 = GREEN */
 
-/* LED»°∑¥∂®“Â */
+/* LEDÂèñÂèçÂÆö‰πâ */
 #define LED0_TOGGLE()    do{ HAL_GPIO_TogglePin(LED0_GPIO_PORT, LED0_GPIO_PIN); }while(0)       /* LED0 = !LED0 */
 #define LED1_TOGGLE()    do{ HAL_GPIO_TogglePin(LED1_GPIO_PORT, LED1_GPIO_PIN); }while(0)       /* LED1 = !LED1 */
 #define LED2_TOGGLE()    do{ HAL_GPIO_TogglePin(LED2_GPIO_PORT, LED2_GPIO_PIN); }while(0)       /* LED0 = !LED0 */
@@ -62,7 +62,7 @@
 //#define LED4_TOGGLE()    do{ HAL_GPIO_TogglePin(LED4_GPIO_PORT, LED4_GPIO_PIN); }while(0)       /* LED0 = !LED0 */
 
 /******************************************************************************************/
-/* Õ‚≤øΩ”ø⁄∫Ø ˝*/
-void led_init(void);                                                                            /* ≥ı ºªØ */
+/* Â§ñÈÉ®Êé•Âè£ÂáΩÊï∞*/
+void led_init(void);                                                                            /* ÂàùÂßãÂåñ */
 
 #endif

@@ -1,40 +1,40 @@
 #include "./BSP/LED/led.h"
 
 /**
- * @brief   ³õÊ¼»¯LED
- * @param   ÎŞ
- * @retval  ÎŞ
+ * @brief   åˆå§‹åŒ–LED
+ * @param   æ— 
+ * @retval  æ— 
  */
 void led_init(void)
 {
     GPIO_InitTypeDef gpio_init_struct = {0};
     
-    /* Ê¹ÄÜGPIO¶Ë¿ÚÊ±ÖÓ */
+    /* ä½¿èƒ½GPIOç«¯å£æ—¶é’Ÿ */
     LED0_GPIO_CLK_ENABLE();
     LED1_GPIO_CLK_ENABLE();
 //	LED2_GPIO_CLK_ENABLE();
     
-    /* ÅäÖÃLED0¿ØÖÆÒı½Å */
+    /* é…ç½®LED0æ§åˆ¶å¼•è„š */
     gpio_init_struct.Pin = LED0_GPIO_PIN;
     gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP;
     gpio_init_struct.Pull = GPIO_PULLDOWN;
     gpio_init_struct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(LED0_GPIO_PORT, &gpio_init_struct);
     
-    /* ÅäÖÃLED1¿ØÖÆÒı½Å */
+    /* é…ç½®LED1æ§åˆ¶å¼•è„š */
     gpio_init_struct.Pin = LED1_GPIO_PIN;
     gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP;
     gpio_init_struct.Pull = GPIO_PULLDOWN;
     gpio_init_struct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(LED1_GPIO_PORT, &gpio_init_struct);
 	
-//     /* ÅäÖÃLED2¿ØÖÆÒı½Å */
+//     /* é…ç½®LED2æ§åˆ¶å¼•è„š */
 //    gpio_init_struct.Pin = LED2_GPIO_PIN;
 //    gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP;
 //    gpio_init_struct.Pull = GPIO_PULLDOWN;
 //    gpio_init_struct.Speed = GPIO_SPEED_FREQ_LOW;
 //    HAL_GPIO_Init(LED1_GPIO_PORT, &gpio_init_struct);   
-    /* ¹Ø±ÕLED0¡¢LED1,LED2 */
+    /* å…³é—­LED0ã€LED1,LED2 */
     LED0(0);
     LED1(0);
 //	LED2(0);

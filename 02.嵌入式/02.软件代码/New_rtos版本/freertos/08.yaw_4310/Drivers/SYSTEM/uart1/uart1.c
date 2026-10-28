@@ -3,16 +3,16 @@
 #include "data.h"
 #include <stdio.h>
 
-/* ¾ä±úºÍÈ«¾Ö±äÁ¿¶¨Òå */
+/* å¥æŸ„å’Œå…¨å±€å˜é‡å®šä¹‰ */
 UART_HandleTypeDef uart1_handle;
 DMA_HandleTypeDef  hdma_usart2_rx;
 uint8_t uart1_rx_buf[FRAME_SIZE];
 
-/* ÉÏ´Î´¦ÀíÊ±µÄDMAĞ´ÈëÎ»ÖÃ */
+/* ä¸Šæ¬¡å¤„ç†æ—¶çš„DMAå†™å…¥ä½ç½® */
 static uint16_t last_dma_pos = 0;
 
 /**
- * @brief  ÖØ¶¨Òåfputc (printfÊä³öµ½USART2)
+ * @brief  é‡å®šä¹‰fputc (printfè¾“å‡ºåˆ°USART2)
  */
 int fputc(int ch, FILE *f)
 {
@@ -22,12 +22,12 @@ int fputc(int ch, FILE *f)
 }
 
 /**
- * @brief  USART2³õÊ¼»¯º¯Êı
- * @param  baudrate: ²¨ÌØÂÊ (Èç 115200)
+ * @brief  USART2åˆå§‹åŒ–å‡½æ•°
+ * @param  baudrate: æ³¢ç‰¹ç‡ (å¦‚ 115200)
  */
 void uart1_init(uint32_t baudrate)
 {
-    /* 1. ÅäÖÃUART»ù´¡²ÎÊı */
+    /* 1. é…ç½®UARTåŸºç¡€å‚æ•° */
     uart1_handle.Instance = USART2;
     uart1_handle.Init.BaudRate = baudrate;
     uart1_handle.Init.WordLength = UART_WORDLENGTH_8B;
@@ -36,18 +36,18 @@ void uart1_init(uint32_t baudrate)
     uart1_handle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
     uart1_handle.Init.Mode = UART_MODE_TX_RX;
 
-    /* 2. ³õÊ¼»¯UART */
+    /* 2. åˆå§‹åŒ–UART */
     HAL_UART_Init(&uart1_handle);
 
-    /* 3. Æô¶¯DMAÑ­»·½ÓÊÕ£¬»º³åÇø´óĞ¡ÎªÖ¡³¤¶È */
+    /* 3. å¯åŠ¨DMAå¾ªç¯æ¥æ”¶ï¼Œç¼“å†²åŒºå¤§å°ä¸ºå¸§é•¿åº¦ */
     HAL_UART_Receive_DMA(&uart1_handle, uart1_rx_buf, FRAME_SIZE);
 
-    /* 4. ³õÊ¼»¯ÉÏ´ÎÎ»ÖÃ£¬±ÜÃâÊ×´ÎÎóÅĞ */
+    /* 4. åˆå§‹åŒ–ä¸Šæ¬¡ä½ç½®ï¼Œé¿å…é¦–æ¬¡è¯¯åˆ¤ */
     last_dma_pos = FRAME_SIZE - __HAL_DMA_GET_COUNTER(&hdma_usart2_rx);
 }
 
 /**
- * @brief  UARTµ×²ãÇı¶¯³õÊ¼»¯
+ * @brief  UARTåº•å±‚é©±åŠ¨åˆå§‹åŒ–
  */
 void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {
@@ -55,39 +55,39 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 
     if(huart->Instance == USART2)
     {
-        /* 1. Ê¹ÄÜÊ±ÖÓ */
+        /* 1. ä½¿èƒ½æ—¶é’Ÿ */
         __HAL_RCC_GPIOA_CLK_ENABLE();
         __HAL_RCC_USART2_CLK_ENABLE();
         __HAL_RCC_DMA1_CLK_ENABLE();
 
-        /* 2. ÅäÖÃ TX (PA2) */
+        /* 2. é…ç½® TX (PA2) */
         gpio_init_struct.Pin = GPIO_PIN_2;
         gpio_init_struct.Mode = GPIO_MODE_AF_PP;
         gpio_init_struct.Pull = GPIO_PULLUP;
         gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;
         HAL_GPIO_Init(GPIOA, &gpio_init_struct);
 
-        /* 3. ÅäÖÃ RX (PA3) ÎªÊäÈë */
+        /* 3. é…ç½® RX (PA3) ä¸ºè¾“å…¥ */
         gpio_init_struct.Pin = GPIO_PIN_3;
         gpio_init_struct.Mode = GPIO_MODE_INPUT;
         gpio_init_struct.Pull = GPIO_NOPULL;
         HAL_GPIO_Init(GPIOA, &gpio_init_struct);
 
-        /* 4. ÅäÖÃ DMA (USART2_RX -> DMA1_Channel6) ÎªÑ­»·Ä£Ê½ */
+        /* 4. é…ç½® DMA (USART2_RX -> DMA1_Channel6) ä¸ºå¾ªç¯æ¨¡å¼ */
         hdma_usart2_rx.Instance = DMA1_Channel6;
         hdma_usart2_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
         hdma_usart2_rx.Init.PeriphInc = DMA_PINC_DISABLE;
         hdma_usart2_rx.Init.MemInc = DMA_MINC_ENABLE;
         hdma_usart2_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
         hdma_usart2_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-        hdma_usart2_rx.Init.Mode = DMA_CIRCULAR;      /* Ñ­»·Ä£Ê½ */
+        hdma_usart2_rx.Init.Mode = DMA_CIRCULAR;      /* å¾ªç¯æ¨¡å¼ */
         hdma_usart2_rx.Init.Priority = DMA_PRIORITY_HIGH;
         HAL_DMA_Init(&hdma_usart2_rx);
 
-        /* 5. ¹ØÁª DMA ¾ä±ú */
+        /* 5. å…³è” DMA å¥æŸ„ */
         __HAL_LINKDMA(huart, hdmarx, hdma_usart2_rx);
 
-        /* ²»Ê¹ÄÜÈÎºÎÖĞ¶Ï£¬´¿ÂÖÑ¯ */
+        /* ä¸ä½¿èƒ½ä»»ä½•ä¸­æ–­ï¼Œçº¯è½®è¯¢ */
     }
 }
 
@@ -96,21 +96,21 @@ void uart1_poll(void)
     uint16_t current_pos = FRAME_SIZE - __HAL_DMA_GET_COUNTER(&hdma_usart2_rx);
     uint16_t new_bytes;
 
-    /* ¼ÆËãĞÂÊÕµ½µÄ×Ö½ÚÊı£¨´¦Àí»·ĞÎ»ØÈÆ£© */
+    /* è®¡ç®—æ–°æ”¶åˆ°çš„å­—èŠ‚æ•°ï¼ˆå¤„ç†ç¯å½¢å›ç»•ï¼‰ */
     if (current_pos >= last_dma_pos) {
         new_bytes = current_pos - last_dma_pos;
     } else {
         new_bytes = (FRAME_SIZE - last_dma_pos) + current_pos;
     }
 
-    /* Öğ¸ö´¦ÀíĞÂ×Ö½Ú */
+    /* é€ä¸ªå¤„ç†æ–°å­—èŠ‚ */
     for (uint16_t i = 0; i < new_bytes; i++) {
         uint16_t index = (last_dma_pos + i) % FRAME_SIZE;
         uint8_t byte = uart1_rx_buf[index];
 
-        /* µ÷ÓÃÖğ×Ö½ÚÍ¬²½º¯Êı£¬Èô·µ»Ø1±íÊ¾ÊÕµ½Ò»Ö¡ */
+        /* è°ƒç”¨é€å­—èŠ‚åŒæ­¥å‡½æ•°ï¼Œè‹¥è¿”å›1è¡¨ç¤ºæ”¶åˆ°ä¸€å¸§ */
         if (frame_sync(byte, uart_recv)) {
-            /* ´òÓ¡ĞÂÖ¡ */
+            /* æ‰“å°æ–°å¸§ */
 //            for (uint16_t j = 0; j < FRAME_SIZE; j++) {
 //                printf("%02X ", uart_recv[j]);
 //            }
@@ -118,10 +118,10 @@ void uart1_poll(void)
         }
     }
 
-    /* ¸üĞÂÉÏ´ÎÎ»ÖÃ */
+    /* æ›´æ–°ä¸Šæ¬¡ä½ç½® */
     last_dma_pos = current_pos;
 
-    /* Çå³ıÒç³ö±êÖ¾£¨¿ÉÑ¡£© */
+    /* æ¸…é™¤æº¢å‡ºæ ‡å¿—ï¼ˆå¯é€‰ï¼‰ */
     if (__HAL_UART_GET_FLAG(&uart1_handle, UART_FLAG_ORE) != RESET) {
         __HAL_UART_CLEAR_OREFLAG(&uart1_handle);
     }

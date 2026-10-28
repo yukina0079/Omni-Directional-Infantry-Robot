@@ -7,17 +7,17 @@ DMA_HandleTypeDef dma_handle = {0};
 void adc_init(void)
 {
 		adc_handle.Instance = ADC1;
-		adc_handle.Init.DataAlign = ADC_DATAALIGN_RIGHT;				//对齐方式
-		adc_handle.Init.ScanConvMode = ADC_SCAN_DISABLE;				//是否扫描
-		adc_handle.Init.ContinuousConvMode = DISABLE;					//是否连续转换
-		adc_handle.Init.NbrOfConversion = 4;							//转换个数
-		adc_handle.Init.DiscontinuousConvMode = DISABLE;				//间断模式
-		adc_handle.Init.NbrOfDiscConversion = 0;						//间断模式个数
- 		adc_handle.Init.ExternalTrigConv = ADC_SOFTWARE_START;			//软件触发
+		adc_handle.Init.DataAlign = ADC_DATAALIGN_RIGHT;				//瀵归綈鏂瑰紡
+		adc_handle.Init.ScanConvMode = ADC_SCAN_DISABLE;				//鏄惁鎵弿
+		adc_handle.Init.ContinuousConvMode = DISABLE;					//鏄惁杩炵画杞崲
+		adc_handle.Init.NbrOfConversion = 4;							//杞崲涓暟
+		adc_handle.Init.DiscontinuousConvMode = DISABLE;				//闂存柇妯″紡
+		adc_handle.Init.NbrOfDiscConversion = 0;						//闂存柇妯″紡涓暟
+ 		adc_handle.Init.ExternalTrigConv = ADC_SOFTWARE_START;			//杞欢瑙﹀彂
 	
 		HAL_ADC_Init(&adc_handle);
 	
-		HAL_ADCEx_Calibration_Start(&adc_handle);						//校准
+		HAL_ADCEx_Calibration_Start(&adc_handle);						//鏍″噯
 }
 
 
@@ -26,18 +26,18 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
 		if(hadc->Instance == ADC1){
 			
 			GPIO_InitTypeDef gpio_initstruct;
-			RCC_PeriphCLKInitTypeDef adc_clk_init = {0}; //ADC时钟句柄
+			RCC_PeriphCLKInitTypeDef adc_clk_init = {0}; //ADC鏃堕挓鍙ユ焺
 			
 			__HAL_RCC_ADC1_CLK_ENABLE();
 			__HAL_RCC_GPIOA_CLK_ENABLE();
 			
 			gpio_initstruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3;
-			gpio_initstruct.Mode = GPIO_MODE_ANALOG;				//配置工作模式 推挽输出
+			gpio_initstruct.Mode = GPIO_MODE_ANALOG;				//閰嶇疆宸ヤ綔妯″紡 鎺ㄦ尳杈撳嚭
 	
 			HAL_GPIO_Init(GPIOA,&gpio_initstruct);
 			
-			adc_clk_init.PeriphClockSelection = RCC_PERIPHCLK_ADC; //ADC时钟 
-			adc_clk_init.AdcClockSelection = RCC_ADCPCLK2_DIV6;    //6分频
+			adc_clk_init.PeriphClockSelection = RCC_PERIPHCLK_ADC; //ADC鏃堕挓 
+			adc_clk_init.AdcClockSelection = RCC_ADCPCLK2_DIV6;    //6鍒嗛
 			HAL_RCCEx_PeriphCLKConfig(&adc_clk_init);
 		}
 	
@@ -68,29 +68,29 @@ uint32_t adc_get_result(uint32_t ch)
 void adc_dma_set(void)
 {
 	adc_handle.Instance = ADC1;
-	adc_handle.Init.DataAlign = ADC_DATAALIGN_RIGHT;				//对齐方式
-	//adc_handle.Init.ScanConvMode = ADC_SCAN_DISABLE;				//单通道扫描
-	adc_handle.Init.ScanConvMode = ADC_SCAN_ENABLE;				//多通道扫描
-	adc_handle.Init.ContinuousConvMode = ENABLE;						//是否连续转换
-	adc_handle.Init.NbrOfConversion = 4;										//转换个数
-	adc_handle.Init.DiscontinuousConvMode = DISABLE;				//间断模式
-	adc_handle.Init.NbrOfDiscConversion = 0;								//间断模式个数
- 	adc_handle.Init.ExternalTrigConv = ADC_SOFTWARE_START;	//软件触发
+	adc_handle.Init.DataAlign = ADC_DATAALIGN_RIGHT;				//瀵归綈鏂瑰紡
+	//adc_handle.Init.ScanConvMode = ADC_SCAN_DISABLE;				//鍗曢�氶亾鎵弿
+	adc_handle.Init.ScanConvMode = ADC_SCAN_ENABLE;				//澶氶�氶亾鎵弿
+	adc_handle.Init.ContinuousConvMode = ENABLE;						//鏄惁杩炵画杞崲
+	adc_handle.Init.NbrOfConversion = 4;										//杞崲涓暟
+	adc_handle.Init.DiscontinuousConvMode = DISABLE;				//闂存柇妯″紡
+	adc_handle.Init.NbrOfDiscConversion = 0;								//闂存柇妯″紡涓暟
+ 	adc_handle.Init.ExternalTrigConv = ADC_SOFTWARE_START;	//杞欢瑙﹀彂
 	
 	HAL_ADC_Init(&adc_handle);
 	
-	HAL_ADCEx_Calibration_Start(&adc_handle);//校准
+	HAL_ADCEx_Calibration_Start(&adc_handle);//鏍″噯
 
 	
 	 __HAL_RCC_DMA1_CLK_ENABLE();
     dma_handle.Instance = DMA1_Channel1;
     dma_handle.Init.Direction = DMA_PERIPH_TO_MEMORY;
     
-    //内存相关配置
+    //鍐呭瓨鐩稿叧閰嶇疆
     dma_handle.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
     dma_handle.Init.MemInc = DMA_MINC_ENABLE;
     
-    //外设相关配置
+    //澶栬鐩稿叧閰嶇疆
     dma_handle.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     dma_handle.Init.PeriphInc = DMA_PINC_DISABLE;
     

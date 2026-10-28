@@ -4,7 +4,7 @@
 #include "iic.h"
 #include "math.h"
 
-// ¹Ù·½ÊÖ²á±ê×¼ÁéÃô¶È
+// å®˜æ–¹æ‰‹å†Œæ ‡å‡†çµæ•åº¦
 #define BMI055_ACCEL_2G_SEN  0.0009765625f
 #define BMI055_ACCEL_4G_SEN  0.001953125f
 #define BMI055_ACCEL_8G_SEN  0.00390625f
@@ -24,19 +24,19 @@ void BMI055_update(float *AX,float *AY,float *AZ,float *GX,float *GY,float *GZ,f
 
     BMI055_get_data(&ax, &ay, &az, &gx, &gy, &gz, &temp_raw);
 
-    // ¼ÓËÙ¶È¼Æ£º12Î»Êı¾İ£¬×ó¶ÔÆë´æ·ÅÔÚ16Î»±äÁ¿ÖĞ
-    // Ö±½ÓÓÒÒÆ4Î»ÀûÓÃ int16_t µÄËãÊõÓÒÒÆÌØĞÔ±£³Ö·ûºÅÎ»
+    // åŠ é€Ÿåº¦è®¡ï¼š12ä½æ•°æ®ï¼Œå·¦å¯¹é½å­˜æ”¾åœ¨16ä½å˜é‡ä¸­
+    // ç›´æ¥å³ç§»4ä½åˆ©ç”¨ int16_t çš„ç®—æœ¯å³ç§»ç‰¹æ€§ä¿æŒç¬¦å·ä½
     *AX = (float)(ax >> 4) * BMI055_ACCEL_4G_SEN;
     *AY = (float)(ay >> 4) * BMI055_ACCEL_4G_SEN;
     *AZ = (float)(az >> 4) * BMI055_ACCEL_4G_SEN;
 
-    // ÍÓÂİÒÇ£º16Î»Êı¾İ£¬Ö±½Ó¼ÆËã
+    // é™€èºä»ªï¼š16ä½æ•°æ®ï¼Œç›´æ¥è®¡ç®—
     *GX = (float)gx * BMI055_GYRO_2000_SEN;
     *GY = (float)gy * BMI055_GYRO_2000_SEN;
     *GZ = (float)gz * BMI055_GYRO_2000_SEN;
 
-    // ÎÂ¶È£ºµ¥Î»Îª 0.5 K/LSB£¬ÖĞĞÄÖµ 23¡ãC (0x00 = 23¡ãC)
-    // ĞèÒªÇ¿ÖÆ×ª»»Îª int8_t ´¦Àí²¹Âë
+    // æ¸©åº¦ï¼šå•ä½ä¸º 0.5 K/LSBï¼Œä¸­å¿ƒå€¼ 23Â°C (0x00 = 23Â°C)
+    // éœ€è¦å¼ºåˆ¶è½¬æ¢ä¸º int8_t å¤„ç†è¡¥ç 
     *Temperature = (float)((int8_t)temp_raw) * 0.5f + 23.0f;
 }
 
@@ -45,7 +45,7 @@ void BMI055_get_data(int16_t *AccX, int16_t *AccY, int16_t *AccZ,
 {
     uint8_t buf[6] = {0};
 
-    // ¼ÓËÙ¶È¼ÆÊı¾İ¼Ä´æÆ÷ 0x02-0x07 (LSB ÔÚÇ°)
+    // åŠ é€Ÿåº¦è®¡æ•°æ®å¯„å­˜å™¨ 0x02-0x07 (LSB åœ¨å‰)
     if (iic_read_len(BMI055_ACCEL_ADDRESS, 0x02, buf, 6) == 0)
     {
         *AccX = (int16_t)((buf[1] << 8) | buf[0]);
@@ -53,7 +53,7 @@ void BMI055_get_data(int16_t *AccX, int16_t *AccY, int16_t *AccZ,
         *AccZ = (int16_t)((buf[5] << 8) | buf[4]);
     }
 
-    // ÍÓÂİÒÇÊı¾İ¼Ä´æÆ÷ 0x02-0x07
+    // é™€èºä»ªæ•°æ®å¯„å­˜å™¨ 0x02-0x07
     if (iic_read_len(BMI055_GYRO_ADDRESS, 0x02, buf, 6) == 0)
     {
         *GyroX = (int16_t)((buf[1] << 8) | buf[0]);
@@ -61,7 +61,7 @@ void BMI055_get_data(int16_t *AccX, int16_t *AccY, int16_t *AccZ,
         *GyroZ = (int16_t)((buf[5] << 8) | buf[4]);
     }
 
-    // ÎÂ¶È¼Ä´æÆ÷ (BMA255²¿·Ö) Ö»ÓĞ 0x08 Ò»¸ö×Ö½Ú
+    // æ¸©åº¦å¯„å­˜å™¨ (BMA255éƒ¨åˆ†) åªæœ‰ 0x08 ä¸€ä¸ªå­—èŠ‚
     if (iic_read_len(BMI055_ACCEL_ADDRESS, 0x08, buf, 1) == 0)
     {
         *Tmp = (int16_t)buf[0]; 
@@ -70,22 +70,22 @@ void BMI055_get_data(int16_t *AccX, int16_t *AccY, int16_t *AccZ,
 
 void BMI055_init(void)
 {
-    // ¼ÓËÙ¶È¼Æ³õÊ¼»¯
+    // åŠ é€Ÿåº¦è®¡åˆå§‹åŒ–
     iic_write_register(BMI055_ACCEL_ADDRESS, 0x7E, 0xB6);  // Soft Reset
     delay_ms(10);
 
-    iic_write_register(BMI055_ACCEL_ADDRESS, 0x0F, 0x05);  // Range: ¡À4g
+    iic_write_register(BMI055_ACCEL_ADDRESS, 0x0F, 0x05);  // Range: Â±4g
     iic_write_register(BMI055_ACCEL_ADDRESS, 0x10, 0x0F);  // BW: 1000Hz (Filter)
     iic_write_register(BMI055_ACCEL_ADDRESS, 0x11, 0x00);  // Normal Mode
     delay_ms(1);
 
-    // ÍÓÂİÒÇ³õÊ¼»¯
+    // é™€èºä»ªåˆå§‹åŒ–
     iic_write_register(BMI055_GYRO_ADDRESS, 0x14, 0xB6);  // Soft Reset
     delay_ms(50);
 
-    iic_write_register(BMI055_GYRO_ADDRESS, 0x0F, 0x00);  // Range: ¡À2000dps
-    // ĞŞ¸Ä£ºÈç¹ûÒª´ïµ½ 2000Hz ODR£¬¼Ä´æÆ÷ 0x10 Ó¦ÉèÎª 0x01
-    // Ô­´úÂë 0x02 ÊÇ 1000Hz ODR£¬´Ë´¦°´×¢ÊÍ¸ÄÎª 0x01
+    iic_write_register(BMI055_GYRO_ADDRESS, 0x0F, 0x00);  // Range: Â±2000dps
+    // ä¿®æ”¹ï¼šå¦‚æœè¦è¾¾åˆ° 2000Hz ODRï¼Œå¯„å­˜å™¨ 0x10 åº”è®¾ä¸º 0x01
+    // åŸä»£ç  0x02 æ˜¯ 1000Hz ODRï¼Œæ­¤å¤„æŒ‰æ³¨é‡Šæ”¹ä¸º 0x01
     iic_write_register(BMI055_GYRO_ADDRESS, 0x10, 0x01);  
     iic_write_register(BMI055_GYRO_ADDRESS, 0x11, 0x00);  // Normal Mode
     delay_ms(10);

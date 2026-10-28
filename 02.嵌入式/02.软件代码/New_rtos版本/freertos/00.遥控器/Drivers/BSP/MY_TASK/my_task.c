@@ -20,23 +20,23 @@ TaskHandle_t printTask_Handler;
 
 void create_task(void)
 {
-    xTaskCreate((TaskFunction_t )start_task,            /* ÈÎÎñº¯Êı */
-                (const char*    )"start_task",          /* ÈÎÎñÃû³Æ */
-                (uint16_t       )START_STK_SIZE,        /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
-                (void*          )NULL,                  /* ´«Èë¸øÈÎÎñº¯ÊıµÄ²ÎÊı */
-                (UBaseType_t    )START_TASK_PRIO,       /* ÈÎÎñÓÅÏÈ¼¶ */
-                (TaskHandle_t*  )&StartTask_Handler);   /* ÈÎÎñ¾ä±ú */
+    xTaskCreate((TaskFunction_t )start_task,            /* ä»»åŠ¡å‡½æ•° */
+                (const char*    )"start_task",          /* ä»»åŠ¡åç§° */
+                (uint16_t       )START_STK_SIZE,        /* ä»»åŠ¡å †æ ˆå¤§å° */
+                (void*          )NULL,                  /* ä¼ å…¥ç»™ä»»åŠ¡å‡½æ•°çš„å‚æ•° */
+                (UBaseType_t    )START_TASK_PRIO,       /* ä»»åŠ¡ä¼˜å…ˆçº§ */
+                (TaskHandle_t*  )&StartTask_Handler);   /* ä»»åŠ¡å¥æŸ„ */
 }
 /**
  * @brief   start_task
- * @param   pvParameters: ´«Èë²ÎÊı(Î´ÓÃµ½)
- * @retval  ÎŞ
+ * @param   pvParameters: ä¼ å…¥å‚æ•°(æœªç”¨åˆ°)
+ * @retval  æ— 
  */
 void start_task(void *pvParameters)
 {
-    taskENTER_CRITICAL();           /* ½øÈëÁÙ½çÇø */
+    taskENTER_CRITICAL();           /* è¿›å…¥ä¸´ç•ŒåŒº */
 	
-    /* ´´½¨data_printÈÎÎñ */
+    /* åˆ›å»ºdata_printä»»åŠ¡ */
     xTaskCreate((TaskFunction_t )print_task,
                 (const char*    )"print_task",
                 (uint16_t       )print_STK_SIZE,
@@ -44,7 +44,7 @@ void start_task(void *pvParameters)
                 (UBaseType_t    )print_PRIO,
                 (TaskHandle_t*  )&printTask_Handler);
 				
-    /* ´´½¨data_getÈÎÎñ */
+    /* åˆ›å»ºdata_getä»»åŠ¡ */
     xTaskCreate((TaskFunction_t )data_get_task,
                 (const char*    )"data_get_task",
                 (uint16_t       )DATA_GET_STK_SIZE,
@@ -52,7 +52,7 @@ void start_task(void *pvParameters)
                 (UBaseType_t    )DATA_GET_PRIO,
                 (TaskHandle_t*  )&DATA_GET_Task_Handler);
                 
-    /* ´´½¨DATA_SENDÈÎÎñ */
+    /* åˆ›å»ºDATA_SENDä»»åŠ¡ */
     xTaskCreate((TaskFunction_t )DATA_SEND_task,
                 (const char*    )"DATA_SEND_task",
                 (uint16_t       )DATA_SEND_SIZE,
@@ -60,7 +60,7 @@ void start_task(void *pvParameters)
                 (UBaseType_t    )DATA_SEND,
                 (TaskHandle_t*  )&DATA_SEND_Handler);
  
-    /* ´´½¨oled_showÈÎÎñ */
+    /* åˆ›å»ºoled_showä»»åŠ¡ */
     xTaskCreate((TaskFunction_t )oled_show_task,
                 (const char*    )"oled_show_task",
                 (uint16_t       )OLED_SHOW_STK_SIZE,
@@ -68,13 +68,13 @@ void start_task(void *pvParameters)
                 (UBaseType_t    )OLED_SHOW_PRIO,
                 (TaskHandle_t*  )&OLED_SHOW_Task_Handler);
 				
-    vTaskDelete(StartTask_Handler); /* É¾³ı¿ªÊ¼ÈÎÎñ */
-    taskEXIT_CRITICAL();            /* ÍË³öÁÙ½çÇø */
+    vTaskDelete(StartTask_Handler); /* åˆ é™¤å¼€å§‹ä»»åŠ¡ */
+    taskEXIT_CRITICAL();            /* é€€å‡ºä¸´ç•ŒåŒº */
 }
 /**
- * @brief   ´òÓ¡ÈÎÎñ
- * @param   pvParameters: ´«Èë²ÎÊı(Î´ÓÃµ½)
- * @retval  ÎŞ
+ * @brief   æ‰“å°ä»»åŠ¡
+ * @param   pvParameters: ä¼ å…¥å‚æ•°(æœªç”¨åˆ°)
+ * @retval  æ— 
  */
 void print_task(void *pvParameters)
 {
@@ -86,9 +86,9 @@ void print_task(void *pvParameters)
     }
 }
 /**
- * @brief   data_getÈÎÎñ
- * @param   pvParameters: ´«Èë²ÎÊı(Î´ÓÃµ½)
- * @retval  ÎŞ
+ * @brief   data_getä»»åŠ¡
+ * @param   pvParameters: ä¼ å…¥å‚æ•°(æœªç”¨åˆ°)
+ * @retval  æ— 
  */
 void data_get_task(void *pvParameters)
 {
@@ -100,9 +100,9 @@ void data_get_task(void *pvParameters)
 }
 
 /**
- * @brief   DATA_SENDÈÎÎñ
- * @param   pvParameters: ´«Èë²ÎÊı(Î´ÓÃµ½)
- * @retval  ÎŞ
+ * @brief   DATA_SENDä»»åŠ¡
+ * @param   pvParameters: ä¼ å…¥å‚æ•°(æœªç”¨åˆ°)
+ * @retval  æ— 
  */
 void DATA_SEND_task(void *pvParameters)
 {

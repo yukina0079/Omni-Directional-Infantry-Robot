@@ -1,4 +1,5 @@
 #include "my_task.h"
+#include "frame13.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "string.h"
@@ -22,7 +23,7 @@
  */
 #define NRF_UART_DEBUG_ENABLE    0U
 #define NRF_UART_DEBUG_PERIOD_MS 100U
-#define NRF_PACKET_SIZE          32U
+#define NRF_PACKET_SIZE          FRAME13_LEN
 
 #if NRF_UART_DEBUG_ENABLE
 static uint8_t nrf_debug_frame[NRF_PACKET_SIZE];
@@ -148,7 +149,7 @@ void start_task(void *pvParameters)
 }
 
 /**
- * @brief 获取�螺仪数据 -- read the IMU and advance both yaw loops.
+ * @brief 鑾峰彇闄铻轰华鏁版嵁 -- read the IMU and advance both yaw loops.
  *
  * Highest priority on the board (9). Runs every 1 ms via vTaskDelayUntil, and
  * that regularity is load-bearing twice over: pid.c integrates per call rather
@@ -210,15 +211,15 @@ void data_get_task(void *pvParameters)
     }
 }
 /**
- * @brief 串口通讯数据 -- push the outgoing frame, and refresh the watchdog.
+ * @brief 涓插彛閫氳鏁版嵁 -- push the outgoing frame, and refresh the watchdog.
  *
  * Lowest of the four supervised tasks (6), which is what makes the watchdog
  * refresh meaningful; see IWDG_TASK_ALL in my_task.h.
  *
  * uart_sand() is non-blocking by design: it skips the cycle if the TX DMA is
- * still busy rather than waiting. At 1 ms period and 1.74 ms per 20-byte frame
- * that means roughly every other cycle is a skip, and the effective frame rate
- * settles near 570 Hz -- comfortably inside the yaw board's 100 ms interlock.
+ * still busy rather than waiting. At 1 ms period and 1.13 ms per 13-byte frame
+ * that means roughly every eighth cycle is a skip, and the effective frame rate
+ * settles near 880 Hz -- comfortably inside the yaw board's 100 ms interlock.
  */
 void UART_Trans_task(void *pvParameters)
 {
@@ -270,7 +271,7 @@ void UART_Trans_task(void *pvParameters)
     }
 }
 /**
- * @brief 数据交换任务 -- the control loop proper.
+ * @brief 鏁版嵁浜ゆ崲浠诲姟 -- the control loop proper.
  *
  * data_change() does the whole chain: decode the received frame, apply the radio
  * failsafe, build the outgoing frame, decode the yaw board's reply, rotate the
@@ -295,7 +296,7 @@ void data_exchange_task(void *pvParameters)
     }
 }
 /**
- * @brief 无线通讯任务 -- receive from the remote.
+ * @brief 鏃犵嚎閫氳浠诲姟 -- receive from the remote.
  *
  * Polled at 2 ms against a remote that transmits every 3 ms, so the poll is
  * comfortably faster than the source. This is the only place the radio failsafe
@@ -333,7 +334,7 @@ void DATA_COMM_task(void *pvParameters)
 }
 
 /**
- * @brief OLED显示任务 (50ms周期) -- body empty, and the task is not created.
+ * @brief OLED鏄剧ず浠诲姟 (50ms鍛ㄦ湡) -- body empty, and the task is not created.
  */
 void oled_show_task(void *pvParameters)
 {
@@ -349,7 +350,7 @@ void oled_show_task(void *pvParameters)
 }
 
 /**
- * @brief 调试打印任务 (10ms周期) -- not created; printf shares the FOC wire.
+ * @brief 璋冭瘯鎵撳嵃浠诲姟 (10ms鍛ㄦ湡) -- not created; printf shares the FOC wire.
  */
 void print_task(void *pvParameters)
 {
