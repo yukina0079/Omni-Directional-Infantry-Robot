@@ -67,7 +67,7 @@ void can_send_data(uint32_t id,uint8_t *buf,uint8_t len)
 	while(HAL_CAN_GetTxMailboxesFreeLevel(&can_handle) != 3);
 
 	uint8_t i = 0;
-	printf("发送数据:\r\n");
+	printf("CAN tx:\r\n");
 	for(i=0;i<len;i++)
 			printf("%X",buf[i]);
 	printf("\r\n");
@@ -83,7 +83,7 @@ uint8_t can_receive_data(uint8_t *buf)
 		HAL_CAN_GetRxMessage(&can_handle,CAN_RX_FIFO0,&rx_header,buf);
 
 			uint8_t i = 0;
-			printf("接收数据:\r\n");
+			printf("CAN rx:\r\n");
 
 			for(i=0;i<rx_header.DLC;i++)
 					printf("%X",buf[i]);
