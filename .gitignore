@@ -44,3 +44,14 @@ JLinkLog.txt
 .idea/
 Thumbs.db
 Desktop.ini
+
+# Keil build output and IDE-generated files
+Output/
+DebugConfig/
+RTE/
+*.hex
+*.uvoptx
+*.dbgconf
+*.scvd
+*.Bak
+*.bak
